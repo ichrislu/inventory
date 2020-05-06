@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	file, err := os.OpenFile("service.log", os.O_CREATE|os.O_WRONLY, 0666)
+	file, err := os.OpenFile("inventory.log", os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Fatal("Failed to log to file, quit now!")
 	}
