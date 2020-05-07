@@ -3,8 +3,8 @@ address=":80"
 auth-key="a"
 
 [database]
-driver-name="mysql"
-data-source-name="chris:chrislu@tcp(localhost:3306)/myweb?charset=utf8&loc=&parseTime=true"
+driver-name="sqlite3"
+data-source-name="inventory.db"
 max-idle-conns=2
 max-open-conns=10
-show-sql=true
+max-lifetime=60
