@@ -48,6 +48,8 @@ func initRouter() *echo.Echo {
 	// e.GET("/p", handler.ListAll)
 
 	e.POST("/category", controller.AddCategory)
+	e.GET("/category", controller.GetCategory)
+	e.DELETE("/category/:id", controller.DelCategory)
 
 	return e
 }

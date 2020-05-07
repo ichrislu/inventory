@@ -6,11 +6,20 @@ import (
 	"inventory/model"
 )
 
-func AddCategory(name string) (model.Category, error) {
-	category := model.Category{Name: name}
-
+func AddCategory(category model.Category) (model.Category, error) {
 	db := database.DB
-	defer db.Close()
 
-	return category, dao.AddCategory(db, category)
+	return dao.AddCategory(db, category)
+}
+
+func GetCategorys() ([]model.Category, error) {
+	db := database.DB
+
+	return dao.GetCategory(db)
+}
+
+func DelCategory(category model.Category) error {
+	db := database.DB
+
+	return dao.DelCategory(db, category)
 }
