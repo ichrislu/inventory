@@ -1,6 +1,5 @@
 [server]
 address=":80"
-auth-key="a"
 
 [database]
 driver-name="sqlite3"

@@ -14,7 +14,7 @@ func init() {
 
 	DB, err = gorm.Open(viper.GetString("database.driver-name"), viper.GetString("database.data-source-name"))
 	if err != nil {
-		panic("failed to connect database")
+		panic(err.Error())
 	}
 	DB.SingularTable(true)
 

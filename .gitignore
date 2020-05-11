@@ -1,3 +1,5 @@
 .DS_Store
 *.log
 /.idea/
+inventory.exe
+inventory
