@@ -48,9 +48,5 @@ func open(uri string, delay time.Duration) error {
 }
 
 func getUrl() string {
-	addr := viper.GetString("server.address")
-	args := strings.Split(addr, ":")
-	args[0] = "http://localhost"
-
-	return strings.Join(args, ":")
+	return strings.Join([]string{"http://localhost", viper.GetString("server.address")}, "")
 }

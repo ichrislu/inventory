@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/spf13/viper"
 	"inventory/controller"
 )
 
@@ -16,11 +15,11 @@ func initRouter() *echo.Echo {
 
 	// CROS
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins:     viper.GetStringSlice("cors.allow-origins"),
-		AllowMethods:     viper.GetStringSlice("cors.allow-methods"),
-		AllowHeaders:     viper.GetStringSlice("cors.allow-headers"),
-		AllowCredentials: viper.GetBool("cors.allow-credentials"),
-		MaxAge:           viper.GetInt("cors.max-age"),
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"*"},
+		AllowHeaders:     []string{"*"},
+		AllowCredentials: false,
+		MaxAge:           86400,
 	}))
 
 	//e.Static("/pic", viper.GetString("upload.path"))
@@ -52,6 +51,8 @@ func initRouter() *echo.Echo {
 	e.POST("/category", controller.AddCategory)
 	e.GET("/category", controller.GetCategory)
 	e.DELETE("/category/:id", controller.DelCategory)
+
+	e.POST("/stock", controller.AddStock)
 
 	return e
 }
