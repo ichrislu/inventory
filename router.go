@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"github.com/spf13/viper"
 	"inventory/controller"
 )
 
@@ -13,13 +15,13 @@ func initRouter() *echo.Echo {
 	// e.Use(middleware.Logger())
 
 	// CROS
-	//e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-	//	AllowOrigins:     viper.GetStringSlice("cors.allow-origins"),
-	//	AllowMethods:     viper.GetStringSlice("cors.allow-methods"),
-	//	AllowHeaders:     viper.GetStringSlice("cors.allow-headers"),
-	//	AllowCredentials: viper.GetBool("cors.allow-credentials"),
-	//	MaxAge:           viper.GetInt("cors.max-age"),
-	//}))
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins:     viper.GetStringSlice("cors.allow-origins"),
+		AllowMethods:     viper.GetStringSlice("cors.allow-methods"),
+		AllowHeaders:     viper.GetStringSlice("cors.allow-headers"),
+		AllowCredentials: viper.GetBool("cors.allow-credentials"),
+		MaxAge:           viper.GetInt("cors.max-age"),
+	}))
 
 	//e.Static("/pic", viper.GetString("upload.path"))
 
