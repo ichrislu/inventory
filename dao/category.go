@@ -10,7 +10,7 @@ func AddCategory(db *gorm.DB, category model.Category) (model.Category, error) {
 }
 
 func GetCategory(db *gorm.DB, id int) (category model.Category, err error) {
-	return category, db.Find(&category).Error
+	return category, db.Where("id=?", id).Find(&category).Error
 }
 
 func GetCategories(db *gorm.DB, pid int) (categories []model.Category, err error) {

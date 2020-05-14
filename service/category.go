@@ -54,6 +54,14 @@ func DelCategory(category model.Category) error {
 		}
 	} else {
 		// 品牌
+		count, err := dao.GetStockCount(db, _category.Id)
+		if err != nil {
+			return err
+		}
+
+		if count > 0 {
+			return errors.New("有入库记录的品牌不能删除")
+		}
 	}
 
 	return dao.DelCategory(db, category)

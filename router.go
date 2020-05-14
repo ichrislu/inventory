@@ -53,6 +53,8 @@ func initRouter() *echo.Echo {
 	e.DELETE("/category/:id", controller.DelCategory)
 
 	e.POST("/stock", controller.AddStock)
+	e.GET("/stock", controller.GetStock)
+	e.PUT("/stock/:id/remarks", controller.EditRemarks)
 
 	return e
 }

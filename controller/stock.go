@@ -5,6 +5,7 @@ import (
 	"inventory/model"
 	"inventory/service"
 	"net/http"
+	"strconv"
 )
 
 func AddStock(c echo.Context) error {
@@ -20,16 +21,34 @@ func AddStock(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
-//func GetCategory(c echo.Context) error {
-//	category, err := service.GetCategory()
-//
-//	if err != nil {
-//		return c.JSON(http.StatusInternalServerError, err.Error())
-//	}
-//
-//	return c.JSON(http.StatusOK, category)
-//}
-//
+func GetStock(c echo.Context) error {
+	provider := c.QueryParam("provider")
+	begin := c.QueryParam("begin")
+	end := c.QueryParam("end")
+
+	stockList, err := service.GetStockList(provider, begin, end)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, stockList)
+}
+
+func EditRemarks(c echo.Context) error {
+	_id := c.Param("id")
+	id, _ := strconv.Atoi(_id)
+	remarks := c.QueryParam("remarks")
+
+	err := service.EditRemarks(id, remarks)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	return c.NoContent(http.StatusOK)
+}
+
 //func DelCategory(c echo.Context) error {
 //	var category model.Category
 //	c.Bind(&category)

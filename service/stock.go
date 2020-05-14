@@ -11,27 +11,23 @@ func AddStock(stock model.Stock) (model.Stock, error) {
 	return dao.AddStock(db, stock)
 }
 
-//func GetCategory() ([]model.Schema, error) {
-//	db := database.DB
-//
-//	var schemas []model.Schema
-//	categories, err := dao.GetCategories(db, 0)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	for _, category := range categories {
-//		subCategories, err := dao.GetCategories(db, category.Id)
-//		if err != nil {
-//			return nil, err
-//		}
-//
-//		schema := model.Schema{Id: category.Id, Name: category.Name, Category: subCategories}
-//		schemas = append(schemas, schema)
-//	}
-//
-//	return schemas, nil
-//}
+func GetStockList(provider string, begin string, end string) ([]model.StockList, error) {
+	db := database.DB
+
+	var stockList []model.StockList
+	stockList, err := dao.GetStockList(db, provider, begin, end)
+	if err != nil {
+		return nil, err
+	}
+
+	return stockList, nil
+}
+
+func EditRemarks(id int, remarks string) error {
+	db := database.DB
+	return dao.EditRemarks(db, id, remarks)
+}
+
 //
 //func DelCategory(category model.Category) error {
 //	db := database.DB
