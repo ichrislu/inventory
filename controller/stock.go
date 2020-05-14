@@ -10,7 +10,9 @@ import (
 
 func AddStock(c echo.Context) error {
 	var stock model.Stock
-	c.Bind(&stock)
+	if err := c.Bind(&stock); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
 
 	result, err := service.AddStock(stock)
 
@@ -25,8 +27,17 @@ func GetStock(c echo.Context) error {
 	provider := c.QueryParam("provider")
 	begin := c.QueryParam("begin")
 	end := c.QueryParam("end")
+	allStr := c.QueryParam("all")
 
-	stockList, err := service.GetStockList(provider, begin, end)
+	var all bool
+	var err error
+	if len(allStr) > 0 {
+		if all, err = strconv.ParseBool(allStr); err == nil {
+			return c.JSON(http.StatusBadRequest, "参数all取值不正确："+err.Error())
+		}
+	}
+
+	stockList, err := service.GetStockList(provider, begin, end, all)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
@@ -37,12 +48,14 @@ func GetStock(c echo.Context) error {
 
 func EditRemarks(c echo.Context) error {
 	_id := c.Param("id")
-	id, _ := strconv.Atoi(_id)
+	id, err := strconv.Atoi(_id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, "参数id取值不正确："+err.Error())
+	}
+
 	remarks := c.QueryParam("remarks")
 
-	err := service.EditRemarks(id, remarks)
-
-	if err != nil {
+	if err := service.EditRemarks(id, remarks); err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 

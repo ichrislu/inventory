@@ -1,21 +1,44 @@
 package service
 
 import (
+	"errors"
 	"inventory/dao"
 	"inventory/database"
 	"inventory/model"
 )
 
 func AddStock(stock model.Stock) (model.Stock, error) {
+	if stock.Bid <= 0 {
+		return _, errors.New("品类品牌不正确")
+	}
+
+	if stock.Date <= 0 {
+		return _, errors.New("入库时间不正确")
+	}
+
+	if stock.Quantity <= 0 {
+		return _, errors.New("入库数量不正确")
+	}
+	stock.Inventory = stock.Quantity
+
+	if len(stock.Model) == 0 {
+		return _, errors.New("型号不能为空")
+	}
+
+	if stock.Price <= 0 {
+		return _, errors.New("价格不能是负数")
+	}
+
 	db := database.DB
+
 	return dao.AddStock(db, stock)
 }
 
-func GetStockList(provider string, begin string, end string) ([]model.StockList, error) {
+func GetStockList(provider string, begin string, end string, all bool) ([]model.StockList, error) {
 	db := database.DB
 
 	var stockList []model.StockList
-	stockList, err := dao.GetStockList(db, provider, begin, end)
+	stockList, err := dao.GetStockList(db, provider, begin, end, all)
 	if err != nil {
 		return nil, err
 	}
@@ -26,6 +49,42 @@ func GetStockList(provider string, begin string, end string) ([]model.StockList,
 func EditRemarks(id int, remarks string) error {
 	db := database.DB
 	return dao.EditRemarks(db, id, remarks)
+}
+
+func EditStock(stock model.Stock) (model.Stock, error) {
+	if stock.Bid <= 0 {
+		return _, errors.New("品类品牌不正确")
+	}
+
+	if stock.Date <= 0 {
+		return _, errors.New("入库时间不正确")
+	}
+
+	if stock.Quantity <= 0 {
+		return _, errors.New("入库数量不正确")
+	}
+
+	if len(stock.Model) == 0 {
+		return _, errors.New("型号不能为空")
+	}
+
+	if stock.Price <= 0 {
+		return _, errors.New("价格不能是负数")
+	}
+
+	data := map[string]interface{}{"Bid": stock.Bid, "Date": stock.Date, "Quantity": stock.Quantity, "Model": stock.Model, "Price": stock.Price}
+
+	db := database.DB
+
+	tx := db.Begin()
+
+	err := dao.EditStock(tx, stock, data)
+
+	if stock.Quantity > 0 {
+
+	}
+
+	return stock, nil
 }
 
 //
