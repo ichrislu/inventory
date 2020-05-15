@@ -9,24 +9,24 @@ import (
 
 func AddStock(stock model.Stock) (model.Stock, error) {
 	if stock.Bid <= 0 {
-		return _, errors.New("品类品牌不正确")
+		return model.Stock{}, errors.New("品类品牌不正确")
 	}
 
 	if stock.Date <= 0 {
-		return _, errors.New("入库时间不正确")
+		return model.Stock{}, errors.New("入库时间不正确")
 	}
 
 	if stock.Quantity <= 0 {
-		return _, errors.New("入库数量不正确")
+		return model.Stock{}, errors.New("入库数量不正确")
 	}
 	stock.Inventory = stock.Quantity
 
 	if len(stock.Model) == 0 {
-		return _, errors.New("型号不能为空")
+		return model.Stock{}, errors.New("型号不能为空")
 	}
 
 	if stock.Price <= 0 {
-		return _, errors.New("价格不能是负数")
+		return model.Stock{}, errors.New("价格不能是负数")
 	}
 
 	db := database.DB
@@ -53,32 +53,32 @@ func EditRemarks(id int, remarks string) error {
 
 func EditStock(stock model.Stock) (model.Stock, error) {
 	if stock.Bid <= 0 {
-		return _, errors.New("品类品牌不正确")
+		return model.Stock{}, errors.New("品类品牌不正确")
 	}
 
 	if stock.Date <= 0 {
-		return _, errors.New("入库时间不正确")
+		return model.Stock{}, errors.New("入库时间不正确")
 	}
 
 	if stock.Quantity <= 0 {
-		return _, errors.New("入库数量不正确")
+		return model.Stock{}, errors.New("入库数量不正确")
 	}
 
 	if len(stock.Model) == 0 {
-		return _, errors.New("型号不能为空")
+		return model.Stock{}, errors.New("型号不能为空")
 	}
 
 	if stock.Price <= 0 {
-		return _, errors.New("价格不能是负数")
+		return model.Stock{}, errors.New("价格不能是负数")
 	}
 
-	data := map[string]interface{}{"Bid": stock.Bid, "Date": stock.Date, "Quantity": stock.Quantity, "Model": stock.Model, "Price": stock.Price}
+	//data := map[string]interface{}{"Bid": stock.Bid, "Date": stock.Date, "Quantity": stock.Quantity, "Model": stock.Model, "Price": stock.Price}
 
-	db := database.DB
-
-	tx := db.Begin()
-
-	err := dao.EditStock(tx, stock, data)
+	//db := database.DB
+	//
+	//tx := db.Begin()
+	//
+	//err := dao.EditStock(tx, stock, data)
 
 	if stock.Quantity > 0 {
 
