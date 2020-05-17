@@ -7,35 +7,56 @@ import (
 	"inventory/model"
 )
 
-func AddStock(stock model.Stock) (model.Stock, error) {
-	if stock.Provider == "" {
-		return model.Stock{}, errors.New("供应商不能为空")
+func AddSaled(saled model.Saled) (model.Saled, error) {
+	if saled.Shipper == "" {
+		return model.Saled{}, errors.New("出货人不能为空")
 	}
 
-	if stock.Bid <= 0 {
-		return model.Stock{}, errors.New("品类品牌不正确")
+	if saled.Sid <= 0 {
+		return model.Saled{}, errors.New("入库项不正确")
 	}
 
-	if stock.Date <= 0 {
-		return model.Stock{}, errors.New("入库时间不正确")
+	if saled.Date <= 0 {
+		return model.Saled{}, errors.New("出库时间不正确")
 	}
 
-	if stock.Quantity <= 0 {
-		return model.Stock{}, errors.New("入库数量不正确")
-	}
-	stock.Inventory = stock.Quantity
-
-	if stock.Model == "" {
-		return model.Stock{}, errors.New("型号不能为空")
+	if saled.Number <= 0 {
+		return model.Saled{}, errors.New("出库数量不正确")
 	}
 
-	if stock.Price <= 0 {
-		return model.Stock{}, errors.New("价格不能是负数")
+	if saled.Price <= 0 {
+		return model.Saled{}, errors.New("价格不能是负数")
 	}
 
 	db := database.DB
+	tx := db.Begin()
 
-	return dao.AddStock(db, stock)
+	var stock model.Stock
+	var err error
+
+	if stock, err = dao.GetStock(tx, saled.Sid); err == nil {
+		tx.Rollback()
+		return model.Saled{}, err
+	}
+
+	if stock.Inventory < saled.Number {
+		return model.Saled{}, errors.New("库存数量不足")
+	}
+
+	saled.Profit = saled.Price - stock.Price
+
+	// 添加出库记录
+	var result model.Saled
+	if result, err = dao.AddSaled(tx, saled); err == nil {
+		tx.Rollback()
+		return model.Saled{}, err
+	}
+
+	// 减库存
+	dao.EditStockInventory(tx, saled.Number, saled.Sid)
+
+	tx.Commit()
+	return result, nil
 }
 
 func GetStockList(provider string, begin string, end string, all bool) ([]model.StockList, error) {
@@ -61,7 +82,6 @@ func EditStock(stock model.Stock) (model.Stock, error) {
 	}
 
 	db := database.DB
-
 	tx := db.Begin()
 
 	var result model.Stock
@@ -115,19 +135,4 @@ func EditStock(stock model.Stock) (model.Stock, error) {
 	tx.Commit()
 
 	return result, nil
-}
-
-func DelStock(stock model.Stock) error {
-	db := database.DB
-
-	result, err := dao.GetStock(db, stock.Id)
-	if err != nil {
-		return err
-	}
-
-	if result.Quantity != result.Inventory {
-		return errors.New("已出库的记录不能删除")
-	}
-
-	return dao.DelStock(db, stock)
 }

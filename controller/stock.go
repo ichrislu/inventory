@@ -62,15 +62,15 @@ func EditRemarks(c echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
-//func DelCategory(c echo.Context) error {
-//	var category model.Category
-//	c.Bind(&category)
-//
-//	err := service.DelCategory(category)
-//
-//	if err != nil {
-//		return c.JSON(http.StatusInternalServerError, err.Error())
-//	}
-//
-//	return c.NoContent(http.StatusOK)
-//}
+func DelStock(c echo.Context) error {
+	var stock model.Stock
+	c.Bind(&stock)
+
+	err := service.DelStock(stock)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.NoContent(http.StatusOK)
+}

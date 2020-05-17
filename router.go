@@ -55,6 +55,7 @@ func initRouter() *echo.Echo {
 	e.POST("/stock", controller.AddStock)
 	e.GET("/stock", controller.GetStock)
 	e.PUT("/stock/:id/remarks", controller.EditRemarks)
+	e.DELETE("/stock/:id", controller.DelStock)
 
 	return e
 }
