@@ -1,0 +1,11 @@
+
+ {
+    "code": 0,
+    "result|5": [
+      {
+        "uid|+1": 1,
+        "name": "@name",
+        "email": "@email"
+      }
+    ]
+  }
