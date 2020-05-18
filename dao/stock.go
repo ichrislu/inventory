@@ -17,11 +17,8 @@ func GetStock(db *gorm.DB, id int) (stock model.Stock, err error) {
 	return stock, db.Where("id = ?", id).Find(&stock).Error
 }
 
-func GetStockList(db *gorm.DB, provider string, begin string, end string, all bool) (stockList []model.StockList, err error) {
-	db = db.Table("stock").
-		Select("stock.id,stock.provider,stock.date,stock.bid,(SELECT c2.name from category c2 where c.pid=c2.id) as category,c.name as brand,stock.model,stock.price,stock.quantity,stock.inventory,stock.remarks").
-		Joins("join category c ON stock.bid = c.id").
-		Order("inventory desc,date asc")
+func GetStocks(db *gorm.DB, provider string, begin string, end string, all bool) (stocks []model.Stock, err error) {
+	db = db.Model(model.Stock{}).Order("inventory desc,date asc")
 
 	if len(provider) > 0 {
 		db = db.Where("provider like ?", "%"+provider+"%")
@@ -35,10 +32,10 @@ func GetStockList(db *gorm.DB, provider string, begin string, end string, all bo
 		db = db.Where("inventory > 0")
 	}
 
-	return stockList, db.Find(&stockList).Error
+	return stocks, db.Find(&stocks).Error
 }
 
-func EditRemarks(db *gorm.DB, id int, remarks string) error {
+func EditStockRemarks(db *gorm.DB, id int, remarks string) error {
 	return db.Model(model.Stock{}).Where("id = ?", id).Update("remarks", remarks).Error
 }
 

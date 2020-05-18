@@ -1,27 +1,28 @@
 package model
 
 type Saled struct {
-	Id      int     `gorm:"Column:id;Type:integer;PRIMARY_KEY;AUTO_INCREMENT"`
-	Shipper string  `gorm:"Column:shipper;Type:text"`
-	Date    int     `gorm:"Column:date;Type:integer"`
-	Sid     int     `gorm:"Column:sid;Type:integer"`
-	Price   float64 `gorm:"Column:price;Type:real"`
-	Number  int     `gorm:"Column:number;Type:integer"`
-	Profit  float64 `gorm:"Column:profit;Type:real"`
-	Remarks string  `gorm:"Column:remarks;Type:text"`
+	Id      int     `gorm:"column:id;type:integer;primary_key;auto_increment"`
+	Shipper string  `gorm:"column:shipper;type:text"`
+	Date    int     `gorm:"column:date;type:integer"`
+	Sid     int     `gorm:"column:sid;type:integer"`
+	Price   float64 `gorm:"column:price;type:real"`
+	Number  int     `gorm:"column:number;type:integer"`
+	Profit  float64 `gorm:"column:profit;type:real"`
+	Remarks string  `gorm:"column:remarks;type:text"`
 }
 
 type SaledList struct {
-	Id       int     `gorm:"Column:id;Type:integer;PRIMARY_KEY;AUTO_INCREMENT"`
-	Shipper  string  `gorm:"Column:shipper;Type:text"`
-	Date     int     `gorm:"Column:date;Type:integer"`
-	Sid      int     `gorm:"Column:sid;Type:integer"`
-	Category string  `gorm:"column:category;type:text"`
-	Brand    string  `gorm:"column:brand;type:text"`
-	Model    string  `gorm:"Column:model;Type:text"`
-	PriceIn  float64 `gorm:"Column:price-in;Type:real"`
-	PriceOut float64 `gorm:"Column:price-out;Type:real"`
-	Number   int     `gorm:"Column:number;Type:integer"`
-	profit   float64 `gorm:"Column:profit;Type:real"`
-	Remarks  string  `gorm:"Column:remarks;Type:text"`
+	Id       int     `gorm:"column:id;type:integer;primary_key;auto_increment"`
+	Shipper  string  `gorm:"column:shipper;type:text"`
+	OutDate  int     `gorm:"column:out_date;type:integer"`
+	Sid      int     `gorm:"column:sid;type:integer"`
+	OutPrice float64 `gorm:"column:out_price;type:real"`
+	Number   int     `gorm:"column:number;type:integer"`
+	Profit   float64 `gorm:"column:profit;type:real"`
+	Bid      int     `gorm:"column:bid;type:integer"`
+	Model    string  `gorm:"column:model;type:text"`
+	InPrice  float64 `gorm:"column:in_price;type:real"`
+	Provider string  `gorm:"column:provider;type:text"`
+	InDate   int     `gorm:"column:in_date;type:integer"`
+	Remarks  string  `gorm:"column:remarks;type:text"`
 }

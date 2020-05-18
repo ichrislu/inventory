@@ -59,80 +59,12 @@ func AddSaled(saled model.Saled) (model.Saled, error) {
 	return result, nil
 }
 
-func GetStockList(provider string, begin string, end string, all bool) ([]model.StockList, error) {
+func GetSaled(shipper string, begin string, end string, all bool) ([]model.SaledList, error) {
 	db := database.DB
-
-	var stockList []model.StockList
-	stockList, err := dao.GetStockList(db, provider, begin, end, all)
-	if err != nil {
-		return nil, err
-	}
-
-	return stockList, nil
+	return dao.GetSaledList(db, shipper, begin, end)
 }
 
-func EditRemarks(id int, remarks string) error {
+func EditSaledRemarks(id int, remarks string) error {
 	db := database.DB
-	return dao.EditRemarks(db, id, remarks)
-}
-
-func EditStock(stock model.Stock) (model.Stock, error) {
-	if stock.Id <= 0 {
-		return model.Stock{}, errors.New("id不正确")
-	}
-
-	db := database.DB
-	tx := db.Begin()
-
-	var result model.Stock
-	var err error
-	var priceFlag bool
-
-	if result, err = dao.GetStock(tx, stock.Id); err == nil {
-		return model.Stock{}, err
-	}
-
-	// 以下内容非零值，则与库中值不同时，则更新
-
-	if stock.Provider != "" && stock.Provider != result.Provider {
-		result.Provider = stock.Provider
-	}
-
-	if stock.Bid > 0 && stock.Bid != result.Bid {
-		result.Bid = stock.Bid
-	}
-
-	if stock.Date > 0 && stock.Date != result.Date {
-		result.Date = stock.Date
-	}
-
-	if stock.Model != "" && stock.Model != result.Model {
-		result.Model = stock.Model
-	}
-
-	if stock.Quantity > 0 && stock.Quantity != result.Quantity {
-		// TODO：算法：当前库存数量 = 新入库数量 - 查出库得出的出库总数量
-		// 当前库存数量为负，则报错
-		// 当前库存数量为0，则全部卖完（库存为0）
-		// 当前库存数量为正数，更新入库数量和库存
-
-	}
-
-	if stock.Price > 0 && stock.Price != result.Price {
-		result.Price = stock.Price
-		priceFlag = true
-	}
-
-	if err := dao.EditStock(tx, stock); err != nil {
-		tx.Rollback()
-		return stock, err
-	}
-
-	if priceFlag {
-		// TODO：修改价格后，出库表需要重新计算相关利润
-	}
-
-	tx.Commit()
-
-	return result, nil
+	return dao.EditSaledRemarks(db, id, remarks)
 }

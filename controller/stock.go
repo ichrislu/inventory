@@ -37,13 +37,13 @@ func GetStock(c echo.Context) error {
 		}
 	}
 
-	stockList, err := service.GetStockList(provider, begin, end, all)
+	stocks, err := service.GetStocks(provider, begin, end, all)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, stockList)
+	return c.JSON(http.StatusOK, stocks)
 }
 
 func EditRemarks(c echo.Context) error {
@@ -53,9 +53,9 @@ func EditRemarks(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "参数id取值不正确："+err.Error())
 	}
 
-	remarks := c.QueryParam("remarks")
+	remarks := c.FormValue("remarks")
 
-	if err := service.EditRemarks(id, remarks); err != nil {
+	if err := service.EditStockRemarks(id, remarks); err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 

@@ -19,23 +19,23 @@ func GetSaledCount(db *gorm.DB, sid int) (count uint, err error) {
 
 func GetSaledList(db *gorm.DB, shipper string, begin string, end string) (saledList []model.SaledList, err error) {
 	db = db.Model(model.Saled{}).
-		Select("saled.id,saled.shipper,stock.date,stock.sid,(SELECT c2.name from category c2 where c.pid=c2.id) as category,c.name as brand,stock.model,stock.price,stock.quantity,stock.inventory,stock.remarks").
-		Joins("join category c ON stock.bid = c.id").
-		Order("inventory desc,date asc")
+		Select("saled.id,saled.shipper,saled.date as out_date,saled.sid,saled.price as out_price,saled.number,saled.profit,stock.price as in_price,stock.date as in_date,stock.bid,stock.model,stock.provider,saled.remarks").
+		Joins("JOIN stock on saled.sid = stock.id").
+		Order("saled.date DESC")
 
-	if len(provider) > 0 {
+	if shipper != "" {
 		db = db.Where("provider like ?", "%"+provider+"%")
 	}
 
 	if len(begin) > 0 && len(end) > 0 {
-		db = db.Where("date >= ? and date <= ?", begin, end)
+		db = db.Where("saled.date >= ? and saled.date <= ?", begin, end)
 	}
 
-	if !all {
-		db = db.Where("inventory > 0")
-	}
+	return saledList, db.Find(&saledList).Error
+}
 
-	return stockList, db.Find(&stockList).Error
+func EditSaledRemarks(db *gorm.DB, id int, remarks string) error {
+	return db.Model(model.Saled{}).Where("id = ?", id).Update("remarks", remarks).Error
 }
 
 func RepairProfit(db *gorm.DB, sid int, newPrice float64) error {

@@ -38,21 +38,15 @@ func AddStock(stock model.Stock) (model.Stock, error) {
 	return dao.AddStock(db, stock)
 }
 
-func GetStockList(provider string, begin string, end string, all bool) ([]model.StockList, error) {
+func GetStocks(provider string, begin string, end string, all bool) ([]model.Stock, error) {
 	db := database.DB
 
-	var stockList []model.StockList
-	stockList, err := dao.GetStockList(db, provider, begin, end, all)
-	if err != nil {
-		return nil, err
-	}
-
-	return stockList, nil
+	return dao.GetStocks(db, provider, begin, end, all)
 }
 
-func EditRemarks(id int, remarks string) error {
+func EditStockRemarks(id int, remarks string) error {
 	db := database.DB
-	return dao.EditRemarks(db, id, remarks)
+	return dao.EditStockRemarks(db, id, remarks)
 }
 
 func EditStock(stock model.Stock) (model.Stock, error) {
