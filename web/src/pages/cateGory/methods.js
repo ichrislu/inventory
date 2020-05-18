@@ -15,6 +15,15 @@ export default {
             // setTimeout(() => {
             //     _this.getList()
             // }, 100)
+            this.$message({
+                type : 'success',
+                message : '添加分类成功'
+            })
+        }).catch( () => {
+            this.$message({
+                type : 'info',
+                message : '添加分类失败'
+            })
         });
 
         this.$refs.addCateRef.resetFields()

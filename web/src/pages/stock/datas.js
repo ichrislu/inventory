@@ -99,17 +99,21 @@ export default {
             outStockFormDialogVisible: false,
             // 出库表单对象
             outStockForm: {
-                name: '',
+                supplier: '',
+                date : new Date(),
                 cate: '',
                 brand: '',
-                mod: '',
+                cate : '',
+                model: '',
                 price: '',
                 num: '',
-                remark: '',
+                shipper : '',
                 sell: ''
             },
+            // 出库表单对象 分类属性
+            outStockValue : [],
             filters: {},
-            activeCollapse: 'search'
+            activeCollapse: 'search',
         }
     }
 }

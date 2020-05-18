@@ -35,6 +35,7 @@ export default {
             quantity: this.addForm.Quantity,
             inventory: this.addForm.Inventory,
         }).then(() => {
+            // this.resetForm(this.addForm)
                 this.getList()
                 this.showAddFormDialogVisible = false
             }
@@ -57,35 +58,36 @@ export default {
     },
 
     // 新增备注
-    addRemark() {
-        let _params = {
-            remarks: this.remarkForm.Remarks
-        }
-        this.$axios.put('http://localhost/stock/' + this.remarkForm.Id + '/remarks', this.getFormDataFromJson(_params)).then(() => {
-            this.getList()
-            this.showRemarkDialogVisible = false;
-        }).catch (function (error) {
-        })
-    },
-    getFormDataFromJson(json) {
-        let params = new URLSearchParams()
-        for (var key in json) {
-            params.append(key, encodeURIComponent(json[key]));
-        }
-        return params;
-    },
-
     // addRemark() {
-    //     this.$axios.put('http://localhost/stock/' + this.remarkForm.Id + '/remarks', {
+    //     let _params = {
     //         remarks: this.remarkForm.Remarks
-    //     }).then(() => {
+    //     }
+    //     this.$axios.put('http://localhost/stock/' + this.remarkForm.Id + '/remarks', this.getFormDataFromJson(_params)).then(() => {
     //         this.getList()
     //         this.showRemarkDialogVisible = false;
-    //     }).catch(
-    //         () => {
-    //         }
-    //     )
+    //     }).catch (function (error) {
+    //     })
     // },
+    // getFormDataFromJson(json) {
+    //     let params = new URLSearchParams()
+    //     for (var key in json) {
+    //         params.append(key, encodeURIComponent(json[key]));
+    //     }
+    //     return params;
+    // },
+
+    addRemark() {
+
+        this.$axios.put('http://localhost/stock/' + this.remarkForm.Id + '/remarks', {
+            remarks: this.remarkForm.Remarks
+        }).then(() => {
+            this.getList()
+            this.showRemarkDialogVisible = false;
+        }).catch(
+            () => {
+            }
+        )
+    },
 
     // ----------------------------------------------------------获取选中库存数据------------------------------------------
     showDditForm(editForm) {
@@ -110,13 +112,13 @@ export default {
     // 修改库存
     editFormHandler() {
         this.$axios.post('http://localhost/stock', {
-            'Provider': this.editForm.Provider,
-            'Date': this.editForm.Date,
-            'Model': this.editForm.Model,
-            'Price': this.editForm.Price,
-            'Quantity': this.editForm.Quantity,
-            'Inventory': this.editForm.Inventory,
-            'Bid': this.editForm.Bid
+            Provider: this.editForm.Provider,
+            Date: this.editForm.Date,
+            Model: this.editForm.Model,
+            Price: this.editForm.Price,
+            Quantity: this.editForm.Quantity,
+            Inventory: this.editForm.Inventory,
+            Bid: this.editForm.Bid
         }).then(
             () => {
                 this.getList()
@@ -134,6 +136,44 @@ export default {
 
     // ------------------------------------------------ 重置表单 ---------------------------------
     resetForm(formName) {
-        this.$refs[formName].resetFields()
+        if (this.$refs[formName]!==undefined) {
+            this.$refs[formName].resetFields();
+        }
+        // this.$refs[formName].resetFields()
     },
+
+    // ------------------------------------------- 出库 ------------------------------
+    // 获取 将要出库的商品信息
+    showOutStock(outstock) {
+        this.outStockFormDialogVisible = true
+        console.log(outstock);
+
+        this.outStockForm.provider = outstock.Provider
+        this.outStockValue = [outstock.Category,outstock.Brand]
+        this.outStockForm.model = outstock.Model
+        this.outStockForm.price = outstock.Price
+        this.outStockForm.sid = outstock.Id
+
+    }
+,
+    // 一键出库
+    outStock() {
+        this.$axios.post('http://localhost/', {
+            shipper : this.outStockForm.provider,
+            date : this.outStockForm.date,
+            sid : this.outStockForm.sid,
+            price : this.outStockForm.sell,
+            number : this.outStockForm.num
+        }).then( () => {
+            this.$message( {
+                type : 'success',
+                message : '出库成功'
+            })
+        }).catch( () => {
+            this.$message({
+                type : 'info',
+                message : '出库失败'
+            })
+        })
+    }
 }

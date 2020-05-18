@@ -3,24 +3,23 @@ export default {
 
     // 获取库存列表数据
     getList() {
-        var _this = this
-        this.$axios.get('/outstock').then(res => {
-            // _this.stockList = _this.stockList.concat(res.data)
-            _this.outStockList = res.data
-        })
+        // var _this = this
+        // this.$axios.get('/outstock').then(res => {
+        //     // _this.stockList = _this.stockList.concat(res.data)
+        //     _this.outStockList = res.data
+        // })
     },
 
-    // 按供应商查询
-    searchSup() {
-        console.log(this.keyword)
-        var _this = this
-        this.$axios.get('/stock/search', {
+     //-------------------------------------------------------根据 年月日, 供货商查询------------------------------------------------------
+     search() {
+        this.$axios.get('http://localhost/outStock', {
             params: {
-                key: keyword
+                'provider': this.searchForm.keyword,
+                'begin': this.searchForm.time[0],
+                'end': this.searchForm.time[1],
             }
         }).then(res => {
-            _this.outStockList = res.data
+            this.stockList = res.data
         })
-    }
-
+    },
 }
