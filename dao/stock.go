@@ -18,7 +18,7 @@ func GetStock(db *gorm.DB, id int) (stock model.Stock, err error) {
 }
 
 func GetStocks(db *gorm.DB, provider string, begin string, end string, all bool) (stocks []model.Stock, err error) {
-	db = db.Model(model.Stock{}).Order("inventory desc,date asc")
+	db = db.Model(model.Stock{}).Order("inventory desc").Order("date asc")
 
 	if len(provider) > 0 {
 		db = db.Where("provider like ?", "%"+provider+"%")
