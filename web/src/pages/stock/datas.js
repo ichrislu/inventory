@@ -4,6 +4,8 @@ export default {
         //TODO  自定义规则
 
         return {
+            // 品类品牌缓存对象
+            session : [],
             // 搜索栏 表单对象
             searchForm: {
                 keyword: '',
@@ -33,7 +35,6 @@ export default {
                 Bid: 0,
                 Model: '',
                 Price: '',
-                Quantity: 0,
                 Inventory: 0,
             },
             // 新增库存表单对象预验证规则
@@ -69,8 +70,6 @@ export default {
                     trigger: 'blur'
                 }]
             },
-            value1: '',
-            value2: '',
             // 控制 修改库存对话框
             showEditFormDialogVisible: false,
             // 修改库存表单对象
@@ -85,8 +84,7 @@ export default {
                 Brand: '',
                 Category: '',
             },
-            // 控制 修改备注对话框的显示与隐藏
-            showRemarkFormDialogVisible: false,
+
             // 备注对话框 表单对象
             remarkForm: {
                 // 备注内容
@@ -99,21 +97,22 @@ export default {
             outStockFormDialogVisible: false,
             // 出库表单对象
             outStockForm: {
-                supplier: '',
-                date : new Date(),
+                provider: '',
                 cate: '',
                 brand: '',
                 cate : '',
                 model: '',
                 price: '',
-                num: '',
-                shipper : '',
-                sell: ''
+
+                sid :'',
+                date : 1589803035185,
+                quantity: 2,
+                shipper : '老王',
+                sell: 7000
             },
             // 出库表单对象 分类属性
             outStockValue : [],
             filters: {},
-            activeCollapse: 'search',
         }
     }
 }

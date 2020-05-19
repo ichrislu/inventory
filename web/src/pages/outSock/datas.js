@@ -1,10 +1,8 @@
 export default {
     init : () => {
         return {
-            activeCollapse : 'search',
             // 出库列表数据
             outStockList: [],
-            showAddFormDialogVisible: false,
             date: '',
             // 表单对象预验证规则
             addFormRules: {
@@ -39,18 +37,22 @@ export default {
                     trigger: 'blur'
                 }]
             },
-            value1: '',
-            value2: '',
-            // 搜索关键字
-            keyword: '',
             // 控制 修改备注对话框的显示与隐藏
             showRemarkFormDialogVisible: false,
             // 备注对话框 表单对象
             remarkForm: {
-                // 备注内容
-                textarea: ''
+                Remarks: '',
+                Id: ''
             },
-
+            // 搜索栏表单对象
+            searchFrom: {
+                shipper: '',
+                // 时间选择器绑定对象
+                time: [{
+                    begin: 0,
+                    end: 0,
+                }]
+            },
         }
     }
 }
