@@ -89,7 +89,7 @@ func EditStock(stock model.Stock) (model.Stock, error) {
 		// 当前库存数量为负，则报错
 		// 当前库存数量为0，则全部卖完（库存为0）
 		// 当前库存数量为正数，更新入库数量和库存
-
+		//quantity:=
 	}
 
 	if stock.Price > 0 && stock.Price != result.Price {
@@ -97,13 +97,14 @@ func EditStock(stock model.Stock) (model.Stock, error) {
 		priceFlag = true
 	}
 
-	if err := dao.EditStock(tx, stock); err != nil {
+	if err := dao.EditStock(tx, result); err != nil {
 		tx.Rollback()
 		return stock, err
 	}
 
 	if priceFlag {
 		// TODO：修改价格后，出库表需要重新计算相关利润
+		dao.RepairProfit(tx, stock.id, stock.Price)
 	}
 
 	tx.Commit()

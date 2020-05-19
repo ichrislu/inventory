@@ -20,7 +20,7 @@ func AddSaled(saled model.Saled) (model.Saled, error) {
 		return model.Saled{}, errors.New("出库时间不正确")
 	}
 
-	if saled.Number <= 0 {
+	if saled.Quantity <= 0 {
 		return model.Saled{}, errors.New("出库数量不正确")
 	}
 
@@ -34,12 +34,12 @@ func AddSaled(saled model.Saled) (model.Saled, error) {
 	var stock model.Stock
 	var err error
 
-	if stock, err = dao.GetStock(tx, saled.Sid); err == nil {
+	if stock, err = dao.GetStock(tx, saled.Sid); err != nil {
 		tx.Rollback()
 		return model.Saled{}, err
 	}
 
-	if stock.Inventory < saled.Number {
+	if stock.Inventory < saled.Quantity {
 		return model.Saled{}, errors.New("库存数量不足")
 	}
 
@@ -47,19 +47,19 @@ func AddSaled(saled model.Saled) (model.Saled, error) {
 
 	// 添加出库记录
 	var result model.Saled
-	if result, err = dao.AddSaled(tx, saled); err == nil {
+	if result, err = dao.AddSaled(tx, saled); err != nil {
 		tx.Rollback()
 		return model.Saled{}, err
 	}
 
 	// 减库存
-	dao.EditStockInventory(tx, saled.Number, saled.Sid)
+	dao.EditStockInventory(tx, saled.Quantity, saled.Sid)
 
 	tx.Commit()
 	return result, nil
 }
 
-func GetSaled(shipper string, begin string, end string, all bool) ([]model.SaledList, error) {
+func GetSaled(shipper string, begin string, end string) ([]model.SaledList, error) {
 	db := database.DB
 	return dao.GetSaledList(db, shipper, begin, end)
 }

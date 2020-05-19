@@ -23,6 +23,20 @@ func AddStock(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
+func EditStock(c echo.Context) error {
+	var stock model.Stock
+	if err := c.Bind(&stock); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	result, err := service.EditStock(stock)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
 func GetStock(c echo.Context) error {
 	provider := c.QueryParam("provider")
 	begin := c.QueryParam("begin")
@@ -46,7 +60,7 @@ func GetStock(c echo.Context) error {
 	return c.JSON(http.StatusOK, stocks)
 }
 
-func EditRemarks(c echo.Context) error {
+func EditStockRemarks(c echo.Context) error {
 	_id := c.Param("id")
 	id, err := strconv.Atoi(_id)
 	if err != nil {
