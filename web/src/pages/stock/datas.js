@@ -100,6 +100,7 @@ export default {
             showEditFormDialogVisible: false,
             // 修改库存表单对象
             editForm: {
+                Id : '',
                 Provider: '',
                 Date: '',
                 Bid: '',

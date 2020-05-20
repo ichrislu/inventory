@@ -23,7 +23,7 @@ export default {
                 'provider': this.searchForm.keyword,
                 'begin': this.searchForm.time[0],
                 'end': this.searchForm.time[1],
-                'all' : this.searchForm.checked
+                'all': this.searchForm.checked
             }
         }).then(res => {
             this.stockList = res.data
@@ -80,8 +80,7 @@ export default {
         this.$axios.put('http://localhost/stock/' + this.remarkForm.Id + '/remarks', this.getFormDataFromJson(_params)).then(() => {
             this.getList()
             this.showRemarkDialogVisible = false;
-        }).catch (function (error) {
-        })
+        }).catch(function (error) {})
     },
     getFormDataFromJson(json) {
         let params = new URLSearchParams()
@@ -99,10 +98,11 @@ export default {
         this.editForm.Model = editForm.Model
         this.editForm.Price = editForm.Price
         this.editForm.Quantity = editForm.Quantity
-        this.editForm.Inventory = editForm.Inventory
+        // this.editForm.Inventory = editForm.Inventory
         this.editForm.Bid = editForm.Bid
         this.editValue = [editForm.Category, editForm.Brand]
         this.showEditFormDialogVisible = true
+        this.editForm.Id = editForm.Id
     },
 
     // 修改库存 分类级联选择
@@ -114,15 +114,16 @@ export default {
 
     // 修改库存
     editFormHandler() {
-        this.$axios.post('http://localhost/stock', {
+        let _params = {
             Provider: this.editForm.Provider,
             Date: this.editForm.Date,
             Model: this.editForm.Model,
-            Price: this.editForm.Price,
+            Price: parseFloat(this.editForm.Price),
             Quantity: this.editForm.Quantity,
-            Inventory: this.editForm.Inventory,
+            // Inventory: this.editForm.Inventory,
             Bid: this.editForm.Bid
-        }).then(
+        }
+        this.$axios.put('http://localhost/stock/' + this.editForm.Id, this.getFormDataFromJson(_params)).then(
             () => {
                 this.getList()
                 this.showEditFormDialogVisible = false
@@ -163,7 +164,7 @@ export default {
             shipper: this.outStockForm.shipper,
             date: this.outStockForm.date,
             sid: this.outStockForm.sid,
-            price: parseFloat(this.outStockForm.sell) ,
+            price: parseFloat(this.outStockForm.sell),
             quantity: this.outStockForm.quantity
         }).then(() => {
             this.outStockFormDialogVisible = false
@@ -187,17 +188,39 @@ export default {
         console.log(id);
 
     },
-//-----------------------设置表格每行样式--------------------
-tableRowClassName({row}) {
-    // console.log(row.Quantity == row.Inventory);
-    if( row.Inventory == 0){
-        return 'over'
+    //-----------------------设置表格每行样式--------------------
+    tableRowClassName({
+        row
+    }) {
+        // console.log(row.Quantity == row.Inventory);
+        if (row.Inventory == 0) {
+            return 'over'
+        }
+        return ''
+    },
+
+    // -------------------------------------------删除库存 ----------------------------------
+    deleteStock(id) {
+        console.log(id);
+
+        this.$confirm('确认删除该库存?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(() => {
+            this.$axios.delete('http://localhost/stock/' + id).then(res => {
+                this.getList()
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                });
+            }).catch(req => {
+                // console.log(req);
+                this.$message({
+                    type: 'info',
+                    message: '已出库的记录不能删除'
+                });
+            });
+        })
     }
-    return ''
-},
-
-// -------------------------------------------删除库存 ----------------------------------
-deleteStock(id) {
-
-}
 }

@@ -47,8 +47,8 @@
                     <el-table-column prop="Brand" label="品牌" align="center"></el-table-column>
                     <el-table-column prop="Model" label="型号" align="center"></el-table-column>
                     <el-table-column prop="Price" label="进货价格(元)" align="center"></el-table-column>
-                    <el-table-column prop="Quantity" label="入库数量(件)" align="center"> </el-table-column>
-                    <el-table-column prop="Inventory" label="此单库存(件)" align="center"> </el-table-column>
+                    <el-table-column prop="Quantity" label="此单总量(件)" align="center"> </el-table-column>
+                    <el-table-column prop="Inventory" label="库存余量(件)" align="center"> </el-table-column>
                     <el-table-column prop="Remarks" label="备注" width="180px" align="center"> </el-table-column>
 
                     <!-- 功能按钮区域 -->
@@ -68,7 +68,7 @@
                             </el-tooltip>
                             <!-- 删除按钮 -->
                             <el-tooltip class="item" effect="dark" content="删除" placement="top" :enterable="false">
-                                <el-button icon="el-icon-s-promotion" size="small" type="danger" @click="deleteStock(scope.row.id)" :disabled="scope.row.Inventory == 0 ? true : false"></el-button>
+                                <el-button icon="el-icon-delete-solid" size="small" type="danger" @click="deleteStock(scope.row.Id)" :disabled="scope.row.Inventory == 0 ? true : false"></el-button>
                             </el-tooltip>
                         </template>
                     </el-table-column>
@@ -104,7 +104,7 @@
                 <!-- <el-form-item label="出库数量(件)" prop="Inventory">
                     <el-input-number v-model="addForm.Inventory" label="描述文字" disabled></el-input-number>
                 </el-form-item> -->
-                <el-form-item label="入库数量(件)" prop="Quantity">
+                <el-form-item label="此单总量(件)" prop="Quantity">
                     <el-input-number v-model="addForm.Quantity" label="描述文字"></el-input-number>
                 </el-form-item>
             </el-form>
@@ -140,16 +140,16 @@
                 <el-form-item label="进货价格(元)" prop="Price">
                     <el-input v-model="editForm.Price"></el-input>
                 </el-form-item>
-                <el-form-item label="出库数量(件)" prop="Quantity">
+                <el-form-item label="此单总量(件)" prop="Quantity">
                     <el-input-number v-model="editForm.Quantity" label="描述文字"></el-input-number>
                 </el-form-item>
-                <el-form-item label="库存数量(件)" prop="Inventory">
+                <!-- <el-form-item label="库存数量(件)" prop="Inventory">
                     <el-input-number v-model="editForm.Inventory" label="描述文字"></el-input-number>
-                </el-form-item>
+                </el-form-item> -->
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="showEditFormDialogVisible = false">取消</el-button>
-                <el-button type="primary" @click="showEditFormDialogVisible = false">确认</el-button>
+                <el-button type="primary" @click="editFormHandler ">确认</el-button>
             </span>
         </el-dialog>
 
