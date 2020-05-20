@@ -35,7 +35,7 @@ export default {
                 Bid: 0,
                 Model: '',
                 Price: '',
-                Inventory: 0,
+                Quantity : 0
             },
             // 新增库存表单对象预验证规则
             addFormRules: {
@@ -105,10 +105,10 @@ export default {
                 price: '',
 
                 sid :'',
-                date : 1589803035185,
-                quantity: 2,
-                shipper : '老王',
-                sell: 7000
+                date : new Date(),
+                quantity: '',
+                shipper : '',
+                sell: ''
             },
             // 出库表单对象 分类属性
             outStockValue : [],

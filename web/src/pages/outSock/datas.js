@@ -45,7 +45,7 @@ export default {
                 Id: ''
             },
             // 搜索栏表单对象
-            searchFrom: {
+            searchForm: {
                 shipper: '',
                 // 时间选择器绑定对象
                 time: [{

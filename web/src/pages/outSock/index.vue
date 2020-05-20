@@ -3,11 +3,12 @@
         <el-card style="margin-bottom: 20px;">
             <!-- --------------------------------------------------------------- 查找区 ------------------------------------------------ -->
             <el-row :gutter="20" style="margin-bottom: 20px;">
-                <el-form :model="searchFrom" :inline="true" class="demo-form-inline" label-width="110px" ref="searchCondition">
-                    <el-form-item>
+                <el-form :model="searchForm" :inline="true" class="demo-form-inline" label-width="110px" ref="searchCondition">
+                    <el-form-item prop="time">
                         <el-date-picker
                             unlink-panels
-                            v-model="searchFrom"
+                            v-model="searchForm.time"
+                            value-format="timestamp"
                             type="daterange"
                             range-separator="至"
                             start-placeholder="开始日期"
@@ -15,10 +16,10 @@
                         >
                         </el-date-picker>
                     </el-form-item>
-                    <el-form-item label="出货人">
-                        <el-input placeholder="请输入出货人" v-model="searchFrom.shipper" clearable></el-input>
+                    <el-form-item label="出货人" prop="shipper">
+                        <el-input placeholder="请输入出货人" v-model="searchForm.shipper" clearable></el-input>
                     </el-form-item>
-                    <el-button type="primary" @click="showAddFormDialogVisible = true">查询</el-button>
+                    <el-button type="primary" @click="search">查询</el-button>
                     <el-button>重置</el-button>
                 </el-form>
             </el-row>

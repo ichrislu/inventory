@@ -38,13 +38,15 @@ export default {
     addStock() {
         //时间转换
         this.addForm.Date = new Date().getTime()
+        // console.log(parseFloat(this.addForm.Price));
+
         this.$axios.post('http://localhost/stock', {
             provider: this.addForm.Provider,
             date: this.addForm.Date,
             bid: this.addForm.Bid,
             model: this.addForm.Model,
-            price: this.addForm.Price - 0,
-            inventory: this.addForm.Inventory,
+            price: parseFloat(this.addForm.Price),
+            Quantity: this.addForm.Quantity,
         }).then(() => {
                 // this.resetForm(addForm)
                 this.getList()
@@ -155,12 +157,13 @@ export default {
     // 一键出库
     outStock() {
         this.$axios.post('http://localhost/saled', {
-            shipper: this.outStockForm.provider,
+            shipper: this.outStockForm.shipper,
             date: this.outStockForm.date,
             sid: this.outStockForm.sid,
-            price: this.outStockForm.sell,
+            price: parseFloat(this.outStockForm.sell) ,
             quantity: this.outStockForm.quantity
         }).then(() => {
+            this.outStockFormDialogVisible = false
             this.$message({
                 type: 'success',
                 message: '出库成功'

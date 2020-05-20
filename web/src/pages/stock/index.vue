@@ -97,11 +97,11 @@
                 <el-form-item label="进货价格(元)" prop="Price">
                     <el-input v-model="addForm.Price"></el-input>
                 </el-form-item>
-                <el-form-item label="出库数量(件)" prop="Quantity">
-                    <el-input-number v-model="addForm.Quantity" label="描述文字" disabled></el-input-number>
+                <el-form-item label="出库数量(件)" prop=" Inventory">
+                    <el-input-number v-model="addForm.Inventory" label="描述文字" disabled></el-input-number>
                 </el-form-item>
-                <el-form-item label="库存数量(件)" prop="Inventory">
-                    <el-input-number v-model="addForm.Inventory" label="描述文字"></el-input-number>
+                <el-form-item label="库存数量(件)" prop="Quantity">
+                    <el-input-number v-model="addForm.Quantity" label="描述文字"></el-input-number>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">

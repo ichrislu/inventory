@@ -16,14 +16,14 @@ export default {
 
     //-------------------------------------------------------根据 年月日, 供货商查询------------------------------------------------------
     search() {
-        this.$axios.get('http://localhost/outStock', {
+        this.$axios.get('http://localhost/saled', {
             params: {
-                'provider': this.searchForm.keyword,
+                'shipper': this.searchForm.shipper,
                 'begin': this.searchForm.time[0],
                 'end': this.searchForm.time[1],
             }
         }).then(res => {
-            this.stockList = res.data
+            this.outStockList = res.data
         })
     },
     // ------------------------------------------------------------ 备注功能 ------------------------------------------------------------
