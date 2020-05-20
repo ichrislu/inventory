@@ -13,7 +13,8 @@ export default {
                 time: [{
                     begin: 0,
                     end: 0,
-                }]
+                }],
+                checked : false
             },
             // 新增库存 分类选择器绑定属性
             addValue: [],
@@ -39,36 +40,61 @@ export default {
             },
             // 新增库存表单对象预验证规则
             addFormRules: {
-                name: [{
+                Provider: [{
                     required: true,
                     message: '请输入供应商',
                     trigger: 'blur'
                 }],
-                cate: [{
+                Date: [{
                     required: true,
-                    message: '请输入品类',
+                    message: '请输入时间',
                     trigger: 'blur'
                 }],
-                brand: [{
+                date: [{
                     required: true,
-                    message: '请输入品牌',
+                    message: '请输入时间',
                     trigger: 'blur'
                 }],
-                mod: [{
+                Cate: [{
+                    required: true,
+                    message: '请输入品类品牌',
+                    trigger: 'blur'
+                }],
+                Model: [{
                     required: true,
                     message: '请输入型号',
                     trigger: 'blur'
                 }],
-                price: [{
+                Price: [{
                     required: true,
                     message: '请输入进货价格',
                     trigger: 'blur'
                 }],
-                num: [{
+                Quantity: [{
                     required: true,
                     message: '请输入数量',
                     trigger: 'blur'
-                }]
+                }],
+                quantity: [{
+                    required: true,
+                    message: '请输入数量',
+                    trigger: 'blur'
+                }],
+                Inventory: [{
+                    required: true,
+                    message: '请输入数量',
+                    trigger: 'blur'
+                }],
+                sell: [{
+                    required: true,
+                    message: '请输入售价',
+                    trigger: 'blur'
+                }],
+                shipper: [{
+                    required: true,
+                    message: '请输入出货人',
+                    trigger: 'blur'
+                }],
             },
             // 控制 修改库存对话框
             showEditFormDialogVisible: false,
@@ -106,7 +132,7 @@ export default {
 
                 sid :'',
                 date : new Date(),
-                quantity: '',
+                quantity: 0,
                 shipper : '',
                 sell: ''
             },

@@ -51,7 +51,8 @@ export default {
                 time: [{
                     begin: 0,
                     end: 0,
-                }]
+                }],
+                checked : false
             },
         }
     }

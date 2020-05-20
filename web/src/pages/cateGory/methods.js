@@ -40,9 +40,9 @@ export default {
         this.$refs.addCateRef.resetFields()
         this.visible = false
     },
+    // 监听表单关闭
     addFormClose() {
         this.$refs.addCateRef.resetFields()
-        this.visible = false
     },
 
     //增加品牌Id
@@ -67,7 +67,7 @@ export default {
     },
     // 删除分类
     deleteBrand(id) {
-        this.$confirm('此操作将永久删除该文件品牌, 是否继续?', '提示', {
+        this.$confirm('确认删除该品类?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
@@ -80,7 +80,7 @@ export default {
                     message: '删除成功!'
                 });
             }).catch(req => {
-                console.log(req);
+                // console.log(req);
                 this.$message({
                     type: 'info',
                     message: '要删除品类，必须先删除所属的所有品牌'
@@ -108,6 +108,8 @@ export default {
                 })
             }
         )
-    }
+    },
+
+
 
 }

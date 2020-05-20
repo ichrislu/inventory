@@ -26,6 +26,18 @@ export default {
             this.outStockList = res.data
         })
     },
+
+    // 重置查询功能
+    reset(ref) {
+        this.resetForm(ref)
+        this.getList()
+    },
+    // 重置表单
+    resetForm(formName) {
+        if (this.$refs[formName] !== undefined) {
+            this.$refs[formName].resetFields();
+        }
+    },
     // ------------------------------------------------------------ 备注功能 ------------------------------------------------------------
     // 获取备注
     showRemark(row) {

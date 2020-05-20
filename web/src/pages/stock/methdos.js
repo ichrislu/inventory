@@ -23,6 +23,7 @@ export default {
                 'provider': this.searchForm.keyword,
                 'begin': this.searchForm.time[0],
                 'end': this.searchForm.time[1],
+                'all' : this.searchForm.checked
             }
         }).then(res => {
             this.stockList = res.data
@@ -30,6 +31,7 @@ export default {
     },
     // 重置查询功能
     reset(ref) {
+        this.searchForm.checked = false
         this.resetForm(ref)
         this.getList()
     },
@@ -89,7 +91,8 @@ export default {
         return params;
     },
 
-    // ----------------------------------------------------------获取选中库存数据------------------------------------------
+    // ----------------------------------------------------------修改库存数据------------------------------------------
+    // 获取选中库存数据
     showDditForm(editForm) {
         this.editForm.Provider = editForm.Provider
         this.editForm.Date = editForm.Date
@@ -102,7 +105,7 @@ export default {
         this.showEditFormDialogVisible = true
     },
 
-    // 新增库存分类 级联选择
+    // 修改库存 分类级联选择
     editChangeRef() {
         const nodesObj = this.$refs['editCascader'].getCheckedNodes();
         const Id = nodesObj[0].data.Id
@@ -168,10 +171,13 @@ export default {
                 type: 'success',
                 message: '出库成功'
             })
-        }).catch(() => {
+        }).catch(res => {
+            // if ( res.data)
+            console.log(res);
+
             this.$message({
                 type: 'info',
-                message: '出库失败'
+                message: '库存数量不足,出库失败'
             })
         })
     },
@@ -180,6 +186,18 @@ export default {
     getBid(id) {
         console.log(id);
 
+    },
+//-----------------------设置表格每行样式--------------------
+tableRowClassName({row}) {
+    // console.log(row.Quantity == row.Inventory);
+    if( row.Inventory == 0){
+        return 'over'
     }
+    return ''
+},
 
+// -------------------------------------------删除库存 ----------------------------------
+deleteStock(id) {
+
+}
 }

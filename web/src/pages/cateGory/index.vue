@@ -6,13 +6,13 @@
                     <el-row><div>品类列表</div></el-row>
                     <el-row>
                         <!-- <el-button>新增品类</el-button> -->
-                        <el-popover placement="left" width="80px" v-model="visible" @close="addFormClose">
-                            <el-form :model="addForm" ref="addCateRef">
+                        <el-popover placement="left" width="80px" v-model="visible" @hide="addFormClose">
+                            <el-form :model="addForm" ref="addCateRef" :rules="addCateFormRules" >
                                 <el-form-item prop="name">
                                     <el-input class="input" v-model="addForm.name"></el-input>
                                 </el-form-item>
                             </el-form>
-                            <el-button size="mini" type="text" @click="addFormClose">取消</el-button>
+                            <el-button size="mini" type="text" @click="visible=false">取消</el-button>
                             <el-button type="primary" size="mini" @click="addcate">确定</el-button>
                             <el-button slot="reference" type="primary">新增品类</el-button>
                         </el-popover>
@@ -43,7 +43,7 @@
 
             <!-- 新增品牌 -->
             <el-dialog title="新增品牌" width="30%" :visible.sync="showBrandDialogVisible" @close="addBrandsFormClose">
-                <el-form label-width="80px" :model="addBrandsForm" ref="addBrandsFormRef">
+                <el-form label-width="80px" :model="addBrandsForm" ref="addBrandsFormRef" :rules="addBrandFormRules">
                     <el-form-item label="品牌" prop="name">
                         <el-input v-model="addBrandsForm.name"></el-input>
                     </el-form-item>

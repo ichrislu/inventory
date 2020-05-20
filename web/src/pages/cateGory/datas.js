@@ -17,7 +17,21 @@ export default {
             showBrandDialogVisible: false,
             bs: false,
             visible: false,
-
+            // 表单验证规则
+            addCateFormRules  : {
+                name: [{
+                    required: true,
+                    message: '品类不能为空',
+                    trigger: 'blur'
+                }],
+            },
+            addBrandFormRules  : {
+                name: [{
+                    required: true,
+                    message: '品牌不能为空',
+                    trigger: 'blur'
+                }],
+            },
         }
     }
 }

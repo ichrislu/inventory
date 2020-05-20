@@ -3,7 +3,7 @@
         <el-card style="margin-bottom: 20px;">
             <!-- --------------------------------------------------------------- 查找区 ------------------------------------------------ -->
             <el-row :gutter="20" style="margin-bottom: 20px;">
-                <el-form :model="searchForm" :inline="true" class="demo-form-inline" label-width="110px" ref="searchCondition">
+                <el-form :model="searchForm" :inline="true" class="demo-form-inline" label-width="110px" ref="search">
                     <el-form-item prop="time">
                         <el-date-picker
                             unlink-panels
@@ -20,7 +20,7 @@
                         <el-input placeholder="请输入出货人" v-model="searchForm.shipper" clearable></el-input>
                     </el-form-item>
                     <el-button type="primary" @click="search">查询</el-button>
-                    <el-button>重置</el-button>
+                    <el-button @click="reset('search')">重置</el-button>
                 </el-form>
             </el-row>
         </el-card>
@@ -50,7 +50,7 @@
                     <el-table-column prop="Model" label="型号" align="center"></el-table-column>
                     <el-table-column prop="InPrice" label="进货价格(元)" align="center"></el-table-column>
                     <el-table-column prop="OutPrice" label="出货价格(元)" align="center"></el-table-column>
-                    <el-table-column prop="Number" label="数量(件)" align="center"></el-table-column>
+                    <el-table-column prop="Quantity" label="数量(件)" align="center"></el-table-column>
                     <el-table-column prop="Profit" label="利润(元)" align="center"></el-table-column>
                     <el-table-column prop="Remarks" label="备注" align="center"></el-table-column>
                     <!-- 功能按钮区域 -->
