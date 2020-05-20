@@ -6,6 +6,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	_ "inventory/config"
+	_ "inventory/statik"
 	"log"
 	"os"
 	"os/exec"

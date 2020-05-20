@@ -3,7 +3,10 @@ package main
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/rakyll/statik/fs"
 	"inventory/controller"
+	"log"
+	"net/http"
 )
 
 func initRouter() *echo.Echo {
@@ -16,6 +19,13 @@ func initRouter() *echo.Echo {
 		AllowCredentials: false,
 		MaxAge:           86400,
 	}))
+
+	statikFS, err := fs.New()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	e.GET("/*", echo.WrapHandler(http.StripPrefix("/", http.FileServer(statikFS))))
 
 	e.POST("/category", controller.AddCategory)
 	e.GET("/category", controller.GetCategory)
