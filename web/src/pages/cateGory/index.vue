@@ -63,8 +63,7 @@ import datas from '../cateGory/datas.js'
 
 export default {
     created() {
-        this.getList()
-        // console.log(this.list)
+        this.getList();
     },
     data() {
         return datas.init()

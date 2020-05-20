@@ -4,13 +4,6 @@
             <!-- --------------------------------------------------------------- 查找区 ------------------------------------------------ -->
             <el-row :gutter="20" style="margin-bottom: 20px;">
                 <el-form :model="searchForm" :inline="true" class="demo-form-inline" label-width="110px" ref="searchRef">
-                    <!-- <el-form-item label="开始时间 : " prop="begin">
-                        <el-date-picker v-model="searchForm.begin" type="date" placeholder="选择日期" value-format="timestamp"> </el-date-picker>
-                    </el-form-item>
-                    <el-form-item label="结束时间 : " prop="end">
-                        <el-date-picker v-model="searchForm.end" type="date" placeholder="选择日期" value-format="timestamp"> </el-date-picker>
-                    </el-form-item> -->
-
                     <el-form-item prop="time">
                         <el-date-picker
                             v-model="searchForm.time"
@@ -27,7 +20,7 @@
                         <el-input placeholder="请输入供货商" v-model="searchForm.keyword" clearable></el-input>
                     </el-form-item>
                     <el-button type="primary" @click="search">查询</el-button>
-                    <el-button @click="resetForm('searchRef')">重置</el-button>
+                    <el-button @click="reset('searchRef')">重置</el-button>
                 </el-form>
             </el-row>
         </el-card>
@@ -49,12 +42,13 @@
                             {{ scope.row.Date | formatDate }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="Category" label="品类" align="center"></el-table-column>
+                    <el-table-column prop="Category" label="品类" align="center">
+                    </el-table-column>
                     <el-table-column prop="Brand" label="品牌" align="center"></el-table-column>
                     <el-table-column prop="Model" label="型号" align="center"></el-table-column>
                     <el-table-column prop="Price" label="进货价格(元)" align="center"></el-table-column>
-                    <el-table-column prop="Inventory" label="已出库(件)" align="center"> </el-table-column>
-                    <el-table-column prop="Quantity" label="库存(件)" align="center"> </el-table-column>
+                    <el-table-column prop="Quantity" label="已出库(件)" align="center"> </el-table-column>
+                    <el-table-column prop="Inventory" label="库存(件)" align="center"> </el-table-column>
                     <el-table-column prop="Remarks" label="备注" width="180px" align="center"> </el-table-column>
 
                     <!-- 功能按钮区域 -->
@@ -70,12 +64,7 @@
                             </el-tooltip>
                             <!-- 出库按钮 -->
                             <el-tooltip class="item" effect="dark" content="出库" placement="top" :enterable="false">
-                                <el-button
-                                    icon="el-icon-s-promotion"
-                                    size="small"
-                                    type="warning"
-                                    @click="showOutStock(scope.row)"
-                                ></el-button>
+                                <el-button icon="el-icon-s-promotion" size="small" type="warning" @click="showOutStock(scope.row)"></el-button>
                             </el-tooltip>
                         </template>
                     </el-table-column>
@@ -83,7 +72,7 @@
             </el-row>
         </el-card>
         <!--------------------------------------------------------新增库存对话框-------------------------------------------------------->
-        <el-dialog title="新增库存" :visible.sync="showAddFormDialogVisible" width="30%" :rules="addFormRules" @close="resetForm('outStockForm')">
+        <el-dialog title="新增库存" :visible.sync="showAddFormDialogVisible" width="30%" :rules="addFormRules" @close="resetForm('addForm')">
             <el-form ref="addForm" :model="addForm" label-width="120px" :rules="addFormRules">
                 <el-form-item label="供应商" prop="Provider">
                     <el-input v-model="addForm.Provider"></el-input>
@@ -108,8 +97,8 @@
                 <el-form-item label="进货价格(元)" prop="Price">
                     <el-input v-model="addForm.Price"></el-input>
                 </el-form-item>
-                <el-form-item label="出库数量(件)" prop="Inventory">
-                    <el-input-number v-model="addForm.Inventory" label="描述文字"></el-input-number>
+                <el-form-item label="出库数量(件)" prop=" Inventory">
+                    <el-input-number v-model="addForm.Inventory" label="描述文字" disabled></el-input-number>
                 </el-form-item>
                 <el-form-item label="库存数量(件)" prop="Quantity">
                     <el-input-number v-model="addForm.Quantity" label="描述文字"></el-input-number>
@@ -180,7 +169,13 @@
                     <el-input v-model="outStockForm.provider" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="出库时间" prop="date">
-                    <el-date-picker v-model="outStockForm.date" type="date" placeholder="选择日期" format="yyyy 年 MM 月 dd 日" value-format="timestamp">
+                    <el-date-picker
+                        v-model="outStockForm.date"
+                        type="date"
+                        placeholder="选择日期"
+                        format="yyyy 年 MM 月 dd 日"
+                        value-format="timestamp"
+                    >
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="品类">
@@ -200,8 +195,8 @@
                 <el-form-item label="进货价格(元)" prop="price">
                     <el-input v-model="outStockForm.price" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="出库数量(件)" prop="num">
-                    <el-input-number v-model="outStockForm.num" label="描述文字"></el-input-number>
+                <el-form-item label="出库数量(件)" prop="quantity">
+                    <el-input-number v-model="outStockForm.quantity" label="描述文字"></el-input-number>
                 </el-form-item>
                 <el-form-item label="出货人" prop="shipper">
                     <el-input v-model="outStockForm.shipper" label="描述文字"></el-input>

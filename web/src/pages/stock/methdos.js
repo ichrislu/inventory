@@ -2,13 +2,21 @@ export default {
     // ---------------------------------------------------- 获取库存列表数据--------------------------------------------------
     getList() {
         this.$axios.get('http://localhost/stock').then(res => {
-            this.stockList = res.data
+            let arr = res.data;
+
+            for (let i = 0; i < arr.length; i++) {
+                var obj = JSON.parse(window.sessionStorage.getItem('key_' + arr[i].Bid))
+                arr[i].Brand = obj.brand,
+                    arr[i].Category = obj.category
+            }
+            this.stockList = arr;
         }).catch(err => {
             console.log(err);
         })
 
     },
     //-------------------------------------------------------根据 年月日, 供货商查询------------------------------------------------------
+    // 查询功能
     search() {
         this.$axios.get('http://localhost/stock', {
             params: {
@@ -20,22 +28,27 @@ export default {
             this.stockList = res.data
         })
     },
+    // 重置查询功能
+    reset(ref) {
+        this.resetForm(ref)
+        this.getList()
+    },
 
-    // ------------------------------------------------------ 新增库存  ---------------------------------------------
-
+    // ------------------------------------------------------ 新增库存  ------------------------------------------------------------------
     addStock() {
         //时间转换
         this.addForm.Date = new Date().getTime()
+        // console.log(parseFloat(this.addForm.Price));
+
         this.$axios.post('http://localhost/stock', {
             provider: this.addForm.Provider,
             date: this.addForm.Date,
             bid: this.addForm.Bid,
             model: this.addForm.Model,
-            price: this.addForm.Price - 0,
-            quantity: this.addForm.Quantity,
-            inventory: this.addForm.Inventory,
+            price: parseFloat(this.addForm.Price),
+            Quantity: this.addForm.Quantity,
         }).then(() => {
-            // this.resetForm(this.addForm)
+                // this.resetForm(addForm)
                 this.getList()
                 this.showAddFormDialogVisible = false
             }
@@ -58,35 +71,22 @@ export default {
     },
 
     // 新增备注
-    // addRemark() {
-    //     let _params = {
-    //         remarks: this.remarkForm.Remarks
-    //     }
-    //     this.$axios.put('http://localhost/stock/' + this.remarkForm.Id + '/remarks', this.getFormDataFromJson(_params)).then(() => {
-    //         this.getList()
-    //         this.showRemarkDialogVisible = false;
-    //     }).catch (function (error) {
-    //     })
-    // },
-    // getFormDataFromJson(json) {
-    //     let params = new URLSearchParams()
-    //     for (var key in json) {
-    //         params.append(key, encodeURIComponent(json[key]));
-    //     }
-    //     return params;
-    // },
-
     addRemark() {
-
-        this.$axios.put('http://localhost/stock/' + this.remarkForm.Id + '/remarks', {
+        let _params = {
             remarks: this.remarkForm.Remarks
-        }).then(() => {
+        }
+        this.$axios.put('http://localhost/stock/' + this.remarkForm.Id + '/remarks', this.getFormDataFromJson(_params)).then(() => {
             this.getList()
             this.showRemarkDialogVisible = false;
-        }).catch(
-            () => {
-            }
-        )
+        }).catch (function (error) {
+        })
+    },
+    getFormDataFromJson(json) {
+        let params = new URLSearchParams()
+        for (var key in json) {
+            params.append(key, json[key]);
+        }
+        return params;
     },
 
     // ----------------------------------------------------------获取选中库存数据------------------------------------------
@@ -136,7 +136,7 @@ export default {
 
     // ------------------------------------------------ 重置表单 ---------------------------------
     resetForm(formName) {
-        if (this.$refs[formName]!==undefined) {
+        if (this.$refs[formName] !== undefined) {
             this.$refs[formName].resetFields();
         }
         // this.$refs[formName].resetFields()
@@ -146,34 +146,40 @@ export default {
     // 获取 将要出库的商品信息
     showOutStock(outstock) {
         this.outStockFormDialogVisible = true
-        console.log(outstock);
-
         this.outStockForm.provider = outstock.Provider
-        this.outStockValue = [outstock.Category,outstock.Brand]
+        this.outStockValue = [outstock.Category, outstock.Brand]
         this.outStockForm.model = outstock.Model
         this.outStockForm.price = outstock.Price
-        this.outStockForm.sid = outstock.Id
 
-    }
-,
+        this.outStockForm.sid = outstock.Id
+        this.outStockForm.date = outstock.date
+    },
     // 一键出库
     outStock() {
-        this.$axios.post('http://localhost/', {
-            shipper : this.outStockForm.provider,
-            date : this.outStockForm.date,
-            sid : this.outStockForm.sid,
-            price : this.outStockForm.sell,
-            number : this.outStockForm.num
-        }).then( () => {
-            this.$message( {
-                type : 'success',
-                message : '出库成功'
-            })
-        }).catch( () => {
+        this.$axios.post('http://localhost/saled', {
+            shipper: this.outStockForm.shipper,
+            date: this.outStockForm.date,
+            sid: this.outStockForm.sid,
+            price: parseFloat(this.outStockForm.sell) ,
+            quantity: this.outStockForm.quantity
+        }).then(() => {
+            this.outStockFormDialogVisible = false
             this.$message({
-                type : 'info',
-                message : '出库失败'
+                type: 'success',
+                message: '出库成功'
+            })
+        }).catch(() => {
+            this.$message({
+                type: 'info',
+                message: '出库失败'
             })
         })
+    },
+
+    //获取Bid
+    getBid(id) {
+        console.log(id);
+
     }
+
 }

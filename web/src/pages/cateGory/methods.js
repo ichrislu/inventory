@@ -3,6 +3,16 @@ export default {
         // debugger
         this.$axios.get('http://localhost/category').then(res => {
             this.list = res.data
+
+            for (let i = 0; i < res.data.length; i++) {
+                for (let j = 0; j < res.data[i].Category.length; j++) {
+                    let obj = {
+                        category: res.data[i].Name,
+                        brand: res.data[i].Category[j].Name
+                    }
+                    window.sessionStorage.setItem('key_' + res.data[i].Category[j].Id, JSON.stringify(obj));
+                }
+            }
         })
     },
     //增加品类
@@ -10,19 +20,20 @@ export default {
         this.$axios.post('http://localhost/category', {
             name: this.addForm.name
         }).then(() => {
+            window.sessionStorage.clear();
             this.getList()
             // let _this = this;
             // setTimeout(() => {
             //     _this.getList()
             // }, 100)
             this.$message({
-                type : 'success',
-                message : '添加分类成功'
+                type: 'success',
+                message: '添加分类成功'
             })
-        }).catch( () => {
+        }).catch(() => {
             this.$message({
-                type : 'info',
-                message : '添加分类失败'
+                type: 'info',
+                message: '添加分类失败'
             })
         });
 
@@ -44,7 +55,8 @@ export default {
         this.$axios.post('http://localhost/category', {
             'pid': this.bId,
             'name': this.addBrandsForm.name
-        }).then( () => {
+        }).then(() => {
+            window.sessionStorage.clear();
             this.getList()
         });
         this.showBrandDialogVisible = false
@@ -61,6 +73,7 @@ export default {
             type: 'warning'
         }).then(() => {
             this.$axios.delete('http://localhost/category/' + id).then(res => {
+                window.sessionStorage.clear();
                 this.getList()
                 this.$message({
                     type: 'success',
@@ -80,6 +93,7 @@ export default {
     removeBrand(id) {
         this.$axios.delete('http://localhost/category/' + id).then(
             () => {
+                window.sessionStorage.clear();
                 this.getList(),
                     this.$message({
                         type: 'success',
