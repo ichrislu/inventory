@@ -62,7 +62,8 @@ func EditStock(stock model.Stock) (model.Stock, error) {
 	var err error
 	var priceFlag bool
 
-	if result, err = dao.GetStock(tx, stock.Id); err == nil {
+	if result, err = dao.GetStock(tx, stock.Id); err != nil {
+		tx.Rollback()
 		return model.Stock{}, err
 	}
 
@@ -84,12 +85,27 @@ func EditStock(stock model.Stock) (model.Stock, error) {
 		result.Model = stock.Model
 	}
 
+	// 算法：当前库存数量 = 新入库数量 - 查出库得出的出库总数量
+	// 当前库存数量为负，则报错
+	// 当前库存数量为0，则全部卖完（库存为0）
+	// 当前库存数量为正数，更新入库数量和库存
 	if stock.Quantity > 0 && stock.Quantity != result.Quantity {
-		// TODO：算法：当前库存数量 = 新入库数量 - 查出库得出的出库总数量
-		// 当前库存数量为负，则报错
-		// 当前库存数量为0，则全部卖完（库存为0）
-		// 当前库存数量为正数，更新入库数量和库存
-		//quantity:=
+		var saledQuantity model.SaledQuantity
+		var err error
+		if saledQuantity, err = dao.GetSaledQuantity(tx, stock.Id); err != nil {
+			tx.Rollback()
+			return model.Stock{}, err
+		}
+
+		count := stock.Quantity - saledQuantity.Quantity
+
+		if count < 0 {
+			tx.Rollback()
+			return model.Stock{}, errors.New("入库数量不能小于已出库的总数量")
+		}
+
+		result.Quantity = stock.Quantity
+		result.Inventory = count
 	}
 
 	if stock.Price > 0 && stock.Price != result.Price {
@@ -103,8 +119,11 @@ func EditStock(stock model.Stock) (model.Stock, error) {
 	}
 
 	if priceFlag {
-		// TODO：修改价格后，出库表需要重新计算相关利润
-		dao.RepairProfit(tx, stock.id, stock.Price)
+		// 修改价格后，出库表需要重新计算相关利润
+		if err := dao.RepairProfit(tx, result.Id, result.Price); err != nil {
+			tx.Rollback()
+			return model.Stock{}, nil
+		}
 	}
 
 	tx.Commit()

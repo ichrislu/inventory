@@ -9,13 +9,13 @@ func AddSaled(db *gorm.DB, saled model.Saled) (model.Saled, error) {
 	return saled, db.Create(&saled).Error
 }
 
-//func GetTotalProfit(db *gorm.DB) (totalProfit float64, err error) {
-//	return count, db.Table("stock").Where("bid=?", bid).Count(&count).Error
-//}
+func GetTotalProfit(db *gorm.DB) (profit model.Profit, err error) {
+	return profit, db.Table("saled").Select("SUM(profit) as TotalProfit").Scan(&profit).Error
+}
 
-//func GetSaledCount(db *gorm.DB, sid int) (count uint, err error) {
-//	return stock, db.Where("id = ?", id).Find(&stock).Error
-//}
+func GetSaledQuantity(db *gorm.DB, sid int) (saledQuantity model.SaledQuantity, err error) {
+	return saledQuantity, db.Table("saled").Select("SUM(quantity) as Quantity").Where("sid = ?", sid).Find(&saledQuantity).Error
+}
 
 func GetSaledList(db *gorm.DB, shipper string, begin string, end string) (saledList []model.SaledList, err error) {
 	db = db.Table("saled").
@@ -39,5 +39,5 @@ func EditSaledRemarks(db *gorm.DB, id int, remarks string) error {
 }
 
 func RepairProfit(db *gorm.DB, sid int, newPrice float64) error {
-	return nil
+	return db.Model(model.Saled{}).Where("sid = ?", sid).Update("profit", gorm.Expr("quantity * (price - ?)", newPrice)).Error
 }

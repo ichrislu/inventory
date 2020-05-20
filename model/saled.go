@@ -17,7 +17,7 @@ type SaledList struct {
 	OutDate  int     `gorm:"column:out_date;type:integer"`
 	Sid      int     `gorm:"column:sid;type:integer"`
 	OutPrice float64 `gorm:"column:out_price;type:real"`
-	Number   int     `gorm:"column:number;type:integer"`
+	Quantity int     `gorm:"column:quantity;type:integer"`
 	Profit   float64 `gorm:"column:profit;type:real"`
 	Bid      int     `gorm:"column:bid;type:integer"`
 	Model    string  `gorm:"column:model;type:text"`
@@ -25,4 +25,12 @@ type SaledList struct {
 	Provider string  `gorm:"column:provider;type:text"`
 	InDate   int     `gorm:"column:in_date;type:integer"`
 	Remarks  string  `gorm:"column:remarks;type:text"`
+}
+
+type Profit struct {
+	TotalProfit float64 `gorm:"column:TotalProfit;type:real"`
+}
+
+type SaledQuantity struct {
+	Quantity int `gorm:"column:Quantity;type:integer"`
 }

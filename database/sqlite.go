@@ -17,6 +17,7 @@ func init() {
 		panic(err.Error())
 	}
 	DB.SingularTable(true)
+	DB.LogMode(true)
 
 	_db := DB.DB()
 	_db.SetMaxIdleConns(viper.GetInt("database.max-idle-conns"))

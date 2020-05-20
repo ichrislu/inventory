@@ -40,7 +40,7 @@ func EditStockRemarks(db *gorm.DB, id int, remarks string) error {
 }
 
 func EditStock(db *gorm.DB, stock model.Stock) error {
-	return db.Update(stock).Error
+	return db.Model(model.Stock{}).Save(stock).Error
 }
 
 func EditStockInventory(db *gorm.DB, count int, id int) error {

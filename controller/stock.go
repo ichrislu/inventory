@@ -31,7 +31,7 @@ func EditStock(c echo.Context) error {
 
 	result, err := service.EditStock(stock)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, result)
@@ -45,8 +45,8 @@ func GetStock(c echo.Context) error {
 
 	var all bool
 	var err error
-	if len(allStr) > 0 {
-		if all, err = strconv.ParseBool(allStr); err == nil {
+	if allStr != "" {
+		if all, err = strconv.ParseBool(allStr); err != nil {
 			return c.JSON(http.StatusBadRequest, "参数all取值不正确："+err.Error())
 		}
 	}
@@ -70,7 +70,7 @@ func EditStockRemarks(c echo.Context) error {
 	remarks := c.FormValue("remarks")
 
 	if err := service.EditStockRemarks(id, remarks); err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	return c.NoContent(http.StatusOK)

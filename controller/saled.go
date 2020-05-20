@@ -36,6 +36,16 @@ func GetSaledList(c echo.Context) error {
 	return c.JSON(http.StatusOK, saledList)
 }
 
+func GetTotalProfit(c echo.Context) error {
+	var totalProfit model.Profit
+	var err error
+	if totalProfit, err = service.GetTotalProfit(); err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, totalProfit)
+}
+
 func EditSaledRemarks(c echo.Context) error {
 	_id := c.Param("id")
 	id, err := strconv.Atoi(_id)

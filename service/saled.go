@@ -43,7 +43,7 @@ func AddSaled(saled model.Saled) (model.Saled, error) {
 		return model.Saled{}, errors.New("库存数量不足")
 	}
 
-	saled.Profit = saled.Price - stock.Price
+	saled.Profit = (saled.Price - stock.Price) * float64(saled.Quantity)
 
 	// 添加出库记录
 	var result model.Saled
@@ -63,6 +63,16 @@ func GetSaled(shipper string, begin string, end string) ([]model.SaledList, erro
 	db := database.DB
 	return dao.GetSaledList(db, shipper, begin, end)
 }
+
+func GetTotalProfit() (model.Profit, error) {
+	db := database.DB
+	return dao.GetTotalProfit(db)
+}
+
+//func GetSaledQuantity(sid int) (model.Quantity, error) {
+//	db := database.DB
+//	return dao.GetSaledQuantity(db, sid)
+//}
 
 func EditSaledRemarks(id int, remarks string) error {
 	db := database.DB
