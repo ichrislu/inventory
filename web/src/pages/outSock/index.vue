@@ -34,15 +34,15 @@
                 </el-row>
                 <el-table :data="outStockList" border style="width: 100%" stripe>
                     <el-table-column prop="Shipper" label="出货人" align="center"></el-table-column>
-                    <el-table-column prop="InDate" label="出货日期">
+                    <el-table-column prop="InDate" label="出货日期" align="center">
                         <template slot-scope="scope">
-                            {{ scope.row.InDate | formatDate }}
+                            <div>{{ scope.row.InDate | formatDate }}</div>
                         </template>
                     </el-table-column>
                     <el-table-column prop="Provider" label="供应商" align="center"></el-table-column>
                     <el-table-column prop="OutDate" label="入库日期" align="center">
                         <template slot-scope="scope">
-                            {{ scope.row.InDate | formatDate }}
+                            <div>{{ scope.row.InDate | formatDate }}</div>
                         </template>
                     </el-table-column>
                     <el-table-column prop="Category" label="品类" align="center"></el-table-column>
@@ -52,9 +52,9 @@
                     <el-table-column prop="OutPrice" label="出货价格(元)" align="center"></el-table-column>
                     <el-table-column prop="Quantity" label="数量(件)" align="center"></el-table-column>
                     <el-table-column prop="Profit" label="利润(元)" align="center"></el-table-column>
-                    <el-table-column prop="Remarks" label="备注" align="center"></el-table-column>
+                    <el-table-column prop="Remarks" label="备注" align="center" width="150px"></el-table-column>
                     <!-- 功能按钮区域 -->
-                    <el-table-column scope align="center" label="操作" width="200px">
+                    <el-table-column scope align="center" label="操作" >
                         <template slot-scope="scope">
                         <!-- 备注按钮 -->
                         <el-tooltip class="item" effect="dark" content="添加备注" placement="top" :enterable="false">
@@ -70,7 +70,7 @@
         <el-dialog title="添加备注" :visible.sync="showRemarkFormDialogVisible" width="30%" >
             <el-form ref="form" :model="remarkForm" label-width="120px" >
                 <el-form-item label="备注" prop="Remarks">
-                    <el-input type="textarea" placeholder="请输入内容" v-model="remarkForm.Remarks" maxlength="200" size="max"> </el-input>
+                    <el-input type="textarea" placeholder="请输入内容" v-model="remarkForm.Remarks" maxlength="200" size="max" autosize> </el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -105,7 +105,7 @@ export default {
                 MM = MM < 10 ? '0' + MM : MM
                 let d = date.getDate() // 日
                 d = d < 10 ? '0' + d : d
-                return y + '-' + MM + '-' + d + ' '
+                return y + '-' + MM + '-' + d
             }
         }
     }
@@ -131,5 +131,11 @@ export default {
     right: 520px;
     top: 29px;
     width: 300px;
+}
+
+.el-table  /deep/ .cell{
+    white-space: pre-wrap;
+    text-align: center;
+    /* padding: 0px 8px; */
 }
 </style>

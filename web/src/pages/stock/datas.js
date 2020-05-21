@@ -32,8 +32,8 @@ export default {
             // 新增库存表单
             addForm: {
                 Provider: '',
-                Date:new Date(),
-                Bid: 0,
+                Date:'',
+                Bid: '',
                 Model: '',
                 Price: '',
                 Quantity : 0
@@ -110,8 +110,8 @@ export default {
                 Inventory: '',
                 Brand: '',
                 Category: '',
+                EditNum :''
             },
-
             // 备注对话框 表单对象
             remarkForm: {
                 // 备注内容
@@ -127,12 +127,12 @@ export default {
                 provider: '',
                 cate: '',
                 brand: '',
-                cate : '',
                 model: '',
                 price: '',
+                inventory:'',
 
                 sid :'',
-                date : new Date(),
+                date : '',
                 quantity: 0,
                 shipper : '',
                 sell: ''

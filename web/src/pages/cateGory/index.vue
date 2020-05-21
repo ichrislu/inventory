@@ -25,7 +25,7 @@
                         <el-table-column label="品牌">
                             <template slot-scope="scope">
                                 <el-row >
-                                    <el-col v-for="item in scope.row.Category" :key="item.id" :span="5">
+                                    <el-col v-for="item in scope.row.Category" :key="item.id" :span="7">
                                         <el-tag size="medium" hit closable @close="removeBrand(item.Id)">{{ item.Name }}</el-tag>
                                     </el-col>
                                 </el-row>

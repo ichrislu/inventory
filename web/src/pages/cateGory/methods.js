@@ -17,24 +17,38 @@ export default {
     },
     //增加品类
     addcate() {
+        for( var i = 0; i< this.list.length; i++) {
+           if (this.list[i].Name == this.addForm.name){
+            this.$notify.error({
+                title: '错误',
+                message: '该分类已存在',
+                position: 'bottom-right'
+            });
+            return true
+           }
+        }
+
         this.$axios.post('http://localhost/category', {
             name: this.addForm.name
-        }).then(() => {
+        }).then(res => {
+            this.$notify.success({
+                title: '成功',
+                message: '分类添加成功',
+                position: 'bottom-right'
+            });
             window.sessionStorage.clear();
             this.getList()
             // let _this = this;
             // setTimeout(() => {
             //     _this.getList()
             // }, 100)
-            this.$message({
-                type: 'success',
-                message: '添加分类成功'
-            })
-        }).catch(() => {
-            this.$message({
-                type: 'info',
-                message: '添加分类失败'
-            })
+
+        }).catch(err => {
+            this.$notify.error({
+                title: '错误',
+                message: err,
+                position: 'bottom-right'
+            });
         });
 
         this.$refs.addCateRef.resetFields()
@@ -56,9 +70,20 @@ export default {
             'pid': this.bId,
             'name': this.addBrandsForm.name
         }).then(() => {
+            this.$notify.success({
+                title: '成功',
+                message: '品牌添加成功',
+                position: 'bottom-right'
+            });
             window.sessionStorage.clear();
             this.getList()
-        });
+        }).catch( err => {
+            this.$notify.error({
+                title: '错误',
+                message: err.response,
+                position: 'bottom-right'
+            });
+        })
         this.showBrandDialogVisible = false
         this.$refs.addBrandsFormRef.resetFields()
     },
@@ -75,16 +100,26 @@ export default {
             this.$axios.delete('http://localhost/category/' + id).then(res => {
                 window.sessionStorage.clear();
                 this.getList()
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
+                this.$notify.success({
+                    title: '成功',
+                    message: res,
+                    position: 'bottom-right'
                 });
-            }).catch(req => {
+                // this.$message({
+                //     type: 'success',
+                //     message: '删除成功!'
+                // });
+            }).catch(err => {
                 // console.log(req);
-                this.$message({
-                    type: 'info',
-                    message: '要删除品类，必须先删除所属的所有品牌'
+                this.$notify.error({
+                    title: '错误',
+                    message: err,
+                    position: 'bottom-right'
                 });
+                // this.$message({
+                //     type: 'info',
+                //     message: '要删除品类，必须先删除所属的所有品牌'
+                // });
             });
         })
     },
@@ -92,20 +127,30 @@ export default {
     // 删除品牌
     removeBrand(id) {
         this.$axios.delete('http://localhost/category/' + id).then(
-            () => {
+            res => {
                 window.sessionStorage.clear();
                 this.getList(),
-                    this.$message({
-                        type: 'success',
-                        message: '删除成功'
-                    })
+                this.$notify.success({
+                    title: '成功',
+                    message: res,
+                    position: 'bottom-right'
+                });
+                    // this.$message({
+                    //     type: 'success',
+                    //     message: '删除成功'
+                    // })
             }
         ).catch(
-            () => {
-                this.$message({
-                    type: 'info',
-                    message: '有入库记录的品牌不能删除'
-                })
+            err => {
+                this.$notify.error({
+                    title: '错误',
+                    message: err,
+                    position: 'bottom-right'
+                });
+                // this.$message({
+                //     type: 'info',
+                //     message: '有入库记录的品牌不能删除'
+                // })
             }
         )
     },

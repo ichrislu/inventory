@@ -5,15 +5,27 @@ export default {
     getList() {
         this.$axios.get('http://localhost/saled').then(res => {
             let arr = res.data;
-            for (let i = 0; i < arr.length; i++) {
-                var obj = JSON.parse(window.sessionStorage.getItem('key_' + arr[i].Bid))
-                arr[i].Brand = obj.brand,
-                arr[i].Category = obj.category
-            }
+            this.setCate(arr)
             this.outStockList = arr;
+
+            if (this.outStockList.length > 100) {
+                this.$notify({
+                    title: '成功',
+                    message: '数据量较大,建议按日期过滤',
+                    position: 'bottom-right',
+                    type: 'warning'
+                });
+            }
         })
     },
-
+    setCate(arr) {
+        for (let i = 0; i < arr.length; i++) {
+            var obj = JSON.parse(window.sessionStorage.getItem('key_' + arr[i].Bid))
+            arr[i].Brand = obj.brand,
+            arr[i].Category = obj.category
+        }
+        return arr
+    },
     //-------------------------------------------------------根据 年月日, 供货商查询------------------------------------------------------
     search() {
         this.$axios.get('http://localhost/saled', {
@@ -23,7 +35,7 @@ export default {
                 'end': this.searchForm.time[1],
             }
         }).then(res => {
-            this.outStockList = res.data
+            this.outStockList = this.setCate(res.data)
         })
     },
 
