@@ -2,7 +2,7 @@
 address=":80"
 
 [database]
-log=false
+log=true
 driver-name="sqlite3"
 data-source-name="inventory.db"
 max-idle-conns=2

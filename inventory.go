@@ -5,6 +5,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	_ "inventory/config"
+	"inventory/database"
 	_ "inventory/statik"
 	"log"
 	"os"
@@ -24,6 +25,8 @@ func main() {
 
 	router := initRouter()
 	go open(getUrl(), 1)
+
+	defer database.DB.Close()
 
 	router.Logger.Fatal(router.Start(viper.GetString("server.address")))
 }
