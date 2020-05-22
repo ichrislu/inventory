@@ -1,10 +1,10 @@
 package model
 
 type Saled struct {
-	Id       int     `gorm:"column:id;type:integer;primary_key;auto_increment"`
+	Id       int64   `gorm:"column:id;type:integer;primary_key"`
 	Shipper  string  `gorm:"column:shipper;type:text"`
 	Date     int     `gorm:"column:date;type:integer"`
-	Sid      int     `gorm:"column:sid;type:integer"`
+	Sid      int64   `gorm:"column:sid;type:integer"`
 	Price    float64 `gorm:"column:price;type:real"`
 	Quantity int     `gorm:"column:quantity;type:integer"`
 	Profit   float64 `gorm:"column:profit;type:real"`
@@ -12,10 +12,10 @@ type Saled struct {
 }
 
 type SaledList struct {
-	Id       int     `gorm:"column:id;type:integer;primary_key;auto_increment"`
+	Id       int64   `gorm:"column:id;type:integer;primary_key"`
 	Shipper  string  `gorm:"column:shipper;type:text"`
 	OutDate  int     `gorm:"column:out_date;type:integer"`
-	Sid      int     `gorm:"column:sid;type:integer"`
+	Sid      int64   `gorm:"column:sid;type:integer"`
 	OutPrice float64 `gorm:"column:out_price;type:real"`
 	Quantity int     `gorm:"column:quantity;type:integer"`
 	Profit   float64 `gorm:"column:profit;type:real"`

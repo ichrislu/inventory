@@ -44,6 +44,7 @@ func AddSaled(saled model.Saled) (model.Saled, error) {
 	}
 
 	saled.Profit = (saled.Price - stock.Price) * float64(saled.Quantity)
+	saled.Id = GetId()
 
 	// 添加出库记录
 	var result model.Saled
@@ -69,12 +70,7 @@ func GetTotalProfit() (model.Profit, error) {
 	return dao.GetTotalProfit(db)
 }
 
-//func GetSaledQuantity(sid int) (model.Quantity, error) {
-//	db := database.DB
-//	return dao.GetSaledQuantity(db, sid)
-//}
-
-func EditSaledRemarks(id int, remarks string) error {
+func EditSaledRemarks(id int64, remarks string) error {
 	db := database.DB
 	return dao.EditSaledRemarks(db, id, remarks)
 }

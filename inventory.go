@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -29,23 +28,15 @@ func main() {
 	router.Logger.Fatal(router.Start(viper.GetString("server.address")))
 }
 
-var commands = map[string]string{
-	"windows": "cmd /c start",
-	"darwin":  "open",
-	"linux":   "xdg-open",
-}
+// only windows
+func open(url string, delay time.Duration) {
+	if runtime.GOOS == "windows" {
+		time.Sleep(delay * time.Second)
 
-func open(uri string, delay time.Duration) error {
-	run, ok := commands[runtime.GOOS]
-	if !ok {
-		return errors.New(fmt.Sprintf("don't know how to open things on %s platform", runtime.GOOS))
+		if err := exec.Command("cmd", "/c", "start", url).Start(); err != nil {
+			fmt.Println("open failed", err.Error())
+		}
 	}
-
-	cmd := exec.Command(run, uri)
-
-	time.Sleep(delay * time.Second)
-
-	return cmd.Start()
 }
 
 func getUrl() string {

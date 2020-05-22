@@ -5,17 +5,18 @@ import (
 	"inventory/dao"
 	"inventory/database"
 	"inventory/model"
-	"strconv"
 )
 
 func AddCategory(category model.Category) (model.Category, error) {
 	if category.Pid < 0 {
-		return model.Category{}, errors.New("品类id不正确：" + strconv.Itoa(category.Pid))
+		return model.Category{}, errors.New("品类id不正确")
 	}
 
 	if len(category.Name) <= 0 {
 		return model.Category{}, errors.New("类目名不能为空")
 	}
+
+	category.Id = GetId()
 
 	db := database.DB
 	return dao.AddCategory(db, category)

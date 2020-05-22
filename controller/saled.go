@@ -48,7 +48,7 @@ func GetTotalProfit(c echo.Context) error {
 
 func EditSaledRemarks(c echo.Context) error {
 	_id := c.Param("id")
-	id, err := strconv.Atoi(_id)
+	id, err := strconv.ParseInt(_id, 10, 64)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, "参数id取值不正确："+err.Error())
 	}

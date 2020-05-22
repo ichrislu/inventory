@@ -33,6 +33,8 @@ func AddStock(stock model.Stock) (model.Stock, error) {
 		return model.Stock{}, errors.New("价格不能是负数")
 	}
 
+	stock.Id = GetId()
+
 	db := database.DB
 
 	return dao.AddStock(db, stock)
@@ -44,7 +46,7 @@ func GetStocks(provider string, begin string, end string, all bool) ([]model.Sto
 	return dao.GetStocks(db, provider, begin, end, all)
 }
 
-func EditStockRemarks(id int, remarks string) error {
+func EditStockRemarks(id int64, remarks string) error {
 	db := database.DB
 	return dao.EditStockRemarks(db, id, remarks)
 }

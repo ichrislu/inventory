@@ -13,7 +13,7 @@ func GetTotalProfit(db *gorm.DB) (profit model.Profit, err error) {
 	return profit, db.Table("saled").Select("SUM(profit) as TotalProfit").Scan(&profit).Error
 }
 
-func GetSaledQuantity(db *gorm.DB, sid int) (saledQuantity model.SaledQuantity, err error) {
+func GetSaledQuantity(db *gorm.DB, sid int64) (saledQuantity model.SaledQuantity, err error) {
 	return saledQuantity, db.Table("saled").Select("SUM(quantity) as Quantity").Where("sid = ?", sid).Find(&saledQuantity).Error
 }
 
@@ -34,10 +34,10 @@ func GetSaledList(db *gorm.DB, shipper string, begin string, end string) (saledL
 	return saledList, db.Find(&saledList).Error
 }
 
-func EditSaledRemarks(db *gorm.DB, id int, remarks string) error {
+func EditSaledRemarks(db *gorm.DB, id int64, remarks string) error {
 	return db.Model(model.Saled{}).Where("id = ?", id).Update("remarks", remarks).Error
 }
 
-func RepairProfit(db *gorm.DB, sid int, newPrice float64) error {
+func RepairProfit(db *gorm.DB, sid int64, newPrice float64) error {
 	return db.Model(model.Saled{}).Where("sid = ?", sid).Update("profit", gorm.Expr("quantity * (price - ?)", newPrice)).Error
 }

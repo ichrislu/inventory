@@ -9,11 +9,11 @@ func AddStock(db *gorm.DB, stock model.Stock) (model.Stock, error) {
 	return stock, db.Create(&stock).Error
 }
 
-func GetStockCount(db *gorm.DB, bid int) (count uint, err error) {
+func GetStockCount(db *gorm.DB, bid int64) (count uint, err error) {
 	return count, db.Table("stock").Where("bid=?", bid).Count(&count).Error
 }
 
-func GetStock(db *gorm.DB, id int) (stock model.Stock, err error) {
+func GetStock(db *gorm.DB, id int64) (stock model.Stock, err error) {
 	return stock, db.Where("id = ?", id).Find(&stock).Error
 }
 
@@ -35,7 +35,7 @@ func GetStocks(db *gorm.DB, provider string, begin string, end string, all bool)
 	return stocks, db.Find(&stocks).Error
 }
 
-func EditStockRemarks(db *gorm.DB, id int, remarks string) error {
+func EditStockRemarks(db *gorm.DB, id int64, remarks string) error {
 	return db.Model(model.Stock{}).Where("id = ?", id).Update("remarks", remarks).Error
 }
 
@@ -43,7 +43,7 @@ func EditStock(db *gorm.DB, stock model.Stock) error {
 	return db.Model(model.Stock{}).Save(stock).Error
 }
 
-func EditStockInventory(db *gorm.DB, count int, id int) error {
+func EditStockInventory(db *gorm.DB, count int, id int64) error {
 	return db.Model(model.Stock{}).Where("id = ?", id).Update("inventory", gorm.Expr("inventory - ?", count)).Error
 }
 
