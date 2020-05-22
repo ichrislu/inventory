@@ -17,14 +17,14 @@ func GetStock(db *gorm.DB, id int64) (stock model.Stock, err error) {
 	return stock, db.Where("id = ?", id).Find(&stock).Error
 }
 
-func GetStocks(db *gorm.DB, provider string, begin string, end string, all bool) (stocks []model.Stock, err error) {
+func GetStocks(db *gorm.DB, provider string, begin int, end int, all bool) (stocks []model.Stock, err error) {
 	db = db.Model(model.Stock{}).Order("inventory desc").Order("date asc")
 
-	if len(provider) > 0 {
+	if provider != "" {
 		db = db.Where("provider like ?", "%"+provider+"%")
 	}
 
-	if len(begin) > 0 && len(end) > 0 {
+	if begin > 0 && end > 0 {
 		db = db.Where("date >= ? and date <= ?", begin, end)
 	}
 

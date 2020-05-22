@@ -60,7 +60,7 @@ func AddSaled(saled model.Saled) (model.Saled, error) {
 	return result, nil
 }
 
-func GetSaled(shipper string, begin string, end string) ([]model.SaledList, error) {
+func GetSaled(shipper string, begin int, end int) ([]model.SaledList, error) {
 	db := database.DB
 	return dao.GetSaledList(db, shipper, begin, end)
 }

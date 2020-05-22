@@ -39,15 +39,26 @@ func EditStock(c echo.Context) error {
 
 func GetStock(c echo.Context) error {
 	provider := c.QueryParam("provider")
-	begin := c.QueryParam("begin")
-	end := c.QueryParam("end")
+	beginStr := c.QueryParam("begin")
+	endStr := c.QueryParam("end")
 	allStr := c.QueryParam("all")
 
 	var all bool
+	var begin, end int
 	var err error
 	if allStr != "" {
 		if all, err = strconv.ParseBool(allStr); err != nil {
 			return c.JSON(http.StatusBadRequest, "参数all取值不正确："+err.Error())
+		}
+	}
+	if beginStr != "" {
+		if begin, err = strconv.Atoi(beginStr); err != nil {
+			return c.JSON(http.StatusBadGateway, "参数begin取值不正确："+err.Error())
+		}
+	}
+	if endStr != "" {
+		if end, err = strconv.Atoi(endStr); err != nil {
+			return c.JSON(http.StatusBadRequest, "参数end取值不正确："+err.Error())
 		}
 	}
 

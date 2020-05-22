@@ -8,14 +8,13 @@ import (
 	"strconv"
 )
 
-func AddSaled(c echo.Context) error {
-	var saled model.Saled
-	if err := c.Bind(&saled); err != nil {
+func AddCustomer(c echo.Context) error {
+	var customer model.Customer
+	if err := c.Bind(&customer); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	result, err := service.AddSaled(saled)
-
+	result, err := service.AddCustomer(customer)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -23,13 +22,34 @@ func AddSaled(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
-func GetSaledList(c echo.Context) error {
+func EditCustomer(c echo.Context) error {
+	var customer model.Customer
+	if err := c.Bind(&customer); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	result, err := service.EditCustomer(customer)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+func GetCustomer(c echo.Context) error {
 	shipper := c.QueryParam("shipper")
 	beginStr := c.QueryParam("begin")
 	endStr := c.QueryParam("end")
+	allStr := c.QueryParam("all")
 
+	var all bool
 	var begin, end int
 	var err error
+	if allStr != "" {
+		if all, err = strconv.ParseBool(allStr); err != nil {
+			return c.JSON(http.StatusBadRequest, "参数all取值不正确："+err.Error())
+		}
+	}
 	if beginStr != "" {
 		if begin, err = strconv.Atoi(beginStr); err != nil {
 			return c.JSON(http.StatusBadGateway, "参数begin取值不正确："+err.Error())
@@ -41,25 +61,16 @@ func GetSaledList(c echo.Context) error {
 		}
 	}
 
-	saledList, err := service.GetSaled(shipper, begin, end)
+	customers, err := service.GetCustomers(shipper, begin, end, all)
+
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, saledList)
+	return c.JSON(http.StatusOK, customers)
 }
 
-func GetTotalProfit(c echo.Context) error {
-	var totalProfit model.Profit
-	var err error
-	if totalProfit, err = service.GetTotalProfit(); err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
-	}
-
-	return c.JSON(http.StatusOK, totalProfit)
-}
-
-func EditSaledRemarks(c echo.Context) error {
+func EditCustomerRemarks(c echo.Context) error {
 	_id := c.Param("id")
 	id, err := strconv.ParseInt(_id, 10, 64)
 	if err != nil {
@@ -68,8 +79,8 @@ func EditSaledRemarks(c echo.Context) error {
 
 	remarks := c.FormValue("remarks")
 
-	if err := service.EditSaledRemarks(id, remarks); err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+	if err := service.EditCustomerRemarks(id, remarks); err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	return c.NoContent(http.StatusOK)

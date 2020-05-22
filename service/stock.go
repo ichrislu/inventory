@@ -40,9 +40,8 @@ func AddStock(stock model.Stock) (model.Stock, error) {
 	return dao.AddStock(db, stock)
 }
 
-func GetStocks(provider string, begin string, end string, all bool) ([]model.Stock, error) {
+func GetStocks(provider string, begin int, end int, all bool) ([]model.Stock, error) {
 	db := database.DB
-
 	return dao.GetStocks(db, provider, begin, end, all)
 }
 

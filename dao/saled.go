@@ -17,7 +17,7 @@ func GetSaledQuantity(db *gorm.DB, sid int64) (saledQuantity model.SaledQuantity
 	return saledQuantity, db.Table("saled").Select("SUM(quantity) as Quantity").Where("sid = ?", sid).Find(&saledQuantity).Error
 }
 
-func GetSaledList(db *gorm.DB, shipper string, begin string, end string) (saledList []model.SaledList, err error) {
+func GetSaledList(db *gorm.DB, shipper string, begin int, end int) (saledList []model.SaledList, err error) {
 	db = db.Table("saled").
 		Select("saled.id,saled.shipper,saled.date as out_date,saled.sid,saled.price as out_price,saled.quantity,saled.profit,stock.price as in_price,stock.date as in_date,stock.bid,stock.model,stock.provider,saled.remarks").
 		Joins("JOIN stock on saled.sid = stock.id").
@@ -27,7 +27,7 @@ func GetSaledList(db *gorm.DB, shipper string, begin string, end string) (saledL
 		db = db.Where("shipper like ?", "%"+shipper+"%")
 	}
 
-	if len(begin) > 0 && len(end) > 0 {
+	if begin > 0 && end > 0 {
 		db = db.Where("saled.date >= ? and saled.date <= ?", begin, end)
 	}
 
