@@ -29,13 +29,14 @@ export default {
     },
     //-------------------------------------------------------根据 年月日, 供货商查询------------------------------------------------------
     search() {
-        // console.log(this.searchForm.shipper);
+        console.log(this.searchForm.time);
+        console.log(this.searchForm.time);
 
         this.$axios.get('http://localhost/saled', {
             params: {
                 shipper: this.searchForm.shipper,
-                begin: this.searchForm.time[0].begin,
-                end: this.searchForm.time[0].end,
+                begin: this.searchForm.time[0],
+                end: this.searchForm.time[1],
             }
         }).then(res => {
             this.outStockList = this.setCate(res.data)

@@ -48,11 +48,7 @@ export default {
             searchForm: {
                 shipper: '',
                 // 时间选择器绑定对象
-                time: [{
-                    begin: 0,
-                    end: 0,
-                }],
-                checked : false
+                time: [],
             },
         }
     }

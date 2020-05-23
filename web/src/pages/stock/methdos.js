@@ -32,8 +32,8 @@ export default {
         this.$axios.get('http://localhost/stock', {
             params: {
                 provider: this.searchForm.keyword,
-                begin: this.searchForm.time[0].begin,
-                end: this.searchForm.time[0].begin,
+                begin: this.searchForm.time[0],
+                end: this.searchForm.time[1],
                 all: this.searchForm.checked
             }
         }).then(res => {
@@ -279,7 +279,7 @@ export default {
     // ------------------------------------------- 出库功能 ------------------------------
     // 获取 将要出库的商品信息
     showOutStock(outstock) {
-        // console.log(outstock);
+        console.log(outstock);
 
         this.outStockFormDialogVisible = true
         this.outStockForm.provider = outstock.Provider

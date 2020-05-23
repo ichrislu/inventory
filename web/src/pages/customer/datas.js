@@ -15,10 +15,7 @@ export default {
             searchForm: {
                 shipper: '',
                 // 时间选择器绑定对象
-                time: [{
-                    begin: 0,
-                    end: 0
-                }],
+                time: [],
                 checked: false
             },
             // 控制客户信息表单的 显示与隐藏

@@ -32,8 +32,8 @@ export default {
         this.$axios.get('http://localhost/customer', {
             params: {
                 shipper: this.searchForm.shipper,
-                begin: this.searchForm.time[0].begin,
-                end: this.searchForm.time[0].end,
+                begin: this.searchForm.time[0],
+                end: this.searchForm.time[1],
                 all: this.searchForm.checked
             }
         }).then(res => {
@@ -130,7 +130,7 @@ export default {
             status: this.editCustomerForm.status
         }).then(res => {
             this.getList()
-            this.customerFormDialogVisible = false
+            this.editCustomerFormDialogVisible = false
             this.$notify.success({
                 title: '成功',
                 message: '客户信息修改成功',

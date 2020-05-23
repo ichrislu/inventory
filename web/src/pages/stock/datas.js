@@ -10,10 +10,7 @@ export default {
             searchForm: {
                 keyword: '',
                 // 时间选择器绑定对象
-                time: [{
-                    begin: 0,
-                    end: 0,
-                }],
+                time: [],
                 checked : false
             },
             // 新增库存 分类选择器绑定属性

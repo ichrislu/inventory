@@ -7,10 +7,9 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
 
+
 // axios.defaults.baseURL = process.env.NODE_ENV === 'mock' ? '/mock' : '/api'
 // console.log('process.env.NODE_ENV', process.env.NODE_ENV)
-
-
 
 
 Vue.prototype.$axios = axios
