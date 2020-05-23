@@ -1,0 +1,252 @@
+<template>
+    <section>
+        <el-card style="margin-bottom: 20px;">
+            <!-- --------------------------------------------------------------- 查找区 ------------------------------------------------ -->
+            <el-row :gutter="20" style="margin-bottom: 20px;">
+                <el-form :model="searchForm" :inline="true" class="demo-form-inline" label-width="110px" ref="search">
+                    <el-form-item prop="time">
+                        <el-date-picker
+                            unlink-panels
+                            v-model="searchForm.time"
+                            value-format="timestamp"
+                            type="daterange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                        >
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="出货人" prop="shipper">
+                        <el-input placeholder="请输入出货人" v-model="searchForm.shipper" clearable></el-input>
+                    </el-form-item>
+                    <el-checkbox v-model="searchForm.checked">全部客户</el-checkbox>
+                    <el-button type="primary" @click="search">查询</el-button>
+                    <el-button @click="reset('search')">重置</el-button>
+                </el-form>
+            </el-row>
+        </el-card>
+        <el-card>
+            <!-- --------------------------------------------------------------- 数据展示区 ------------------------------------------------ -->
+            <el-row>
+                <el-row type="flex" justify="space-around">
+                    <el-col :span="20">
+                        <div>数据列表</div>
+                    </el-col>
+                    <el-col :span="2">
+                        <el-button type="success" @click="customerFormDialogVisible = true">新增客户</el-button>
+                    </el-col>
+                </el-row>
+                <el-table :data="customerList" border style="width: 100%"  :row-class-name="tableRowClassName">
+                    <el-table-column prop="Shipper" label="出货人" align="center"></el-table-column>
+                    <el-table-column prop="SaleDate" label="出单日期" align="center">
+                        <template slot-scope="scope">
+                            <div>{{ scope.row.SaleDate | formatDate }}</div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="DeliveryDate" label="送货日期" align="center">
+                        <template slot-scope="scope">
+                            <div>{{ scope.row.DeliveryDate | formatDate }}</div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="Model" label="型号" align="center"></el-table-column>
+                    <el-table-column prop="Name" label="顾客姓名" align="center"></el-table-column>
+                    <el-table-column prop="Phone" label="联系电话" align="center"></el-table-column>
+                    <el-table-column prop="Address" label="送货地址" align="center"></el-table-column>
+                    <el-table-column prop="Remarks" label="备注" align="center" width="150px"></el-table-column>
+                    <el-table-column prop="Status" label="状态" align="center">
+                        <template slot-scope="scope">
+                            <div>{{ scope.row.Status == 1 ? '未送货' : '已送货' }}</div>
+                        </template>
+                    </el-table-column>
+                    <!-- 功能按钮区域 -->
+                    <el-table-column scope align="center" label="操作" width="300px">
+                        <template slot-scope="scope">
+                            <!-- 修改按钮 -->
+                            <el-tooltip class="item" effect="dark" content="修改" placement="top" :enterable="false">
+                                <el-button icon="el-icon-setting" size="medium " type="primary" @click="showEditForm(scope.row)"></el-button>
+                            </el-tooltip>
+                            <!-- 备注按钮 -->
+                            <el-tooltip class="item" effect="dark" content="添加备注" placement="top" :enterable="false">
+                                <el-button icon="el-icon-edit" size="medium " type="success" @click="showRemark(scope.row)"></el-button>
+                            </el-tooltip>
+                            <!-- 删除按钮 -->
+                            <el-tooltip class="item" effect="dark" content="删除" placement="top" :enterable="false">
+                                <el-button icon="el-icon-delete-solid" size="medium " type="danger" @click="deleteCustomer(scope.row.Id)">
+                                </el-button>
+                            </el-tooltip>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-row>
+        </el-card>
+
+        <!--------------------------------------------------------录入客户信息对话框-------------------------------------------------------->
+        <el-dialog title="出库" :visible.sync="customerFormDialogVisible" width="30%" @close="resetForm('setCustomerForm')">
+            <el-form ref="setCustomerForm" :model="setCustomerForm" label-width="120px" :rules="formRules">
+                <el-form-item label="出货人" prop="shipper">
+                    <el-input v-model="setCustomerForm.shipper" label="描述文字"></el-input>
+                </el-form-item>
+                <el-form-item label="型号" prop="model">
+                    <el-input v-model="setCustomerForm.model"></el-input>
+                </el-form-item>
+                <el-form-item label="顾客姓名" prop="name" :rules="[{ required: true, message: '请输入顾客姓名' }]">
+                    <el-input v-model="setCustomerForm.name" label="描述文字"></el-input>
+                </el-form-item>
+                <el-form-item label="联系电话" prop="phone">
+                    <el-input v-model="setCustomerForm.phone" label="描述文字"></el-input>
+                </el-form-item>
+                <el-form-item label="收货地址" prop="address">
+                    <el-input v-model="setCustomerForm.address" label="描述文字"></el-input>
+                </el-form-item>
+                <el-form-item label="出单时间" prop="saleDate">
+                    <el-date-picker
+                        v-model="setCustomerForm.saleDate"
+                        type="date"
+                        placeholder="选择日期"
+                        format="yyyy 年 MM 月 dd 日"
+                        value-format="timestamp"
+                    >
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="送货时间" prop="deliveryDate">
+                    <el-date-picker
+                        v-model="setCustomerForm.deliveryDate"
+                        type="date"
+                        placeholder="选择日期"
+                        format="yyyy 年 MM 月 dd 日"
+                        value-format="timestamp"
+                    >
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="备注 : " prop="remarks">
+                    <el-input type="textarea" autosize v-model="setCustomerForm.remarks" label="描述文字"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="setCustomerForm = false">取消</el-button>
+                <el-button type="primary" @click="showCustomer">确认</el-button>
+            </span>
+        </el-dialog>
+
+        <!--------------------------------------------------------修改客户信息对话框-------------------------------------------------------->
+        <el-dialog title="出库" :visible.sync="editCustomerFormDialogVisible" width="30%" @close="resetForm('setCustomerForm')">
+            <el-form ref="setCustomerForm" :model="editCustomerForm" label-width="120px" :rules="formRules">
+                <el-form-item label="出货人" prop="shipper">
+                    <el-input v-model="editCustomerForm.shipper" label="描述文字"></el-input>
+                </el-form-item>
+                <el-form-item label="型号" prop="model">
+                    <el-input v-model="editCustomerForm.model"></el-input>
+                </el-form-item>
+                <el-form-item label="顾客姓名" prop="name" :rules="[{ required: true, message: '请输入顾客姓名' }]">
+                    <el-input v-model="editCustomerForm.name" label="描述文字"></el-input>
+                </el-form-item>
+                <el-form-item label="联系电话" prop="phone">
+                    <el-input v-model="editCustomerForm.phone" label="描述文字"></el-input>
+                </el-form-item>
+                <el-form-item label="收货地址" prop="address">
+                    <el-input v-model="editCustomerForm.address" label="描述文字"></el-input>
+                </el-form-item>
+                <el-form-item label="状态" prop="status">
+                    <el-radio-group v-model="editCustomerForm.status">
+                        <el-radio :label="1">未送货</el-radio>
+                        <el-radio :label="0">已送货</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="出单时间" prop="saleDate">
+                    <el-date-picker
+                        v-model="editCustomerForm.saleDate"
+                        type="date"
+                        placeholder="选择日期"
+                        format="yyyy 年 MM 月 dd 日"
+                        value-format="timestamp"
+                    >
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="送货时间" prop="deliveryDate">
+                    <el-date-picker
+                        v-model="editCustomerForm.deliveryDate"
+                        type="date"
+                        placeholder="选择日期"
+                        format="yyyy 年 MM 月 dd 日"
+                        value-format="timestamp"
+                    >
+                    </el-date-picker>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="editCustomerFormDialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="showCustomer">确认</el-button>
+            </span>
+        </el-dialog>
+
+        <!-- 备注对话框 -->
+        <el-dialog title="添加备注" :visible.sync="showRemarkFormDialogVisible" width="30%">
+            <el-form ref="form" :model="remarkForm" label-width="120px">
+                <el-form-item label="备注" prop="Remarks">
+                    <el-input type="textarea" placeholder="请输入内容" v-model="remarkForm.Remarks" maxlength="200" size="max" autosize> </el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="showRemarkFormDialogVisible = false">取消添加</el-button>
+                <el-button type="primary" @click="addRemark">确定添加</el-button>
+            </span>
+        </el-dialog>
+    </section>
+</template>
+
+<script>
+import datas from './datas.js'
+import methods from './methods.js'
+
+export default {
+    data() {
+        return datas.init()
+    },
+    created() {
+        this.getList()
+    },
+    methods: methods,
+    filters: {
+        formatDate: function(value) {
+            // 时间戳转换日期格式方法
+            if (value == null) {
+                return ''
+            } else {
+                let date = new Date(value)
+                let y = date.getFullYear() // 年
+                let MM = date.getMonth() + 1 // 月
+                MM = MM < 10 ? '0' + MM : MM
+                let d = date.getDate() // 日
+                d = d < 10 ? '0' + d : d
+                return y + '-' + MM + '-' + d
+            }
+        }
+    }
+}
+</script>
+
+<style scoped>
+.el-table {
+    margin-top: 15px;
+}
+.el-col {
+    margin: 0 20px;
+}
+.el-button {
+    margin: 0 6px;
+}
+
+.coll {
+    position: relative;
+}
+
+.el-table /deep/ .over {
+    background-color: #ffd700;
+}
+
+.el-table /deep/ .cell {
+    white-space: pre-wrap;
+    text-align: center;
+    /* padding: 0px 8px; */
+}
+</style>

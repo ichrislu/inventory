@@ -31,10 +31,10 @@ export default {
     search() {
         this.$axios.get('http://localhost/stock', {
             params: {
-                'provider': this.searchForm.keyword,
-                'begin': this.searchForm.time[0],
-                'end': this.searchForm.time[1],
-                'all': this.searchForm.checked
+                provider: this.searchForm.keyword,
+                begin: this.searchForm.time[0].begin,
+                end: this.searchForm.time[0].begin,
+                all: this.searchForm.checked
             }
         }).then(res => {
             this.stockList = this.setCate(res.data)
@@ -81,7 +81,7 @@ export default {
         //     return true
         //     }
         // })
-
+        var _this = this
         if (parseFloat(this.addForm.Price) <= 0) {
             this.$notify({
                 title: '警告',
@@ -89,17 +89,14 @@ export default {
                 position: 'bottom-right',
                 type: 'warning'
             });
-            return true
-        } else if (this.addForm.Date == '') {
+        } else if (this.addForm.Date == null) {
             this.$notify({
                 title: '警告',
                 message: '请输入正确的时间',
                 position: 'bottom-right',
                 type: 'warning'
             });
-            return true
         } else {
-
             this.$axios.post('http://localhost/stock', {
                 provider: this.addForm.Provider,
                 date: this.addForm.Date,
@@ -108,7 +105,8 @@ export default {
                 price: parseFloat(this.addForm.Price),
                 Quantity: this.addForm.Quantity,
             }).then(res => {
-                // this.resetForm(addForm)
+                _this.resetForm('addForm')
+                this.addValue = []
                 this.$notify.success({
                     title: '成功',
                     message: '入库成功',
@@ -120,7 +118,7 @@ export default {
                 // console.log(err.response);
                 this.$notify.error({
                     title: '错误',
-                    message: err.response.data,
+                    message: err,
                     position: 'bottom-right'
                 });
             })
@@ -281,20 +279,21 @@ export default {
     // ------------------------------------------- 出库功能 ------------------------------
     // 获取 将要出库的商品信息
     showOutStock(outstock) {
+        // console.log(outstock);
+
         this.outStockFormDialogVisible = true
         this.outStockForm.provider = outstock.Provider
-        this.outStockValue = [outstock.Category, outstock.Brand]
+        this.outStockValue = outstock.Category+' / '+ outstock.Brand
         this.outStockForm.model = outstock.Model
         this.outStockForm.price = outstock.Price
         this.outStockForm.inventory = outstock.Inventory
 
         this.outStockForm.sid = outstock.Id
-        // this.outStockForm.date = outstock.Date
+        this.outStockForm.inDate = outstock.Date
     },
 
     // 一键出库
     outStock() {
-
         if (parseFloat(this.outStockForm.sell) == 0 || this.outStockForm.sell == '') {
             this.$notify.error({
                 title: '错误',
@@ -307,28 +306,28 @@ export default {
                 message: '请输入正确的出库数量',
                 position: 'bottom-right'
             });
-        } else if (this.outStockForm.quantity > this.outStockForm.inventory) {
-            this.$notify.error({
-                title: '错误',
-                message: '库存不足',
-                position: 'bottom-right'
-            });
-        } else if (this.outStockForm.date == '') {
+        } else if (this.outStockForm.quantity > this.outStockForm.inventory) {
+            this.$notify.error({
+                title: '错误',
+                message: '库存不足',
+                position: 'bottom-right'
+            });
+        } else if (this.outStockForm.outDate == '') {
             this.$notify.error({
                 title: '错误',
                 message: '请输入正确的时间',
                 position: 'bottom-right'
             });
-        } else if (this.outStockForm.price == '' || this.outStockForm.price == 0) {
+        } else if (parseFloat(this.outStockForm.inDate) > parseFloat(this.outStockForm.outDate)) {
             this.$notify.error({
                 title: '错误',
-                message: '请输入正确的价格',
+                message: '出库时间不能晚于入库时间',
                 position: 'bottom-right'
             });
         } else {
             this.$axios.post('http://localhost/saled', {
                 shipper: this.outStockForm.shipper,
-                date: this.outStockForm.date,
+                date: this.outStockForm.outDate,
                 sid: this.outStockForm.sid,
                 price: parseFloat(this.outStockForm.sell),
                 quantity: this.outStockForm.quantity
@@ -344,12 +343,13 @@ export default {
                 console.log(error.response);
                 this.$notify.error({
                     title: '错误',
-                    message: error.response.data,
+                    message: error.response,
                     position: 'bottom-right'
                 });
             })
         }
     },
+
     //-----------------------设置表格每行样式--------------------
     tableRowClassName({
         row
@@ -385,5 +385,7 @@ export default {
                 });
             });
         })
-    }
+    },
+
+
 }

@@ -28,7 +28,6 @@ export default {
             stockList: [],
             // 控制 新增库存的显示与隐藏
             showAddFormDialogVisible: false,
-            date: '',
             // 新增库存表单
             addForm: {
                 Provider: '',
@@ -130,15 +129,18 @@ export default {
                 model: '',
                 price: '',
                 inventory:'',
+                inDate : '',
 
                 sid :'',
-                date : '',
+                outDate : '',
                 quantity: 0,
                 shipper : '',
-                sell: ''
+                sell: '',
+
+
             },
             // 出库表单对象 分类属性
-            outStockValue : [],
+            outStockValue : '',
             filters: {},
         }
     }

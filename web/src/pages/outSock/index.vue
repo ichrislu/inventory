@@ -36,7 +36,7 @@
                     <el-table-column prop="Shipper" label="出货人" align="center"></el-table-column>
                     <el-table-column prop="InDate" label="出货日期" align="center">
                         <template slot-scope="scope">
-                            <div>{{ scope.row.InDate | formatDate }}</div>
+                            <div>{{ scope.row.OutDate | formatDate }}</div>
                         </template>
                     </el-table-column>
                     <el-table-column prop="Provider" label="供应商" align="center"></el-table-column>
@@ -54,11 +54,15 @@
                     <el-table-column prop="Profit" label="利润(元)" align="center"></el-table-column>
                     <el-table-column prop="Remarks" label="备注" align="center" width="150px"></el-table-column>
                     <!-- 功能按钮区域 -->
-                    <el-table-column scope align="center" label="操作" >
+                    <el-table-column scope align="center" label="操作" width="180px">
                         <template slot-scope="scope">
                         <!-- 备注按钮 -->
                         <el-tooltip class="item" effect="dark" content="添加备注" placement="top" :enterable="false">
                             <el-button icon="el-icon-edit" size="medium " type="primary" @click="showRemark(scope.row)"></el-button>
+                        </el-tooltip>
+                        <!-- 确认出库按钮 -->
+                        <el-tooltip class="item" effect="dark" content="确认出库" placement="top" :enterable="false">
+                            <el-button icon="el-icon-s-goods" size="medium " type="warning" @click="outStock(scope.row.Id)"></el-button>
                         </el-tooltip>
                         </template>
                     </el-table-column>

@@ -18,6 +18,7 @@ export default {
             }
         })
     },
+
     setCate(arr) {
         for (let i = 0; i < arr.length; i++) {
             var obj = JSON.parse(window.sessionStorage.getItem('key_' + arr[i].Bid))
@@ -28,14 +29,19 @@ export default {
     },
     //-------------------------------------------------------根据 年月日, 供货商查询------------------------------------------------------
     search() {
+        // console.log(this.searchForm.shipper);
+
         this.$axios.get('http://localhost/saled', {
             params: {
-                'shipper': this.searchForm.shipper,
-                'begin': this.searchForm.time[0],
-                'end': this.searchForm.time[1],
+                shipper: this.searchForm.shipper,
+                begin: this.searchForm.time[0].begin,
+                end: this.searchForm.time[0].end,
             }
         }).then(res => {
             this.outStockList = this.setCate(res.data)
+
+            // console.log(res.data);
+            // console.log(this.outStockList);
         })
     },
 
@@ -54,8 +60,9 @@ export default {
     // 获取备注
     showRemark(row) {
         this.remarkForm.Remarks = row.Remarks
-        this.remarkForm.Id = row.Id
+        this.remarkForm.Id =row.Id
         this.showRemarkFormDialogVisible = true
+        // console.log(row);
     },
 
     // 新增备注
@@ -84,15 +91,18 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            this.$message({
+            this.$notify({
+                title: '成功',
+                message: '成功出库',
                 type: 'success',
-                message: '出库成功!'
-            });
+                position: 'bottom-right'
+              });
         }).catch(() => {
-            this.$message({
-                type: 'info',
-                message: '已取消出库'
-            });
+            this.$notify.error({
+                title: '错误',
+                message: '出库失败',
+                position: 'bottom-right'
+              });
         });
     }
 }

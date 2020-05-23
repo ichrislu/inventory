@@ -25,6 +25,7 @@
                 </el-form>
             </el-row>
         </el-card>
+
         <el-card>
             <!----------------------------------------------------------------- 数据展示区 ------------------------------------------------ -->
             <el-row>
@@ -50,57 +51,40 @@
                     <el-table-column prop="Quantity" label="此单总量(件)" align="center"> </el-table-column>
                     <el-table-column prop="Inventory" label="库存余量(件)" align="center"> </el-table-column>
                     <el-table-column prop="Remarks" label="备注" width="200px" align="center" class="remark"> </el-table-column>
-
                     <!-- 功能按钮区域 -->
                     <el-table-column width="300px" scope label="操作" align="center">
                         <template slot-scope="scope">
                             <!-- 修改按钮 -->
                             <el-tooltip class="item" effect="dark" content="修改" placement="top" :enterable="false">
-                                <el-button
-                                    icon="el-icon-setting"
-                                    size="small"
-                                    type="primary"
-                                    @click="showDditForm(scope.row)"
-                                    :disabled="scope.row.Inventory == 0 ? true : false"
-                                ></el-button>
+                                <el-button icon="el-icon-setting" size="small" type="primary" @click="showDditForm(scope.row)"></el-button>
                             </el-tooltip>
                             <!-- 备注按钮 -->
                             <el-tooltip class="item" effect="dark" content="添加备注" placement="top" :enterable="false">
-                                <el-button
-                                    icon="el-icon-edit"
-                                    size="small"
-                                    type="success"
-                                    @click="showRemark(scope.row)"
-                                    :disabled="scope.row.Inventory == 0 ? true : false"
-                                ></el-button>
+                                <el-button icon="el-icon-edit" size="small" type="success" @click="showRemark(scope.row)"></el-button>
                             </el-tooltip>
                             <!-- 出库按钮 -->
                             <el-tooltip class="item" effect="dark" content="出库" placement="top" :enterable="false">
-                                <el-button
-                                    icon="el-icon-s-promotion"
-                                    size="small"
-                                    type="warning"
-                                    @click="showOutStock(scope.row)"
-                                    :disabled="scope.row.Inventory == 0 ? true : false"
-                                ></el-button>
+                                <el-button icon="el-icon-s-promotion" size="small" type="warning" @click="showOutStock(scope.row)"></el-button>
                             </el-tooltip>
+
                             <!-- 删除按钮 -->
                             <el-tooltip class="item" effect="dark" content="删除" placement="top" :enterable="false">
-                                <el-button
-                                    icon="el-icon-delete-solid"
-                                    size="small"
-                                    type="danger"
-                                    @click="deleteStock(scope.row.Id)"
-                                    :disabled="scope.row.Inventory == 0 ? true : false"
-                                ></el-button>
+                                <el-button icon="el-icon-delete-solid" size="small" type="danger" @click="deleteStock(scope.row.Id)"></el-button>
                             </el-tooltip>
                         </template>
                     </el-table-column>
                 </el-table>
             </el-row>
         </el-card>
+
         <!--------------------------------------------------------新增库存对话框-------------------------------------------------------->
-        <el-dialog title="新增库存" :visible.sync="showAddFormDialogVisible" width="30%" :rules="addFormRules" @close="resetForm('addForm')" ref="addForm">
+        <el-dialog
+            title="新增库存"
+            :visible.sync="showAddFormDialogVisible"
+            width="30%"
+            :rules="addFormRules"
+            @close="resetForm('addForm')"
+        >
             <el-form ref="addForm" :model="addForm" label-width="120px" :rules="addFormRules">
                 <el-form-item label="供应商" prop="Provider">
                     <el-input v-model="addForm.Provider"></el-input>
@@ -197,30 +181,26 @@
                 <el-form-item label="供应商" prop="provider">
                     <el-input v-model="outStockForm.provider" disabled></el-input>
                 </el-form-item>
-
                 <el-form-item label="品类">
-                    <el-cascader
-                        disabled
-                        v-model="outStockValue"
-                        :options="options"
-                        :props="{ value: 'Name', label: 'Name', children: 'Category', expandTrigger: 'hover' }"
-                        @change="editChangeRef"
-                        ref="editCascader"
-                    >
-                    </el-cascader>
+                    <el-input v-model="outStockValue" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="型号" prop="model">
                     <el-input v-model="outStockForm.model" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="进货价格(元)" prop="price">
-                    <el-input v-model="outStockForm.price" disabled></el-input>
-                </el-form-item>
                 <el-form-item label="此单库存(件)" prop="inventory">
                     <el-input v-model="outStockForm.inventory" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="出库时间" prop="date">
+                <el-form-item label="进货价格(元)" prop="price">
+                    <el-input v-model="outStockForm.price" disabled></el-input>
+                </el-form-item>
+
+                <el-form-item label="出货人" prop="shipper">
+                    <el-input v-model="outStockForm.shipper" label="描述文字"></el-input>
+                </el-form-item>
+
+                <el-form-item label="出库时间" prop="outDate">
                     <el-date-picker
-                        v-model="outStockForm.date"
+                        v-model="outStockForm.outDate"
                         type="date"
                         placeholder="选择日期"
                         format="yyyy 年 MM 月 dd 日"
@@ -228,14 +208,13 @@
                     >
                     </el-date-picker>
                 </el-form-item>
+
                 <el-form-item label="出库数量(件)" prop="quantity">
                     <el-input-number v-model="outStockForm.quantity" label="描述文字" :min="0" :precision="0"></el-input-number>
                 </el-form-item>
+
                 <el-form-item label="售价(元)" prop="sell">
                     <el-input v-model="outStockForm.sell" label="描述文字" oninput="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"> </el-input>
-                </el-form-item>
-                <el-form-item label="出货人" prop="shipper">
-                    <el-input v-model="outStockForm.shipper" label="描述文字"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">

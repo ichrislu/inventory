@@ -33,7 +33,7 @@ export default {
         }).then(res => {
             this.$notify.success({
                 title: '成功',
-                message: '分类添加成功',
+                message: '品类添加成功',
                 position: 'bottom-right'
             });
             window.sessionStorage.clear();
@@ -46,7 +46,7 @@ export default {
         }).catch(err => {
             this.$notify.error({
                 title: '错误',
-                message: err,
+                message: '品类添加失败',
                 position: 'bottom-right'
             });
         });
@@ -80,7 +80,7 @@ export default {
         }).catch( err => {
             this.$notify.error({
                 title: '错误',
-                message: err.response,
+                message: '品牌添加失败',
                 position: 'bottom-right'
             });
         })
@@ -102,7 +102,7 @@ export default {
                 this.getList()
                 this.$notify.success({
                     title: '成功',
-                    message: res,
+                    message: '分类已删除',
                     position: 'bottom-right'
                 });
                 // this.$message({
@@ -113,7 +113,7 @@ export default {
                 // console.log(req);
                 this.$notify.error({
                     title: '错误',
-                    message: err,
+                    message: '分类删除失败',
                     position: 'bottom-right'
                 });
                 // this.$message({
@@ -132,7 +132,7 @@ export default {
                 this.getList(),
                 this.$notify.success({
                     title: '成功',
-                    message: res,
+                    message: '品牌已删除',
                     position: 'bottom-right'
                 });
                     // this.$message({
@@ -144,7 +144,7 @@ export default {
             err => {
                 this.$notify.error({
                     title: '错误',
-                    message: err,
+                    message: '删除失败',
                     position: 'bottom-right'
                 });
                 // this.$message({

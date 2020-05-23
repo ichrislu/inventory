@@ -5,6 +5,7 @@ import Category from '../pages/cateGory/index'
 // import Brand from '../pages/Brand.vue'
 import Stock from '../pages/stock/index'
 import OutStock from '../pages/outSock/index'
+import Customer from '../pages/customer/index'
 
 //查询界面
 // import Demo from '../pages/Demo.vue'
@@ -16,7 +17,7 @@ export default new Router({
     routes: [{
             path: '/',
             name: 'Home',
-            title: '功能管理',
+            title: '进销存管理系统',
             redirect : '/category',
             component: Home,
             children: [{
@@ -30,10 +31,14 @@ export default new Router({
                     component: Stock
                 },
                 {
+                    path: '/customer',
+                    title: '顾客信息',
+                    component: Customer
+                },{
                     path: '/outstock',
                     title: '出库列表',
                     component: OutStock
-                }
+                },
             ]
         }
     ]
