@@ -1,10 +1,10 @@
 package model
 
 type Stock struct {
-	Id        int64   `gorm:"column:id;type:integer;primary_key"`
+	Id        int64   `gorm:"column:id;type:integer;primary_key" json:"Id,string"`
 	Provider  string  `gorm:"column:provider;type:text"`
 	Date      int     `gorm:"column:date;type:integer"`
-	Bid       int64   `gorm:"column:bid;type:integer"`
+	Bid       int64   `gorm:"column:bid;type:integer" json:"Bid,string"`
 	Model     string  `gorm:"column:model;type:text"`
 	Price     float64 `gorm:"column:price;type:real"`
 	Quantity  int     `gorm:"column:quantity;type:integer"`

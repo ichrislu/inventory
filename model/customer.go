@@ -1,7 +1,7 @@
 package model
 
 type Customer struct {
-	Id           int64  `gorm:"column:id;type:integer;primary_key"`
+	Id           int64  `gorm:"column:id;type:integer;primary_key" json:"Id,string"`
 	Shipper      string `gorm:"column:shipper;type:text"`
 	SaleDate     int    `gorm:"column:sale_date;type:integer"`
 	DeliveryDate int    `gorm:"column:delivery_date;type:integer"`
