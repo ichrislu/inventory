@@ -20,10 +20,14 @@ export default {
     },
 
     setCate(arr) {
+        console.log(arr);
+
         for (let i = 0; i < arr.length; i++) {
+            // console.log(window.sessionStorage.getItem('key_' + arr[i].Bid));
             var obj = JSON.parse(window.sessionStorage.getItem('key_' + arr[i].Bid))
+            // console.log(obj);
             arr[i].Brand = obj.brand,
-            arr[i].Category = obj.category
+                arr[i].Category = obj.category
         }
         return arr
     },
@@ -61,7 +65,7 @@ export default {
     // 获取备注
     showRemark(row) {
         this.remarkForm.Remarks = row.Remarks
-        this.remarkForm.Id =row.Id
+        this.remarkForm.Id = row.Id
         this.showRemarkFormDialogVisible = true
         // console.log(row);
     },
@@ -74,8 +78,7 @@ export default {
         this.$axios.put('http://localhost/saled/' + this.remarkForm.Id + '/remarks', this.getFormDataFromJson(_params)).then(() => {
             this.getList()
             this.showRemarkFormDialogVisible = false;
-        }).catch (function (error) {
-        })
+        }).catch(function (error) {})
     },
     getFormDataFromJson(json) {
         let params = new URLSearchParams()
@@ -97,13 +100,13 @@ export default {
                 message: '成功出库',
                 type: 'success',
                 position: 'bottom-right'
-              });
+            });
         }).catch(() => {
             this.$notify.error({
                 title: '错误',
                 message: '出库失败',
                 position: 'bottom-right'
-              });
+            });
         });
     }
 }

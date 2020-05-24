@@ -93,7 +93,7 @@
                     <el-date-picker v-model="addForm.Date" type="date" placeholder="选择日期" format="yyyy 年 MM 月 dd 日" value-format="timestamp">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="品类" prop="Cate">
+                <el-form-item label="品类">
                     <el-cascader
                         v-model="addValue"
                         :options="options"

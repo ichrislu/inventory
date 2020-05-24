@@ -113,7 +113,7 @@ export default {
                 // console.log(req);
                 this.$notify.error({
                     title: '错误',
-                    message: '分类删除失败',
+                    message: err.response.data,
                     position: 'bottom-right'
                 });
                 // this.$message({
@@ -144,7 +144,7 @@ export default {
             err => {
                 this.$notify.error({
                     title: '错误',
-                    message: '删除失败',
+                    message: '删除品牌失败',
                     position: 'bottom-right'
                 });
                 // this.$message({

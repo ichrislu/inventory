@@ -89,7 +89,7 @@ export default {
                 position: 'bottom-right',
                 type: 'warning'
             });
-        } else if (this.addForm.Date == null) {
+        } else if (this.addForm.Date == '') {
             this.$notify({
                 title: '警告',
                 message: '请输入正确的时间',
@@ -97,37 +97,44 @@ export default {
                 type: 'warning'
             });
         } else {
-            this.$axios.post('http://localhost/stock', {
-                provider: this.addForm.Provider,
-                date: this.addForm.Date,
-                bid: this.addForm.Bid,
-                model: this.addForm.Model,
-                price: parseFloat(this.addForm.Price),
-                Quantity: this.addForm.Quantity,
-            }).then(res => {
-                _this.resetForm('addForm')
-                this.addValue = []
-                this.$notify.success({
-                    title: '成功',
-                    message: '入库成功',
-                    position: 'bottom-right'
-                });
-                this.getList()
-                this.showAddFormDialogVisible = false
-            }).catch(err => {
-                // console.log(err.response);
-                this.$notify.error({
-                    title: '错误',
-                    message: err,
-                    position: 'bottom-right'
-                });
+            this.$refs['addForm'].validate(valid => {
+                if (valid) {
+                    this.$axios.post('http://localhost/stock', {
+                        provider: this.addForm.Provider,
+                        date: this.addForm.Date,
+                        bid: this.addForm.Bid,
+                        model: this.addForm.Model,
+                        price: parseFloat(this.addForm.Price),
+                        Quantity: this.addForm.Quantity,
+                    }).then(res => {
+                        _this.resetForm('addForm')
+                        this.addValue = []
+                        this.$notify.success({
+                            title: '成功',
+                            message: '入库成功',
+                            position: 'bottom-right'
+                        });
+                        this.getList()
+                        this.showAddFormDialogVisible = false
+                    }).catch(err => {
+                        // console.log(err.response);
+                        this.$notify.error({
+                            title: '错误',
+                            message: err,
+                            position: 'bottom-right'
+                        });
+                    })
+
+                }
             })
         }
+
     },
     // 新增库存分类 级联选择
     addChangeRef() {
         const nodesObj = this.$refs['cascader'].getCheckedNodes();
         const Id = nodesObj[0].data.Id
+        // console.log(nodesObj[0].data.Id);
         this.addForm.Bid = Id
     },
 
@@ -283,7 +290,7 @@ export default {
 
         this.outStockFormDialogVisible = true
         this.outStockForm.provider = outstock.Provider
-        this.outStockValue = outstock.Category+' / '+ outstock.Brand
+        this.outStockValue = outstock.Category + ' / ' + outstock.Brand
         this.outStockForm.model = outstock.Model
         this.outStockForm.price = outstock.Price
         this.outStockForm.inventory = outstock.Inventory
