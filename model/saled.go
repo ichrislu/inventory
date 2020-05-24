@@ -19,7 +19,7 @@ type SaledList struct {
 	OutPrice float64 `gorm:"column:out_price;type:real"`
 	Quantity int     `gorm:"column:quantity;type:integer"`
 	Profit   float64 `gorm:"column:profit;type:real"`
-	Bid      int     `gorm:"column:bid;type:integer"`
+	Bid      int     `gorm:"column:bid;type:integer" json:"Bid,string"`
 	Model    string  `gorm:"column:model;type:text"`
 	InPrice  float64 `gorm:"column:in_price;type:real"`
 	Provider string  `gorm:"column:provider;type:text"`
