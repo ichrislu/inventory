@@ -32,11 +32,12 @@
                     <el-col :span="20">
                         <div>数据列表</div>
                     </el-col>
-                    <el-col :span="2">
+                    <el-row type="flex" justify="end">
                         <el-button type="success" @click="customerFormDialogVisible = true">新增客户</el-button>
-                    </el-col>
+                        <el-button type="primary" @click="print">打印预览</el-button>
+                    </el-row>
                 </el-row>
-                <el-table :data="customerList" border style="width: 100%"  :row-class-name="tableRowClassName">
+                <el-table :data="customerList" border style="width: 100%" :row-class-name="tableRowClassName">
                     <el-table-column prop="Shipper" label="出货人" align="center"></el-table-column>
                     <el-table-column prop="SaleDate" label="出单日期" align="center">
                         <template slot-scope="scope">
@@ -81,7 +82,7 @@
         </el-card>
 
         <!--------------------------------------------------------录入客户信息对话框-------------------------------------------------------->
-        <el-dialog title="出库" :visible.sync="customerFormDialogVisible" width="30%" @close="resetForm('setCustomerForm')">
+        <el-dialog title="客户信息" :visible.sync="customerFormDialogVisible" width="30%" @close="resetForm('setCustomerForm')">
             <el-form ref="setCustomerForm" :model="setCustomerForm" label-width="120px" :rules="formRules">
                 <el-form-item label="出货人" prop="shipper">
                     <el-input v-model="setCustomerForm.shipper" label="描述文字"></el-input>
@@ -89,7 +90,7 @@
                 <el-form-item label="型号" prop="model">
                     <el-input v-model="setCustomerForm.model"></el-input>
                 </el-form-item>
-                <el-form-item label="顾客姓名" prop="name" :rules="[{ required: true, message: '请输入顾客姓名' }]">
+                <el-form-item label="顾客姓名" prop="name">
                     <el-input v-model="setCustomerForm.name" label="描述文字"></el-input>
                 </el-form-item>
                 <el-form-item label="联系电话" prop="phone">
@@ -123,7 +124,7 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="setCustomerForm = false">取消</el-button>
+                <el-button @click="customerFormDialogVisible = false">取消</el-button>
                 <el-button type="primary" @click="showCustomer">确认</el-button>
             </span>
         </el-dialog>
@@ -191,13 +192,52 @@
                 <el-button type="primary" @click="addRemark">确定添加</el-button>
             </span>
         </el-dialog>
+
+        <!-- 打印对话框 -->
+        <el-dialog title="打印预览" :visible.sync="outVisible" width="1086px" class="print">
+            <div class="dialog-footer" style="text-align: center; margin-bottom : 15px">
+                <el-button @click="outVisible = false">取 消</el-button>
+                <el-button v-print="'#print'" type="primary" @click="print">打印</el-button>
+            </div>
+            <div id="print">
+                <el-table :data="customerList" border style="width: 100%;" class="printTable">
+                    <el-table-column prop="Shipper" label="出货人" align="center" width="100px"></el-table-column>
+                    <el-table-column prop="SaleDate" label="出单日期" align="center" width="100px">
+                        <template slot-scope="scope">
+                            <div>{{ scope.row.SaleDate | formatDate }}</div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="DeliveryDate" label="送货日期" align="center" width="100px">
+                        <template slot-scope="scope">
+                            <div>{{ scope.row.DeliveryDate | formatDate }}</div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="Name" label="顾客姓名" align="center" width="100px"></el-table-column>
+                    <el-table-column prop="Phone" label="联系电话" align="center" width="110px"></el-table-column>
+                    <el-table-column prop="Model" label="型号" align="center" width="150px"></el-table-column>
+                    <el-table-column prop="Address" label="送货地址" align="center"></el-table-column>
+                    <el-table-column prop="Remarks" label="备注" align="center" width="150px"></el-table-column>
+                </el-table>
+            </div>
+        </el-dialog>
     </section>
 </template>
 
 <script>
 import datas from './datas.js'
 import methods from './methods.js'
+var mediaQueryList = window.matchMedia('print')
 
+console.log(mediaQueryList)
+
+mediaQueryList.addListener(function(mql) {
+    console.log(mql)
+    if (mql.matches) {
+        alert(1)
+    } else {
+        alert(2)
+    }
+})
 export default {
     data() {
         return datas.init()
@@ -225,7 +265,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped media="print">
 .el-table {
     margin-top: 15px;
 }
@@ -247,6 +287,17 @@ export default {
 .el-table /deep/ .cell {
     white-space: pre-wrap;
     text-align: center;
-    /* padding: 0px 8px; */
+    padding: 0px;
+}
+
+.printTable {
+    margin-top: 0;
+}
+
+.printTable /deep/ td {
+    padding: 8px 0px;
+}
+@page {
+    size: A4 landscape;
 }
 </style>

@@ -72,7 +72,9 @@ export default {
                 deliveryDate : [
                     {required : true, message : '请输入送货时间', trigger : 'blur'}
                 ],
-            }
+            },
+             // 打印窗口
+             outVisible : false
         }
     }
 }

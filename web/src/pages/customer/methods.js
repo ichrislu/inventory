@@ -164,7 +164,7 @@ export default {
         let _params = {
             remarks: this.remarkForm.Remarks
         }
-        this.$axios.put('http://localhost/customer/' + parseIntthis.remarkForm.Id + '/remarks', this.getFormDataFromJson(_params)).then(res => {
+        this.$axios.put('http://localhost/customer/' + this.remarkForm.Id + '/remarks', this.getFormDataFromJson(_params)).then(res => {
 
             this.getList()
             this.showRemarkFormDialogVisible = false;
@@ -234,4 +234,26 @@ export default {
         }
         return ''
     },
+
+    //------------------------------打印事件---------------------------
+    print(){
+        this.outVisible = true
+        // console.log(this.searchForm.checked == true);
+
+        // if(this.searchForm.checked == true)
+        // this.$confirm('确认打印包含已送货客户的信息吗?', '提示', {
+        //     confirmButtonText: '确定',
+        //     cancelButtonText: '取消',
+        //     type: 'warning'
+        //   }).then(
+
+        //   )
+    },
+
+    // printClose(){
+    //     // location.reload()
+    //     // this.getList()
+    // }
+
+
 }
