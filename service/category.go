@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"inventory/dao"
 	"inventory/database"
 	"inventory/model"
@@ -18,8 +17,6 @@ func AddCategory(category model.Category) (model.Category, error) {
 	}
 
 	category.Id = GetId()
-
-	fmt.Println("in service", category)
 
 	db := database.DB
 	return dao.AddCategory(db, category)

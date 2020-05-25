@@ -1,47 +1,64 @@
 package main
 
 import (
-	"fmt"
-	"github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	_ "inventory/config"
 	"inventory/database"
 	_ "inventory/statik"
-	"log"
 	"os"
 	"os/exec"
+	"os/signal"
 	"runtime"
 	"strings"
-	"time"
 )
 
 func main() {
-	file, err := os.OpenFile("inventory.log", os.O_CREATE|os.O_WRONLY, 0666)
+	file, err := os.OpenFile("inventory.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND|os.O_SYNC, 0666)
 	if err != nil {
-		log.Fatal("Failed to log to file, quit now!")
+		log.Warn("写入磁盘日志失败：", err)
+	} else {
+		log.SetOutput(file)
 	}
-	logrus.SetOutput(file)
-	logrus.SetLevel(logrus.InfoLevel)
+
+	log.SetLevel(log.InfoLevel)
 
 	router := initRouter()
-	go open(getUrl(), 1)
-
 	defer database.DB.Close()
 
-	router.Logger.Fatal(router.Start(viper.GetString("server.address")))
+	go func() {
+		runtime.Gosched()
+
+		err := router.Start(viper.GetString("server.address"))
+		if err != nil {
+			log.Panic("web服务启动失败：", err)
+		}
+	}()
+
+	open(getUrl())
+
+	handleSignal()
 }
 
 // only windows
-func open(url string, delay time.Duration) {
+func open(url string) {
 	if runtime.GOOS == "windows" {
-		time.Sleep(delay * time.Second)
-
 		if err := exec.Command("cmd", "/c", "start", url).Start(); err != nil {
-			fmt.Println("open failed", err.Error())
+			log.Warn("打开浏览器失败：", err)
 		}
 	}
 }
 
 func getUrl() string {
 	return strings.Join([]string{"http://localhost", viper.GetString("server.address")}, "")
+}
+
+func handleSignal() {
+	c := make(chan os.Signal)
+	// 监听指定信号
+	signal.Notify(c, os.Interrupt, os.Kill)
+
+	//阻塞直至有信号传入
+	s := <-c
+	log.Info("程序退出，信号：", s)
 }

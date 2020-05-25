@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"inventory/model"
 	"inventory/service"
@@ -12,9 +11,7 @@ func AddCategory(c echo.Context) error {
 	var category model.Category
 	c.Bind(&category)
 
-	fmt.Println("前", category)
 	result, err := service.AddCategory(category)
-	fmt.Println("后", result)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
