@@ -7,6 +7,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
 
+import Print from 'vue-print-nb'
 
 // axios.defaults.baseURL = process.env.NODE_ENV === 'mock' ? '/mock' : '/api'
 // console.log('process.env.NODE_ENV', process.env.NODE_ENV)
@@ -18,6 +19,7 @@ Vue.config.productionTip = false
 
 
 Vue.use(ElementUI)
+Vue.use(Print)
 
 /* eslint-disable no-new */
 new Vue({

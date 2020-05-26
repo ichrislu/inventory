@@ -13,11 +13,12 @@ export default {
                 });
             }
         }).catch(err => {
-            console.log(err.response);
+            console.log(err);
         })
 
     },
 
+    //  设置品牌品类
     setCate(arr) {
         for (let i = 0; i < arr.length; i++) {
             var obj = JSON.parse(window.sessionStorage.getItem('key_' + arr[i].Bid))
@@ -264,15 +265,6 @@ export default {
                 });
             })
         }
-    },
-    //--------------------------------------------------------------------- 获取分类  --------------------------------------------
-    getCateList() {
-        // debugger
-        this.$axios.get('http://localhost/category').then(res => {
-            this.options = res.data
-        }).catch(err => {
-            console.log(err.response);
-        })
     },
 
     // ------------------------------------------------ 重置表单 ---------------------------------

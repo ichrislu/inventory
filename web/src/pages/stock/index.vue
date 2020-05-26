@@ -1,5 +1,5 @@
 <template>
-    <section>
+    <section >
         <el-card style="margin-bottom: 20px;">
             <!-- --------------------------------------------------------------- 查找区 ------------------------------------------------ -->
             <el-row :gutter="20" style="margin-bottom: 20px;">
@@ -22,6 +22,7 @@
                     <el-checkbox v-model="searchForm.checked">全部库存</el-checkbox>
                     <el-button type="primary" @click="search">查询</el-button>
                     <el-button @click="reset('searchRef')">重置</el-button>
+
                 </el-form>
             </el-row>
         </el-card>
@@ -78,13 +79,7 @@
         </el-card>
 
         <!--------------------------------------------------------新增库存对话框-------------------------------------------------------->
-        <el-dialog
-            title="新增库存"
-            :visible.sync="showAddFormDialogVisible"
-            width="30%"
-            :rules="addFormRules"
-            @close="resetForm('addForm')"
-        >
+        <el-dialog title="新增库存" :visible.sync="showAddFormDialogVisible" width="30%" :rules="addFormRules" @close="resetForm('addForm')">
             <el-form ref="addForm" :model="addForm" label-width="120px" :rules="addFormRules">
                 <el-form-item label="供应商" prop="Provider">
                     <el-input v-model="addForm.Provider"></el-input>
@@ -222,6 +217,8 @@
                 <el-button type="primary" @click="outStock">确认</el-button>
             </span>
         </el-dialog>
+
+
     </section>
 </template>
 <script>
@@ -234,7 +231,8 @@ export default {
         return datas.init()
     },
     created() {
-        this.getList(), this.getCateList()
+        this.getList()
+        // , this.getCateList()
     },
     methods: methods,
     filters: {
@@ -256,7 +254,8 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped >
+
 .el-table {
     margin-top: 15px;
 }
@@ -278,4 +277,6 @@ export default {
 .el-table /deep/ .cell {
     white-space: pre-wrap;
 }
+
+
 </style>
