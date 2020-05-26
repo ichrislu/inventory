@@ -37,12 +37,7 @@ export default {
         })
     },
 
-    // 重置查询功能
-    reset(ref) {
-        let _this = this
-        util.resetForm(_this ,ref)
-        this.getList()
-    },
+
 
     //---------------------------------------------------------录入客户信息------------------------------------------------------------------------
     showCustomer() {
@@ -159,12 +154,6 @@ export default {
         })
     },
 
-    // ------------------------------------------------ 重置表单 ---------------------------------
-    resetForm(formName) {
-        if (this.$refs[formName] !== undefined) {
-            this.$refs[formName].resetFields();
-        }
-    },
 
     // -------------------------------------------删除客户 ----------------------------------
     deleteCustomer(id) {
@@ -204,4 +193,16 @@ export default {
     print(){
         this.outVisible = true
     },
+
+    //------------------------------表单重置---------------------------
+    formClose(ref) {
+        let _this = this
+        util.resetForm(_this, ref)
+
+        if(ref == 'searchRef') {
+            _this.searchForm.checked = false
+            _this.getList()
+        }
+    },
+
 }

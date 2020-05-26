@@ -145,17 +145,5 @@ export default {
     formClose(ref) {
         let _this = this
         util.resetForm(_this, ref)
-        // switch (ref) {
-        //     //增加品类表单
-        //     case 'addCateRef':
-        //         util.resetForm(_this, 'addCateRef')
-        //         break;
-        //         //增加品牌表单
-        //     case 'addBrandsFormRef':
-        //         util.resetForm(_this, 'addBrandsFormRef')
-        //         break;
-        //     default:
-        //         break;
-        // }
     },
 }

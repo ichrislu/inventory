@@ -3,7 +3,7 @@
         <el-card style="margin-bottom: 20px;">
             <!-- --------------------------------------------------------------- 查找区 ------------------------------------------------ -->
             <el-row :gutter="20" style="margin-bottom: 20px;">
-                <el-form :model="searchForm" :inline="true" class="demo-form-inline" label-width="110px" ref="search">
+                <el-form :model="searchForm" :inline="true" class="demo-form-inline" label-width="110px" ref="searchRef">
                     <el-form-item prop="time">
                         <el-date-picker
                             unlink-panels
@@ -21,7 +21,7 @@
                     </el-form-item>
                     <el-checkbox v-model="searchForm.checked">全部客户</el-checkbox>
                     <el-button type="primary" @click="search">查询</el-button>
-                    <el-button @click="reset('search')">重置</el-button>
+                    <el-button @click="formClose('searchRef')">重置</el-button>
                 </el-form>
             </el-row>
         </el-card>
@@ -82,7 +82,7 @@
         </el-card>
 
         <!--------------------------------------------------------录入客户信息对话框-------------------------------------------------------->
-        <el-dialog title="客户信息" :visible.sync="customerFormDialogVisible" width="30%" @close="resetForm('setCustomerForm')">
+        <el-dialog title="客户信息" :visible.sync="customerFormDialogVisible" width="30%" @close="formClose('setCustomerForm')">
             <el-form ref="setCustomerForm" :model="setCustomerForm" label-width="120px" :rules="formRules">
                 <el-form-item label="出货人" prop="shipper">
                     <el-input v-model="setCustomerForm.shipper" label="描述文字"></el-input>
@@ -130,7 +130,7 @@
         </el-dialog>
 
         <!--------------------------------------------------------修改客户信息对话框-------------------------------------------------------->
-        <el-dialog title="出库" :visible.sync="editCustomerFormDialogVisible" width="30%" @close="resetForm('setCustomerForm')">
+        <el-dialog title="出库" :visible.sync="editCustomerFormDialogVisible" width="30%" >
             <el-form ref="setCustomerForm" :model="editCustomerForm" label-width="120px" :rules="formRules">
                 <el-form-item label="出货人" prop="shipper">
                     <el-input v-model="editCustomerForm.shipper" label="描述文字"></el-input>
@@ -181,8 +181,8 @@
         </el-dialog>
 
         <!-- 备注对话框 -->
-        <el-dialog title="添加备注" :visible.sync="showRemarkFormDialogVisible" width="30%">
-            <el-form ref="form" :model="remarkForm" label-width="120px">
+        <el-dialog title="添加备注" :visible.sync="showRemarkFormDialogVisible" width="30%" @close="formClose('customerForm')">
+            <el-form ref="customerForm" :model="remarkForm" label-width="120px">
                 <el-form-item label="备注" prop="Remarks">
                     <el-input type="textarea" placeholder="请输入内容" v-model="remarkForm.Remarks" maxlength="200" size="max" autosize> </el-input>
                 </el-form-item>

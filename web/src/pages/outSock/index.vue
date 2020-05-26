@@ -3,7 +3,7 @@
         <el-card style="margin-bottom: 20px;">
             <!-- --------------------------------------------------------------- 查找区 ------------------------------------------------ -->
             <el-row :gutter="20" style="margin-bottom: 20px;">
-                <el-form :model="searchForm" :inline="true" class="demo-form-inline" label-width="110px" ref="search">
+                <el-form :model="searchForm" :inline="true" class="demo-form-inline" label-width="110px" ref="searchRef">
                     <el-form-item prop="time">
                         <el-date-picker
                             unlink-panels
@@ -20,7 +20,7 @@
                         <el-input placeholder="请输入出货人" v-model="searchForm.shipper" clearable></el-input>
                     </el-form-item>
                     <el-button type="primary" @click="search">查询</el-button>
-                    <el-button @click="reset('search')">重置</el-button>
+                    <el-button @click="formClose('searchRef')">重置</el-button>
                 </el-form>
             </el-row>
         </el-card>
@@ -72,7 +72,7 @@
 
         <!-- 备注对话框 -->
         <el-dialog title="添加备注" :visible.sync="showRemarkFormDialogVisible" width="30%" >
-            <el-form ref="form" :model="remarkForm" label-width="120px" >
+            <el-form ref="outStockRef" :model="remarkForm" label-width="120px" @close="formClose('outStockRef')">
                 <el-form-item label="备注" prop="Remarks">
                     <el-input type="textarea" placeholder="请输入内容" v-model="remarkForm.Remarks" maxlength="200" size="max" autosize> </el-input>
                 </el-form-item>

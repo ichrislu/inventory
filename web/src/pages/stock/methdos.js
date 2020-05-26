@@ -1,9 +1,5 @@
-import util from '../../common/util.js'
+import util from '../../common/util'
 import rules from '../../common/js/rules'
-import {
-    getList
-} from '../../api/stockApi'
-
 
 export default {
     // ---------------------------------------------------- 获取库存列表数据--------------------------------------------------
@@ -326,27 +322,11 @@ export default {
     //-----------------------------------------表单重置中心-----------------------------------------
     formClose(ref) {
         let _this = this
-        switch (ref) {
-            //查询表单
-            case 'searchRef':
-                _this.searchForm.checked = false
-                util.resetForm(_this, 'searchRef')
-                _this.getList()
-                break;
-            // 备注表单
-            case 'remarkForm':
-                util.resetForm(_this, 'remarkForm')
-                break;
-            //新增库存表单
-            case 'addForm':
-                util.resetForm(_this, 'addForm')
-                break;
-            //出库表单
-            case 'outStockForm':
-                util.resetForm(_this, 'outStockForm')
-                break;
-            default:
-                break;
+        util.resetForm(_this, ref)
+
+        if(ref == 'searchRef') {
+            _this.searchForm.checked = false
+            _this.getList()
         }
     },
 
