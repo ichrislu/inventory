@@ -5,28 +5,33 @@ export default {
         // debugger
         this.$axios.get('http://localhost/category').then(res => {
             this.list = res.data
-            for (let i = 0; i < res.data.length; i++) {
-                for (let j = 0; j < res.data[i].Category.length; j++) {
-                    let obj = {
-                        category: res.data[i].Name,
-                        brand: res.data[i].Category[j].Name
+            // console.log(res.data);
+            if (res.data !== null) {
+                for (let i = 0; i < res.data.length; i++) {
+                    for (let j = 0; j < res.data[i].Category.length; j++) {
+                        let obj = {
+                            category: res.data[i].Name,
+                            brand: res.data[i].Category[j].Name
+                        }
+                        window.sessionStorage.setItem('key_' + res.data[i].Category[j].Id, JSON.stringify(obj));
                     }
-                    window.sessionStorage.setItem('key_' + res.data[i].Category[j].Id, JSON.stringify(obj));
                 }
+                window.sessionStorage.setItem('pickValue', JSON.stringify(this.list))
             }
-            window.sessionStorage.setItem('pickValue', JSON.stringify(this.list))
         })
     },
     //增加品类
     addcate() {
-        for (var i = 0; i < this.list.length; i++) {
-            if (this.list[i].Name == this.addForm.name) {
-                this.$notify.error({
-                    title: '错误',
-                    message: '该分类已存在',
-                    position: 'bottom-right'
-                });
-                return true
+        if (this.list !== null) {
+            for (var i = 0; i < this.list.length; i++) {
+                if (this.list[i].Name == this.addForm.name) {
+                    this.$notify.error({
+                        title: '错误',
+                        message: '该分类已存在',
+                        position: 'bottom-right'
+                    });
+                    return true
+                }
             }
         }
 
@@ -134,7 +139,7 @@ export default {
             err => {
                 this.$notify.error({
                     title: '错误',
-                    message: '删除品牌失败',
+                    message: err.response.data,
                     position: 'bottom-right'
                 });
             }
