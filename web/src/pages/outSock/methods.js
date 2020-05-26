@@ -1,13 +1,29 @@
+import { getList } from '../../api/stockApi'
+import util from '../../common/util';
+
 export default {
-
-
     // 获取库存列表数据
     getList() {
+        // getList(para).then(res => {
+        //     let arr = res.data;
+        //     this.setCate(arr)
+        //     this.outStockList = arr;
+
+        //     if (this.outStockList.length > 100) {
+        //         this.$notify({
+        //             title: '成功',
+        //             message: '数据量较大,建议按日期过滤',
+        //             position: 'bottom-right',
+        //             type: 'warning'
+        //         });
+        //     }
+        // })
+
         this.$axios.get('http://localhost/saled').then(res => {
             let arr = res.data;
-            this.setCate(arr)
+            // 设置 品类品牌
+            util.setCate(arr)
             this.outStockList = arr;
-
             if (this.outStockList.length > 100) {
                 this.$notify({
                     title: '成功',
@@ -19,23 +35,8 @@ export default {
         })
     },
 
-    setCate(arr) {
-        console.log(arr);
-
-        for (let i = 0; i < arr.length; i++) {
-            // console.log(window.sessionStorage.getItem('key_' + arr[i].Bid));
-            var obj = JSON.parse(window.sessionStorage.getItem('key_' + arr[i].Bid))
-            // console.log(obj);
-            arr[i].Brand = obj.brand,
-                arr[i].Category = obj.category
-        }
-        return arr
-    },
     //-------------------------------------------------------根据 年月日, 供货商查询------------------------------------------------------
     search() {
-        console.log(this.searchForm.time);
-        console.log(this.searchForm.time);
-
         this.$axios.get('http://localhost/saled', {
             params: {
                 shipper: this.searchForm.shipper,
@@ -43,10 +44,7 @@ export default {
                 end: this.searchForm.time[1],
             }
         }).then(res => {
-            this.outStockList = this.setCate(res.data)
-
-            // console.log(res.data);
-            // console.log(this.outStockList);
+            this.outStockList = util.setCate(res.data)
         })
     },
 
@@ -67,7 +65,6 @@ export default {
         this.remarkForm.Remarks = row.Remarks
         this.remarkForm.Id = row.Id
         this.showRemarkFormDialogVisible = true
-        // console.log(row);
     },
 
     // 新增备注
@@ -75,17 +72,13 @@ export default {
         let _params = {
             remarks: this.remarkForm.Remarks
         }
-        this.$axios.put('http://localhost/saled/' + this.remarkForm.Id + '/remarks', this.getFormDataFromJson(_params)).then(() => {
+        this.$axios.put('http://localhost/saled/' + this.remarkForm.Id + '/remarks', util.getFormDataFromJson(_params)).then(() => {
             this.getList()
             this.showRemarkFormDialogVisible = false;
-        }).catch(function (error) {})
-    },
-    getFormDataFromJson(json) {
-        let params = new URLSearchParams()
-        for (var key in json) {
-            params.append(key, json[key]);
-        }
-        return params;
+        }).catch(function (err) {
+            console.log(err);
+
+        })
     },
 
     // ----------------------------------------------------确认出库----------------------------------------------------------
@@ -104,7 +97,7 @@ export default {
         }).catch(() => {
             this.$notify.error({
                 title: '错误',
-                message: '出库失败',
+                message: '取消了出库',
                 position: 'bottom-right'
             });
         });

@@ -1,11 +1,9 @@
+import util from '../../common/util'
+
 export default {
-
-
     // ---------------------------------------------------获取顾客列表数据-----------------------------
     getList() {
         this.$axios.get('http://localhost/customer').then(res => {
-            // console.log(res.data);
-
             this.customerList = res.data
         })
     },
@@ -25,10 +23,6 @@ export default {
     },
     //-------------------------------------------------------根据 年月日, 供货商查询------------------------------------------------------
     search() {
-        // console.log(this.searchForm.shipper);
-        // console.log(this.searchForm.time[0].begin);
-        // console.log(this.searchForm.time[0].end);
-
         this.$axios.get('http://localhost/customer', {
             params: {
                 shipper: this.searchForm.shipper,
@@ -40,29 +34,21 @@ export default {
             this.customerList = res.data
         }).catch(err => {
             console.log(err.response);
-
         })
     },
 
     // 重置查询功能
     reset(ref) {
-        this.resetForm(ref)
+        let _this = this
+        util.resetForm(_this ,ref)
         this.getList()
-    },
-    // 重置表单
-    resetForm(formName) {
-        if (this.$refs[formName] !== undefined) {
-            this.$refs[formName].resetFields();
-        }
     },
 
     //---------------------------------------------------------录入客户信息------------------------------------------------------------------------
     showCustomer() {
         this.customerFormDialogVisible = true
-        // console.log(this.setCustomerForm);
         this.$refs['setCustomerForm'].validate(valid => {
             if (valid) {
-                // console.log('验证通过');
                 this.$axios.post('http://localhost/customer', {
                     Shipper: this.setCustomerForm.shipper,
                     Name: this.setCustomerForm.name,
@@ -82,29 +68,22 @@ export default {
                         position: 'bottom-right'
                     });
                 }).catch(err => {
-                    // console.log(err.response);
                     this.$notify.error({
                         title: '失败',
                         message: '客户信息录入失败',
                         position: 'bottom-right'
                     });
                 })
-
             } else {
                 console.log('验证不通过');
 
             }
         })
-
-
     },
-
-
 
     // ----------------------------------------------------------修改客户信息------------------------------------------
     // 获取选中库存数据
     showEditForm(editForm) {
-        console.log(editForm);
         this.editCustomerFormDialogVisible = true
         this.editCustomerForm.shipper = editForm.Shipper
         this.editCustomerForm.model = editForm.Model
@@ -115,7 +94,6 @@ export default {
         this.editCustomerForm.deliveryDate = editForm.DeliveryDate
         this.editCustomerForm.status = editForm.Status
         this.editCustomerForm.id = editForm.Id
-        console.log(editForm);
     },
 
     EditForm() {
@@ -152,8 +130,6 @@ export default {
     // ------------------------------------------------------------ 备注功能 ------------------------------------------------------------
     // 获取备注
     showRemark(row) {
-        // console.log(row.Id);
-        console.log(row);
         this.remarkForm.Remarks = row.Remarks
         this.remarkForm.Id = row.Id
         this.showRemarkFormDialogVisible = true
@@ -164,7 +140,7 @@ export default {
         let _params = {
             remarks: this.remarkForm.Remarks
         }
-        this.$axios.put('http://localhost/customer/' + this.remarkForm.Id + '/remarks', this.getFormDataFromJson(_params)).then(res => {
+        this.$axios.put('http://localhost/customer/' + this.remarkForm.Id + '/remarks', util.getFormDataFromJson(_params)).then(res => {
 
             this.getList()
             this.showRemarkFormDialogVisible = false;
@@ -174,7 +150,6 @@ export default {
                 position: 'bottom-right'
             });
         }).catch(err => {
-            // console.log(err.response);
             this.$notify.error({
                 title: '失败',
                 message: '修改备注失败',
@@ -183,26 +158,16 @@ export default {
 
         })
     },
-    getFormDataFromJson(json) {
-        let params = new URLSearchParams()
-        for (var key in json) {
-            params.append(key, json[key]);
-        }
-        return params;
-    },
+
     // ------------------------------------------------ 重置表单 ---------------------------------
     resetForm(formName) {
         if (this.$refs[formName] !== undefined) {
             this.$refs[formName].resetFields();
         }
-        // this.$refs[formName].resetFields()
     },
-
 
     // -------------------------------------------删除客户 ----------------------------------
     deleteCustomer(id) {
-        // console.log(id);
-
         this.$confirm('确认删除该用户?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
@@ -216,7 +181,6 @@ export default {
                     position: 'bottom-right'
                 });
             }).catch(err => {
-                // console.log(err.response);
                 this.$notify.error({
                     title: '错误',
                     message: err.response.data,
@@ -225,6 +189,7 @@ export default {
             });
         })
     },
+
     //-----------------------设置表格每行样式--------------------
     tableRowClassName({
         row
@@ -238,22 +203,5 @@ export default {
     //------------------------------打印事件---------------------------
     print(){
         this.outVisible = true
-        // console.log(this.searchForm.checked == true);
-
-        // if(this.searchForm.checked == true)
-        // this.$confirm('确认打印包含已送货客户的信息吗?', '提示', {
-        //     confirmButtonText: '确定',
-        //     cancelButtonText: '取消',
-        //     type: 'warning'
-        //   }).then(
-
-        //   )
     },
-
-    // printClose(){
-    //     // location.reload()
-    //     // this.getList()
-    // }
-
-
 }

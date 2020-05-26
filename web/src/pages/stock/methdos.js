@@ -1,12 +1,34 @@
+import util from '../../common/util.js'
+import rules from '../../common/js/rules'
+import {
+    getList
+} from '../../api/stockApi'
+
+
 export default {
     // ---------------------------------------------------- 获取库存列表数据--------------------------------------------------
     getList() {
+        // getList.then(res => {
+        //     this.stockList = util.setCate(res.data)
+        //     if (this.stockList.length > 100) {
+        //         this.$notify({
+        //             title: '警告',
+        //             message: '数据量较大,建议按日期过滤',
+        //             position: 'bottom-right',
+        //             type: 'warning'
+        //         });
+        //     }
+        // }).catch(err => {
+        //     console.log(err);
+        // })
+
         this.$axios.get('http://localhost/stock').then(res => {
-            this.stockList = this.setCate(res.data)
-            // console.log(this.stockList.length);
+            this.stockList = util.setCate(res.data)
+            this.options = JSON.parse(window.sessionStorage.getItem('pickValue'))
+
             if (this.stockList.length > 100) {
                 this.$notify({
-                    title: '成功',
+                    title: '警告',
                     message: '数据量较大,建议按日期过滤',
                     position: 'bottom-right',
                     type: 'warning'
@@ -15,18 +37,8 @@ export default {
         }).catch(err => {
             console.log(err);
         })
-
     },
 
-    //  设置品牌品类
-    setCate(arr) {
-        for (let i = 0; i < arr.length; i++) {
-            var obj = JSON.parse(window.sessionStorage.getItem('key_' + arr[i].Bid))
-            arr[i].Brand = obj.brand,
-                arr[i].Category = obj.category
-        }
-        return arr
-    },
     //-------------------------------------------------------根据 年月日, 供货商查询------------------------------------------------------
     // 查询功能
     search() {
@@ -38,51 +50,14 @@ export default {
                 all: this.searchForm.checked
             }
         }).then(res => {
-            this.stockList = this.setCate(res.data)
+            this.stockList = util.setCate(res.data)
         }).catch(err => {
             console.log(err.response);
         })
     },
-    // 重置查询功能
-    reset(ref) {
-        this.searchForm.checked = false
-        this.resetForm(ref)
-        this.getList()
-    },
 
     // ------------------------------------------------------ 新增库存  ------------------------------------------------------------------
     addStock() {
-        // this.$refs.addForm.validate( valid => {
-        //     if (valid) {
-        //         this.$axios.post('http://localhost/stock', {
-        //         provider: this.addForm.Provider,
-        //         date: this.addForm.Date,
-        //         bid: this.addForm.Bid,
-        //         model: this.addForm.Model,
-        //         price: parseFloat(this.addForm.Price),
-        //         Quantity: this.addForm.Quantity,
-        //     }).then(res => {
-        //         // this.resetForm(addForm)
-        //         this.$notify.success({
-        //             title: '成功',
-        //             message: '入库成功',
-        //             position: 'bottom-right'
-        //         });
-        //         this.getList()
-        //         this.showAddFormDialogVisible = false
-        //     }).catch(err => {
-        //         // console.log(err.response);
-        //         this.$notify.error({
-        //             title: '错误',
-        //             message: err.response.data,
-        //             position: 'bottom-right'
-        //         });
-
-        //     })
-        //     return true
-        //     }
-        // })
-        var _this = this
         if (parseFloat(this.addForm.Price) <= 0) {
             this.$notify({
                 title: '警告',
@@ -108,7 +83,7 @@ export default {
                         price: parseFloat(this.addForm.Price),
                         Quantity: this.addForm.Quantity,
                     }).then(res => {
-                        _this.resetForm('addForm')
+                        let _this = this
                         this.addValue = []
                         this.$notify.success({
                             title: '成功',
@@ -118,7 +93,6 @@ export default {
                         this.getList()
                         this.showAddFormDialogVisible = false
                     }).catch(err => {
-                        // console.log(err.response);
                         this.$notify.error({
                             title: '错误',
                             message: err,
@@ -129,15 +103,22 @@ export default {
                 }
             })
         }
-
     },
     // 新增库存分类 级联选择
     addChangeRef() {
         const nodesObj = this.$refs['cascader'].getCheckedNodes();
         const Id = nodesObj[0].data.Id
-        // console.log(nodesObj[0].data.Id);
         this.addForm.Bid = Id
     },
+
+    // // 监听新增表单关闭事件
+    // addFormClose(ref) {
+    //     console.log(ref);
+
+    //     let _this = this
+    //     util.resetForm(_this, ref)
+    // },
+
 
     // ------------------------------------------------------------ 备注功能 ------------------------------------------------------------
     // 获取备注
@@ -152,7 +133,7 @@ export default {
         let _params = {
             remarks: this.remarkForm.Remarks
         }
-        this.$axios.put('http://localhost/stock/' + this.remarkForm.Id + '/remarks', this.getFormDataFromJson(_params)).then(() => {
+        this.$axios.put('http://localhost/stock/' + this.remarkForm.Id + '/remarks', util.getFormDataFromJson(_params)).then(() => {
             this.getList()
             this.showRemarkDialogVisible = false;
         }).catch(err => {
@@ -160,19 +141,15 @@ export default {
         })
     },
 
-    getFormDataFromJson(json) {
-        let params = new URLSearchParams()
-        for (var key in json) {
-            params.append(key, json[key]);
-        }
-        return params;
-    },
+    // // 监听修改备注表单的关闭
+    // eidtRemark(ref) {
+    //     let _this = this
+    //     util.resetForm(_this, ref)
+    // },
 
     // ----------------------------------------------------------修改库存数据------------------------------------------
     // 获取选中库存数据
     showDditForm(editForm) {
-        // console.log(editForm);
-
         this.editForm.Provider = editForm.Provider
         this.editForm.Date = editForm.Date
         this.editForm.Model = editForm.Model
@@ -187,7 +164,6 @@ export default {
     },
 
     changePrice() {
-        // console.log('改变了');
         this.$notify({
             title: '警告',
             message: '修改价格需要重新计算利润',
@@ -204,12 +180,8 @@ export default {
         this.editForm.Bid = Id
     },
 
-
-
     // 修改库存
     editFormHandler() {
-        // console.log(this.editForm.Price);
-
         if (this.editForm.Quantity < this.editForm.EditNum && this.editForm.Quantity != 0) {
             this.$notify.error({
                 title: '错误',
@@ -243,7 +215,6 @@ export default {
                 Model: this.editForm.Model,
                 Price: parseFloat(this.editForm.Price),
                 Quantity: this.editForm.Quantity,
-                // Inventory: this.editForm.Inventory,
                 Bid: this.editForm.Bid
             }
             this.$axios.put('http://localhost/stock/' + this.editForm.Id, this.getFormDataFromJson(_params)).then(
@@ -267,19 +238,9 @@ export default {
         }
     },
 
-    // ------------------------------------------------ 重置表单 ---------------------------------
-    resetForm(formName) {
-        if (this.$refs[formName] !== undefined) {
-            this.$refs[formName].resetFields();
-        }
-        // this.$refs[formName].resetFields()
-    },
-
     // ------------------------------------------- 出库功能 ------------------------------
     // 获取 将要出库的商品信息
     showOutStock(outstock) {
-        console.log(outstock);
-
         this.outStockFormDialogVisible = true
         this.outStockForm.provider = outstock.Provider
         this.outStockValue = outstock.Category + ' / ' + outstock.Brand
@@ -324,28 +285,68 @@ export default {
                 position: 'bottom-right'
             });
         } else {
-            this.$axios.post('http://localhost/saled', {
-                shipper: this.outStockForm.shipper,
-                date: this.outStockForm.outDate,
-                sid: this.outStockForm.sid,
-                price: parseFloat(this.outStockForm.sell),
-                quantity: this.outStockForm.quantity
-            }).then(() => {
-                this.outStockFormDialogVisible = false
-                this.getList()
-                this.$notify.success({
-                    title: '成功',
-                    message: '出库成功',
-                    position: 'bottom-right'
-                });
-            }).catch(error => {
-                console.log(error.response);
-                this.$notify.error({
-                    title: '错误',
-                    message: error.response,
-                    position: 'bottom-right'
-                });
+            this.$refs['outStockForm'].validate(valid => {
+                if (valid) {
+                    this.$axios.post('http://localhost/saled', {
+                        shipper: this.outStockForm.shipper,
+                        date: this.outStockForm.outDate,
+                        sid: this.outStockForm.sid,
+                        price: parseFloat(this.outStockForm.sell),
+                        quantity: this.outStockForm.quantity
+                    }).then(() => {
+                        this.outStockFormDialogVisible = false
+                        this.getList()
+                        this.$notify.success({
+                            title: '成功',
+                            message: '出库成功',
+                            position: 'bottom-right'
+                        });
+                    }).catch(err => {
+                        if (err.response.data == '出库数量不正确') {
+                            this.$notify.error({
+                                title: '错误',
+                                message: err.response.data,
+                                position: 'bottom-right'
+                            });
+                        } else if (err.response.data == '库存数量不足') {
+                            this.$notify.error({
+                                title: '错误',
+                                message: err.response.data,
+                                position: 'bottom-right'
+                            });
+                        }
+                    })
+                } else {
+                    console.log('出库信息验证未通过');
+                }
             })
+        }
+    },
+
+    //-----------------------------------------表单重置中心-----------------------------------------
+    formClose(ref) {
+        let _this = this
+        switch (ref) {
+            //查询表单
+            case 'searchRef':
+                _this.searchForm.checked = false
+                util.resetForm(_this, 'searchRef')
+                _this.getList()
+                break;
+            // 备注表单
+            case 'remarkForm':
+                util.resetForm(_this, 'remarkForm')
+                break;
+            //新增库存表单
+            case 'addForm':
+                util.resetForm(_this, 'addForm')
+                break;
+            //出库表单
+            case 'outStockForm':
+                util.resetForm(_this, 'outStockForm')
+                break;
+            default:
+                break;
         }
     },
 
@@ -361,8 +362,6 @@ export default {
 
     // -------------------------------------------删除库存 ----------------------------------
     deleteStock(id) {
-        // console.log(id);
-
         this.$confirm('确认删除该库存?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
@@ -376,7 +375,6 @@ export default {
                     position: 'bottom-right'
                 });
             }).catch(err => {
-                // console.log(err.response);
                 this.$notify.error({
                     title: '错误',
                     message: err.response.data,

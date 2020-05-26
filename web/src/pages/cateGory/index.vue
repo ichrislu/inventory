@@ -6,7 +6,7 @@
                     <el-row><div>品类列表</div></el-row>
                     <el-row>
                         <!-- <el-button>新增品类</el-button> -->
-                        <el-popover placement="left" width="80px" v-model="visible" @hide="addFormClose">
+                        <el-popover placement="left" width="80px" v-model="visible" @hide ="formClose('addCateRef')">
                             <el-form :model="addForm" ref="addCateRef" :rules="addCateFormRules" >
                                 <el-form-item prop="name">
                                     <el-input class="input" v-model="addForm.name"></el-input>
@@ -18,6 +18,7 @@
                         </el-popover>
                     </el-row>
                 </el-row>
+
 <!---------------------------------------------------- 分类列表区 ---------------------------------------------->
                 <el-row>
                     <el-table :data="list" stripe style="width: 100%" border highlight-current-row>

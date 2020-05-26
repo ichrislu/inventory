@@ -65,13 +65,8 @@ export default {
                     required: true,
                     message: '请输入进货价格',
                     trigger: 'blur'
-                }],
+                },],
                 Quantity: [{
-                    required: true,
-                    message: '请输入数量',
-                    trigger: 'blur'
-                }],
-                quantity: [{
                     required: true,
                     message: '请输入数量',
                     trigger: 'blur'
@@ -89,6 +84,16 @@ export default {
                 shipper: [{
                     required: true,
                     message: '请输入出货人',
+                    trigger: 'blur'
+                }],
+                outDate: [{
+                    required: true,
+                    message: '请输入时间',
+                    trigger: 'blur'
+                }],
+                quantity: [{
+                    required: true,
+                    message: '请输入数量',
                     trigger: 'blur'
                 }],
             },

@@ -21,7 +21,7 @@
                     </el-form-item>
                     <el-checkbox v-model="searchForm.checked">全部库存</el-checkbox>
                     <el-button type="primary" @click="search">查询</el-button>
-                    <el-button @click="reset('searchRef')">重置</el-button>
+                    <el-button @click="formClose('searchRef')">重置</el-button>
 
                 </el-form>
             </el-row>
@@ -79,7 +79,7 @@
         </el-card>
 
         <!--------------------------------------------------------新增库存对话框-------------------------------------------------------->
-        <el-dialog title="新增库存" :visible.sync="showAddFormDialogVisible" width="30%" :rules="addFormRules" @close="resetForm('addForm')">
+        <el-dialog title="新增库存" :visible.sync="showAddFormDialogVisible" width="30%" :rules="addFormRules" @close="formClose('addForm')">
             <el-form ref="addForm" :model="addForm" label-width="120px" :rules="addFormRules">
                 <el-form-item label="供应商" prop="Provider">
                     <el-input v-model="addForm.Provider"></el-input>
@@ -104,9 +104,6 @@
                 <el-form-item label="进货价格(元)" prop="Price">
                     <el-input v-model.number="addForm.Price" oninput="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></el-input>
                 </el-form-item>
-                <!-- <el-form-item label="出库数量(件)" prop="Inventory">
-                    <el-input-number v-model="addForm.Inventory" label="描述文字" disabled></el-input-number>
-                </el-form-item> -->
                 <el-form-item label="此单总量(件)" prop="Quantity">
                     <el-input-number v-model="addForm.Quantity" label="描述文字" :min="0" :precision="0"></el-input-number>
                 </el-form-item>
@@ -118,7 +115,7 @@
         </el-dialog>
 
         <!--------------------------------------------------------修改库存对话框-------------------------------------------------------->
-        <el-dialog title="修改库存" :visible.sync="showEditFormDialogVisible" width="30%" :rules="addFormRules" @close="resetForm('editForm')">
+        <el-dialog title="修改库存" :visible.sync="showEditFormDialogVisible" width="30%" :rules="addFormRules">
             <el-form ref="editForm" :model="editForm" label-width="120px" :rules="addFormRules">
                 <el-form-item label="供应商" prop="Provider">
                     <el-input v-model="editForm.Provider"></el-input>
@@ -148,7 +145,6 @@
                 </el-form-item>
                 <el-form-item label="已销售数量(件)" prop="EditNum">
                     <el-input v-model="editForm.EditNum" label="描述文字" disabled></el-input>
-                    <!-- <div>{{editForm.Quantity - editForm.Inventory}}</div> -->
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -158,7 +154,7 @@
         </el-dialog>
 
         <!--------------------------------------------------------添加备注对话框-------------------------------------------------------->
-        <el-dialog title="修改库存" :visible.sync="showRemarkDialogVisible" width="30%" :rules="addFormRules" @close="resetForm('remarkForm')">
+        <el-dialog title="修改库存" :visible.sync="showRemarkDialogVisible" width="30%" :rules="addFormRules" @close="formClose('remarkForm')">
             <el-form ref="remarkForm" :model="remarkForm" label-width="120px" :rules="addFormRules">
                 <el-form-item label="备注 : " prop="Remarks">
                     <el-input type="textarea" autosize v-model="remarkForm.Remarks" label="描述文字"></el-input>
@@ -171,21 +167,21 @@
         </el-dialog>
 
         <!--------------------------------------------------------出库对话框-------------------------------------------------------->
-        <el-dialog title="出库" :visible.sync="outStockFormDialogVisible" width="30%" :rules="addFormRules" @close="resetForm('outStockForm')">
+        <el-dialog title="出库" :visible.sync="outStockFormDialogVisible" width="30%" @close="formClose('outStockForm')">
             <el-form ref="outStockForm" :model="outStockForm" label-width="120px" :rules="addFormRules">
-                <el-form-item label="供应商" prop="provider">
+                <el-form-item label="供应商" >
                     <el-input v-model="outStockForm.provider" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="品类">
                     <el-input v-model="outStockValue" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="型号" prop="model">
+                <el-form-item label="型号" >
                     <el-input v-model="outStockForm.model" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="此单库存(件)" prop="inventory">
+                <el-form-item label="此单库存(件)" >
                     <el-input v-model="outStockForm.inventory" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="进货价格(元)" prop="price">
+                <el-form-item label="进货价格(元)" >
                     <el-input v-model="outStockForm.price" disabled></el-input>
                 </el-form-item>
 
@@ -232,7 +228,6 @@ export default {
     },
     created() {
         this.getList()
-        // , this.getCateList()
     },
     methods: methods,
     filters: {
