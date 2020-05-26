@@ -33,7 +33,7 @@ export default {
         }).then(res => {
             this.customerList = res.data
         }).catch(err => {
-            console.log(err.response);
+            // console.log(err.response);
         })
     },
 
@@ -110,7 +110,6 @@ export default {
                 position: 'bottom-right'
             });
         }).catch(err => {
-            // console.log(err.response);
             this.$notify.error({
                 title: '失败',
                 message: '修改客户信息失败',

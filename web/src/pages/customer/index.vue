@@ -71,10 +71,10 @@
                                 <el-button icon="el-icon-edit" size="medium " type="success" @click="showRemark(scope.row)"></el-button>
                             </el-tooltip>
                             <!-- 删除按钮 -->
-                            <el-tooltip class="item" effect="dark" content="删除" placement="top" :enterable="false">
+                            <!-- <el-tooltip class="item" effect="dark" content="删除" placement="top" :enterable="false">
                                 <el-button icon="el-icon-delete-solid" size="medium " type="danger" @click="deleteCustomer(scope.row.Id)">
                                 </el-button>
-                            </el-tooltip>
+                            </el-tooltip> -->
                         </template>
                     </el-table-column>
                 </el-table>
