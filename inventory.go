@@ -27,14 +27,14 @@ func main() {
 	defer database.DB.Close()
 
 	go func() {
-		runtime.Gosched()
-
 		err := router.Start(viper.GetString("server.address"))
 		if err != nil {
 			log.Panic("web服务启动失败：", err)
 		}
 	}()
+	defer router.Close()
 
+	runtime.Gosched()
 	open(getUrl())
 
 	handleSignal()
