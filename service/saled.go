@@ -40,6 +40,7 @@ func AddSaled(saled model.Saled) (model.Saled, error) {
 	}
 
 	if stock.Inventory < saled.Quantity {
+		tx.Rollback()
 		return model.Saled{}, errors.New("库存数量不足")
 	}
 
