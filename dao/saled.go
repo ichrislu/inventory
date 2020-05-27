@@ -23,12 +23,20 @@ func GetSaledList(db *gorm.DB, shipper string, begin int, end int) (saledList []
 		Joins("JOIN stock on saled.sid = stock.id").
 		Order("saled.date DESC")
 
+	var whereFlag bool
+
 	if shipper != "" {
+		whereFlag = true
 		db = db.Where("shipper like ?", "%"+shipper+"%")
 	}
 
 	if begin > 0 && end > 0 {
+		whereFlag = true
 		db = db.Where("saled.date >= ? and saled.date <= ?", begin, end)
+	}
+
+	if !whereFlag {
+		db = db.Limit(50)
 	}
 
 	return saledList, db.Find(&saledList).Error
