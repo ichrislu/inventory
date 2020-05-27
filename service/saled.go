@@ -55,7 +55,10 @@ func AddSaled(saled model.Saled) (model.Saled, error) {
 	}
 
 	// 减库存
-	dao.EditStockInventory(tx, saled.Quantity, saled.Sid)
+	if err = dao.EditStockInventory(tx, saled.Quantity, saled.Sid); err != nil {
+		tx.Rollback()
+		return model.Saled{}, err
+	}
 
 	tx.Commit()
 	return result, nil
