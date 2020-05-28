@@ -2,7 +2,9 @@ import util from '../../common/js/util'
 import {
     getCate,
     addCategory,
-    addBrandById
+    addBrandById,
+    deleteCateById,
+    deleteBrandById
 } from '../../api/cateGoryApi'
 
 export default {
@@ -49,11 +51,6 @@ export default {
             });
             window.sessionStorage.clear();
             this.getList()
-            // let _this = this;
-            // setTimeout(() => {
-            //     _this.getList()
-            // }, 100)
-
         }).catch(err => {
             this.$notify.error({
                 title: '错误',
@@ -63,10 +60,6 @@ export default {
         });
 
         this.visible = false
-    },
-    // 监听表单关闭
-    addFormClose() {
-        this.$refs.addCateRef.resetFields()
     },
 
     //获取品牌Id
@@ -81,27 +74,24 @@ export default {
             name: this.addBrandsForm.name
         }
         addBrandById(para).then(() => {
-                this.$notify.success({
-                    title: '成功',
-                    message: '品牌添加成功',
-                    position: 'bottom-right'
-                });
-                window.sessionStorage.clear();
-                this.getList()
-            }).catch(err => {
-                this.$notify.error({
-                    title: '错误',
-                    message: '品牌添加失败',
-                    position: 'bottom-right'
-                });
-            })
+            this.$notify.success({
+                title: '成功',
+                message: '品牌添加成功',
+                position: 'bottom-right'
+            });
+            window.sessionStorage.clear();
+            this.getList()
+        }).catch(err => {
+            this.$notify.error({
+                title: '错误',
+                message: '品牌添加失败',
+                position: 'bottom-right'
+            });
+        })
         this.showBrandDialogVisible = false
     },
 
-    // 监听 增加品牌窗口关闭
-    addBrandsFormClose() {
-        this.$refs.addBrandsFormRef.resetFields()
-    },
+
 
     // 删除分类
     deleteBrand(id) {
@@ -110,9 +100,8 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            this.$axios.delete('http://localhost/category/' + id).
-            // deleteCateById(id).
-            then(res => {
+            deleteCateById(id).then(res => {
+                console.log(res)
                 window.sessionStorage.clear();
                 this.getList()
                 this.$notify.success({
@@ -120,19 +109,13 @@ export default {
                     message: '分类已删除',
                     position: 'bottom-right'
                 });
-            }).catch(err => {
-                this.$notify.error({
-                    title: '错误',
-                    message: err.response.data,
-                    position: 'bottom-right'
-                });
-            });
+            })
         })
     },
 
     // 删除品牌
     removeBrand(id) {
-        this.$axios.delete('http://localhost/category/' + id).then(
+        deleteBrandById(id).then(
             res => {
                 window.sessionStorage.clear();
                 this.getList(),
@@ -142,20 +125,14 @@ export default {
                         position: 'bottom-right'
                     });
             }
-        ).catch(
-            err => {
-                this.$notify.error({
-                    title: '错误',
-                    message: err.response.data,
-                    position: 'bottom-right'
-                });
-            }
         )
     },
 
-    //-----------------------------------------表单重置中心-----------------------------------------
-    formClose(ref) {
-        let _this = this
-        util.resetForm(_this, ref)
+    //-----------------------------------------表单重置-----------------------------------------
+    // 监听表单关闭
+    formClose(formName) {
+        if (this.$refs[formName] !== undefined) {
+            this.$refs[formName].resetFields();
+        }
     },
 }

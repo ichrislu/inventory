@@ -1,8 +1,12 @@
-import util from '../../common/js/util'
+import util, { Datetransformation } from '../../common/js/util'
 import {
-    getStockList,
-    searchStock,
-    addNewStock
+    getStockListAPI,
+    searchStockAPI,
+    addStockAPI,
+    addRemarkAPI,
+    editStockAPI,
+    outStockAPI,
+    deleteStockAPI
 } from '../../api/stockApi'
 export default {
     // ---------------------------------------------------- 获取库存列表数据--------------------------------------------------
@@ -13,10 +17,9 @@ export default {
             })
         }
 
-        getStockList().then(res => {
+        getStockListAPI().then(res => {
             this.stockList = util.setCate(res.data)
             this.options = JSON.parse(window.sessionStorage.getItem('pickValue'))
-
             if (this.stockList.length > 100) {
                 this.$notify({
                     title: '警告',
@@ -25,8 +28,6 @@ export default {
                     type: 'warning'
                 });
             }
-        }).catch(err => {
-            console.log(err);
         })
     },
 
@@ -39,15 +40,7 @@ export default {
             end: this.searchForm.time[1],
             all: this.searchForm.checked
         }
-        // this.$axios.get('http://localhost/stock', {
-        //     params: {
-        //         provider: this.searchForm.keyword,
-        //         begin: this.searchForm.time[0],
-        //         end: this.searchForm.time[1],
-        //         all: this.searchForm.checked
-        //     }
-        // })
-        searchStock(para).then(res => {
+        searchStockAPI(para).then(res => {
             this.stockList = util.setCate(res.data)
         }).catch(err => {
             console.log(err.response);
@@ -74,14 +67,14 @@ export default {
             this.$refs['addForm'].validate(valid => {
                 if (valid) {
                     let para = {
-                            provider: this.addForm.Provider,
-                            date: this.addForm.Date,
-                            bid: this.addForm.Bid,
-                            model: this.addForm.Model,
-                            price: parseFloat(this.addForm.Price),
+                            Provider: this.addForm.Provider,
+                            Date: this.addForm.Date,
+                            Bid: this.addForm.Bid,
+                            Model: this.addForm.Model,
+                            Price: parseFloat(this.addForm.Price),
                             Quantity: this.addForm.Quantity,
                         }
-                        addNewStock(para).then(res => {
+                        addStockAPI(para).then(res => {
                             let _this = this
                             this.addValue = []
                             this.$notify.success({
@@ -91,14 +84,7 @@ export default {
                             });
                             this.getList()
                             this.showAddFormDialogVisible = false
-                        }).catch(err => {
-                            this.$notify.error({
-                                title: '错误',
-                                message: err.response.data,
-                                position: 'bottom-right'
-                            });
                         })
-
                 }
             })
         }
@@ -123,7 +109,7 @@ export default {
         let _params = {
             remarks: this.remarkForm.Remarks
         }
-        this.$axios.put('http://localhost/stock/' + this.remarkForm.Id + '/remarks', util.getFormDataFromJson(_params)).then(() => {
+        addRemarkAPI(this.remarkForm.Id, util.getFormDataFromJson(_params)).then(() => {
             this.getList()
             this.showRemarkDialogVisible = false;
         }).catch(err => {
@@ -134,17 +120,11 @@ export default {
     // ----------------------------------------------------------修改库存数据------------------------------------------
     // 获取选中库存数据
     showDditForm(editForm) {
-        this.editForm.Provider = editForm.Provider
-        this.editForm.Date = editForm.Date
-        this.editForm.Model = editForm.Model
-        this.editForm.Price = editForm.Price
-        this.editForm.Quantity = editForm.Quantity
-        this.editForm.Inventory = editForm.Inventory
-        this.editForm.Bid = editForm.Bid
+        this.editForm = Object.assign(editForm)
         this.editValue = [editForm.Category, editForm.Brand]
-        this.showEditFormDialogVisible = true
         this.editForm.Id = editForm.Id
         this.editForm.EditNum = editForm.Quantity - editForm.Inventory
+        this.showEditFormDialogVisible = true
     },
 
     changePrice() {
@@ -201,7 +181,7 @@ export default {
                 Quantity: this.editForm.Quantity,
                 Bid: this.editForm.Bid
             }
-            this.$axios.put('http://localhost/stock/' + this.editForm.Id, util.getFormDataFromJson(_params)).then(
+            editStockAPI(this.editForm.Id,util.getFormDataFromJson(_params) ).then(
                 res => {
                     this.$notify.success({
                         title: '成功',
@@ -211,73 +191,55 @@ export default {
                     this.getList()
                     this.showEditFormDialogVisible = false
                 }
-            ).catch(err => {
-                console.log(err.response);
-                this.$notify.error({
-                    title: '错误',
-                    message: err.response.data,
-                    position: 'bottom-right'
-                });
-            })
+            )
         }
     },
 
     // ------------------------------------------- 出库功能 ------------------------------
     // 获取 将要出库的商品信息
     showOutStock(outstock) {
-        this.outStockFormDialogVisible = true
-        this.outStockForm.provider = outstock.Provider
+        this.outStockForm = Object.assign(outstock)
         this.outStockValue = outstock.Category + ' / ' + outstock.Brand
-        this.outStockForm.model = outstock.Model
-        this.outStockForm.price = outstock.Price
-        this.outStockForm.inventory = outstock.Inventory
+        this.outStockForm.Quantity = 0
+        this.outStockForm.Sid = outstock.Id
 
-        this.outStockForm.sid = outstock.Id
-        this.outStockForm.inDate = outstock.Date
+        this.outStockFormDialogVisible = true
     },
 
     // 一键出库
     outStock() {
-        if (parseFloat(this.outStockForm.sell) == 0 || this.outStockForm.sell == '') {
+        if (parseFloat(this.outStockForm.Sell) == 0 || this.outStockForm.Sell == '') {
             this.$notify.error({
                 title: '错误',
                 message: '请输入正确的售价',
                 position: 'bottom-right'
             });
-        } else if (this.outStockForm.quantity <= 0) {
-            this.$notify.error({
-                title: '错误',
-                message: '请输入正确的出库数量',
-                position: 'bottom-right'
-            });
-        } else if (this.outStockForm.quantity > this.outStockForm.inventory) {
-            this.$notify.error({
-                title: '错误',
-                message: '库存不足',
-                position: 'bottom-right'
-            });
-        } else if (this.outStockForm.outDate == '') {
+        }
+        else if (this.outStockForm.OutDate == '') {
             this.$notify.error({
                 title: '错误',
                 message: '请输入正确的时间',
                 position: 'bottom-right'
             });
-        } else if (parseFloat(this.outStockForm.inDate) > parseFloat(this.outStockForm.outDate)) {
+        }
+        else if (parseFloat(this.outStockForm.InDate) > parseFloat(this.outStockForm.OutDate)) {
             this.$notify.error({
                 title: '错误',
-                message: '出库时间不能晚于入库时间',
+                message: '出库时间不能早于入库时间',
                 position: 'bottom-right'
             });
-        } else {
+        }
+        else {
             this.$refs['outStockForm'].validate(valid => {
                 if (valid) {
-                    this.$axios.post('http://localhost/saled', {
-                        shipper: this.outStockForm.shipper,
-                        date: this.outStockForm.outDate,
-                        sid: this.outStockForm.sid,
-                        price: parseFloat(this.outStockForm.sell),
-                        quantity: this.outStockForm.quantity
-                    }).then(() => {
+                    let para = {
+                        Shipper: this.outStockForm.Shipper,
+                        Date: this.outStockForm.OutDate,
+                        Sid: this.outStockForm.Sid,
+                        Price: parseFloat(this.outStockForm.Sell),
+                        Quantity: this.outStockForm.Quantity
+                    }
+                    outStockAPI(para).then(() => {
                         this.outStockFormDialogVisible = false
                         this.getList()
                         this.$notify.success({
@@ -285,28 +247,11 @@ export default {
                             message: '出库成功',
                             position: 'bottom-right'
                         });
-                    }).catch(err => {
-                        this.$notify.error({
-                            title: '错误',
-                            message: err.response.data,
-                            position: 'bottom-right'
-                        });
                     })
                 } else {
                     console.log('出库信息验证未通过');
                 }
             })
-        }
-    },
-
-    //-----------------------------------------表单重置中心-----------------------------------------
-    formClose(ref) {
-        let _this = this
-        util.resetForm(_this, ref)
-
-        if (ref == 'searchRef') {
-            _this.searchForm.checked = false
-            _this.getList()
         }
     },
 
@@ -327,22 +272,35 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            this.$axios.delete('http://localhost/stock/' + id).then(res => {
+            deleteStockAPI(id).then(res => {
                 this.getList()
                 this.$notify.success({
                     title: '成功',
                     message: '删除成功',
                     position: 'bottom-right'
                 });
-            }).catch(err => {
-                this.$notify.error({
-                    title: '错误',
-                    message: err.response.data,
-                    position: 'bottom-right'
-                });
-            });
+            })
         })
     },
 
+    // 时间格式转换
+    dataFormatter(row, column, cellValue, inde ) {
+        return Datetransformation(cellValue)
+    },
+
+
+    //-----------------------------------------表单重置-----------------------------------------
+    formClose(formName) {
+        if (this.$refs[formName] !== undefined) {
+            this.$refs[formName].resetFields();
+        }
+        if (formName == 'searchRef') {
+            this.searchForm.checked = false
+            this.getList()
+        }
+        if (formName == 'addForm') {
+            this.addValue = []
+        }
+    },
 
 }

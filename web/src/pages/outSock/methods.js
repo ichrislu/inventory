@@ -1,28 +1,14 @@
-import { getList } from '../../api/stockApi'
-import util from '../../common/js/util';
+import { getOutStockListAPI,searchOutStockAPI,addRemarkAPI } from '../../api/outStockApi'
+import util , {Datetransformation} from '../../common/js/util';
 
 export default {
     // 获取库存列表数据
     getList() {
-        // getList(para).then(res => {
-        //     let arr = res.data;
-        //     this.setCate(arr)
-        //     this.outStockList = arr;
-
-        //     if (this.outStockList.length > 100) {
-        //         this.$notify({
-        //             title: '成功',
-        //             message: '数据量较大,建议按日期过滤',
-        //             position: 'bottom-right',
-        //             type: 'warning'
-        //         });
-        //     }
-        // })
         if( window.sessionStorage.length == 0) {
             this.$router.push({path : '/category'})
         }
 
-        this.$axios.get('http://localhost/saled').then(res => {
+        getOutStockListAPI().then(res => {
             let arr = res.data;
             // 设置 品类品牌
             util.setCate(arr)
@@ -40,13 +26,12 @@ export default {
 
     //-------------------------------------------------------根据 年月日, 供货商查询------------------------------------------------------
     search() {
-        this.$axios.get('http://localhost/saled', {
-            params: {
-                shipper: this.searchForm.shipper,
-                begin: this.searchForm.time[0],
-                end: this.searchForm.time[1],
-            }
-        }).then(res => {
+        let para = {
+            shipper: this.searchForm.shipper,
+            begin: this.searchForm.time[0],
+            end: this.searchForm.time[1],
+        }
+        searchOutStockAPI(para).then(res => {
             this.outStockList = util.setCate(res.data)
         })
     },
@@ -65,23 +50,27 @@ export default {
         let _params = {
             remarks: this.remarkForm.Remarks
         }
-        this.$axios.put('http://localhost/saled/' + this.remarkForm.Id + '/remarks', util.getFormDataFromJson(_params)).then(() => {
+        addRemarkAPI(this.remarkForm.Id, util.getFormDataFromJson(_params)).then(() => {
             this.getList()
             this.showRemarkFormDialogVisible = false;
-        }).catch(function (err) {
-            console.log(err);
-
         })
     },
 
     //--------------------------------表单重置---------------------------------------------
-       formClose(ref) {
-        let _this = this
-        util.resetForm(_this, ref)
+       formClose(formName) {
+        if(formName == 'searchRef') {
+            this.searchForm.checked = false
+            this.getList()
+        }
 
-        if(ref == 'searchRef') {
-            _this.searchForm.checked = false
-            _this.getList()
+        if (this.$refs[formName] !== undefined) {
+            this.$refs[formName].resetFields();
         }
     },
+
+
+    // 时间格式转换
+    dataFormatter(row, column, cellValue, inde ) {
+        return Datetransformation(cellValue)
+    }
 }

@@ -24,54 +24,54 @@ export default {
             customerFormDialogVisible: false,
             // 录入客户信息表单
             setCustomerForm: {
-                shipper: '',
-                model: '',
-                name: '',
-                phone: '',
-                address: '',
-                saleDate: '',
-                deliveryDate: '',
-                remarks: '',
-                status: 1
+                Shipper: '',
+                Model: '',
+                Name: '',
+                Phone: '',
+                Address: '',
+                SaleDate: '',
+                DeliveryDate: '',
+                Remarks: '',
+                Status: 1
             },
 
             // 控制修改客户信息表单的显示和隐藏,
             editCustomerFormDialogVisible : false,
             // 修改客户信息表单对象
             editCustomerForm: {
-                id:'',
-                shipper: '',
-                model: '',
-                name: '',
-                phone: '',
-                address: '',
-                saleDate: '',
-                deliveryDate: '',
-                remarks: '',
-                status: 1
+                Id:'',
+                Shipper: '',
+                Model: '',
+                Name: '',
+                Phone: '',
+                Address: '',
+                SaleDate: '',
+                DeliveryDate: '',
+                Remarks: '',
+                Status: 1
             },
 
             // 表单验证规则
             formRules : {
-                shipper : [
+                Shipper : [
                     {required : true, message : '请输入出货人', trigger : 'blur'}
                 ],
-                model : [
+                Model : [
                     {required : true, message : '请输入型号', trigger : 'blur'}
                 ],
-                name : [
+                Name : [
                     {required : true, message : '请输入顾客', trigger : 'blur'}
                 ],
-                phone : [
+                Phone : [
                     {required : true, message : '请输入联系方式', trigger : 'blur'}
                 ],
-                address : [
+                Address : [
                     {required : true, message : '请输入收货地址', trigger : 'blur'}
                 ],
-                saleDate : [
+                SaleDate : [
                     {required : true, message : '请输入出单时间', trigger : 'blur'}
                 ],
-                deliveryDate : [
+                DeliveryDate : [
                     {required : true, message : '请输入送货时间', trigger : 'blur'}
                 ],
             },

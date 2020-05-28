@@ -1,0 +1,33 @@
+import axios from 'axios'
+import { BaseUrl } from '../api/config'
+
+//------------------------------客户页面API--------------------------
+// 获取客户信息列表数据
+export const getCustomerListAPI = params => {
+    return axios.get(`${BaseUrl}/customer`)
+}
+
+// 查询客户信息列表
+export const searchCustomerAPI = params => {
+    return axios.get(`${BaseUrl}/customer`, {params:params})
+}
+
+// 新增客户信息
+export const addCustomerAPI = params => {
+    return axios.post(`${BaseUrl}/customer`, params)
+}
+
+// 新增客户信息
+export const editCustomerAPI = (para,params) => {
+    return axios.put(`${BaseUrl}/customer/${para}`, params)
+}
+
+// 新增备注
+export const addCustomerRemarkAPI = (para,params) => {
+    return axios.put(`${BaseUrl}/customer/${para}/remarks`, params)
+}
+
+// 出库信息
+export const sendCustomerAPI = (para,params) => {
+    return axios.put(`${BaseUrl}/customer/${para}`, params)
+}

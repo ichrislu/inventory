@@ -76,22 +76,22 @@ export default {
                     message: '请输入数量',
                     trigger: 'blur'
                 }],
-                sell: [{
+                Sell: [{
                     required: true,
                     message: '请输入售价',
                     trigger: 'blur'
                 }],
-                shipper: [{
+                Shipper: [{
                     required: true,
                     message: '请输入出货人',
                     trigger: 'blur'
                 }],
-                outDate: [{
+                OutDate: [{
                     required: true,
                     message: '请输入时间',
                     trigger: 'blur'
                 }],
-                quantity: [{
+                outQuantity: [{
                     required: true,
                     message: '请输入数量',
                     trigger: 'blur'
@@ -125,21 +125,19 @@ export default {
             outStockFormDialogVisible: false,
             // 出库表单对象
             outStockForm: {
-                provider: '',
-                cate: '',
-                brand: '',
-                model: '',
-                price: '',
-                inventory:'',
-                inDate : '',
+                Provider: '',
+                Cate: '',
+                Brand: '',
+                Model: '',
+                Price: '',
+                Inventory:'',
+                InDate : '',
 
-                sid :'',
-                outDate : '',
-                quantity: 0,
-                shipper : '',
-                sell: '',
-
-
+                Sid :'',
+                OutDate : '',
+                Quantity: 0,
+                Shipper : '',
+                Sell: '',
             },
             // 出库表单对象 分类属性
             outStockValue : '',

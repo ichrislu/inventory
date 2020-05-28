@@ -1,9 +1,10 @@
-import util from '../../common/js/util'
+import util, {Datetransformation} from '../../common/js/util'
+import {getCustomerListAPI,searchCustomerAPI,addCustomerAPI,editCustomerAPI,addCustomerRemarkAPI,sendCustomerAPI} from '../../api/customerAPI'
 
 export default {
     // ---------------------------------------------------获取顾客列表数据-----------------------------
     getList() {
-        this.$axios.get('http://localhost/customer').then(res => {
+        getCustomerListAPI().then(res => {
             this.customerList = res.data
         })
     },
@@ -23,18 +24,15 @@ export default {
     },
     //-------------------------------------------------------根据 年月日, 供货商查询------------------------------------------------------
     search() {
-        this.$axios.get('http://localhost/customer', {
-            params: {
-                shipper: this.searchForm.shipper,
-                begin: this.searchForm.time[0],
-                end: this.searchForm.time[1],
-                all: this.searchForm.checked
-            }
-        }).then(res => {
+        let para= {
+            shipper: this.searchForm.shipper,
+            begin: this.searchForm.time[0],
+            end: this.searchForm.time[1],
+            all: this.searchForm.checked
+        }
+        searchCustomerAPI(para).then(res => {
             this.customerList = res.data
             this.show = true
-        }).catch(err => {
-            // console.log(err.response);
         })
     },
 
@@ -45,17 +43,21 @@ export default {
         this.customerFormDialogVisible = true
         this.$refs['setCustomerForm'].validate(valid => {
             if (valid) {
-                this.$axios.post('http://localhost/customer', {
-                    Shipper: this.setCustomerForm.shipper,
-                    Name: this.setCustomerForm.name,
-                    Phone: this.setCustomerForm.phone,
-                    Address: this.setCustomerForm.address,
-                    SaleDate: this.setCustomerForm.saleDate,
-                    DeliveryDate: this.setCustomerForm.deliveryDate,
-                    Model: this.setCustomerForm.model,
-                    Status: this.setCustomerForm.status,
-                    Remarks: this.setCustomerForm.remarks
-                }).then(res => {
+                // let params = Object.assign(this.setCustomerForm)
+                // console.log(params);
+
+                let para = {
+                    Shipper: this.setCustomerForm.Shipper,
+                    Name: this.setCustomerForm.Name,
+                    Phone: this.setCustomerForm.Phone,
+                    Address: this.setCustomerForm.Address,
+                    SaleDate: this.setCustomerForm.SaleDate,
+                    DeliveryDate: this.setCustomerForm.DeliveryDate,
+                    Model: this.setCustomerForm.Model,
+                    Status: this.setCustomerForm.Status,
+                    Remarks: this.setCustomerForm.Remarks
+                }
+                addCustomerAPI(para).then(res => {
                     this.getList()
                     this.customerFormDialogVisible = false
                     this.$notify.success({
@@ -63,13 +65,14 @@ export default {
                         message: '客户信息录入成功',
                         position: 'bottom-right'
                     });
-                }).catch(err => {
-                    this.$notify.error({
-                        title: '失败',
-                        message: '客户信息录入失败',
-                        position: 'bottom-right'
-                    });
                 })
+                // .catch(err => {
+                //     this.$notify.error({
+                //         title: '失败',
+                //         message: '客户信息录入失败',
+                //         position: 'bottom-right'
+                //     });
+                // })
             } else {
                 console.log('验证不通过');
 
@@ -81,28 +84,21 @@ export default {
     // 获取选中库存数据
     showEditForm(editForm) {
         this.editCustomerFormDialogVisible = true
-        this.editCustomerForm.shipper = editForm.Shipper
-        this.editCustomerForm.model = editForm.Model
-        this.editCustomerForm.name = editForm.Name
-        this.editCustomerForm.phone = editForm.Phone
-        this.editCustomerForm.address = editForm.Address
-        this.editCustomerForm.saleDate = editForm.SaleDate
-        this.editCustomerForm.deliveryDate = editForm.DeliveryDate
-        this.editCustomerForm.status = editForm.Status
-        this.editCustomerForm.id = editForm.Id
+        this.editCustomerForm = Object.assign(editForm)
     },
 
     EditForm() {
-        this.$axios.put('http://localhost/customer/' + this.editCustomerForm.id, {
-            shipper: this.editCustomerForm.shipper,
-            model: this.editCustomerForm.model,
-            name: this.editCustomerForm.name,
-            phone: this.editCustomerForm.phone,
-            address: this.editCustomerForm.address,
-            saleDate: this.editCustomerForm.saleDate,
-            deliveryDate: this.editCustomerForm.deliveryDate,
-            status: this.editCustomerForm.status
-        }).then(res => {
+        let para = {
+            Shipper: this.editCustomerForm.Shipper,
+            Model: this.editCustomerForm.Model,
+            Name: this.editCustomerForm.Name,
+            Phone: this.editCustomerForm.Phone,
+            Address: this.editCustomerForm.Address,
+            SaleDate: this.editCustomerForm.SaleDate,
+            DeliveryDate: this.editCustomerForm.DeliveryDate,
+            Status: this.editCustomerForm.Status
+        }
+        editCustomerAPI(this.editCustomerForm.Id, para).then(res => {
             this.getList()
             this.editCustomerFormDialogVisible = false
             this.$notify.success({
@@ -110,13 +106,14 @@ export default {
                 message: '客户信息修改成功',
                 position: 'bottom-right'
             });
-        }).catch(err => {
-            this.$notify.error({
-                title: '失败',
-                message: '修改客户信息失败',
-                position: 'bottom-right'
-            });
         })
+        // .catch(err => {
+        //     this.$notify.error({
+        //         title: '失败',
+        //         message: '修改客户信息失败',
+        //         position: 'bottom-right'
+        //     });
+        // })
     },
 
     // ------------------------------------------------------------ 备注功能 ------------------------------------------------------------
@@ -132,8 +129,7 @@ export default {
         let _params = {
             remarks: this.remarkForm.Remarks
         }
-        this.$axios.put('http://localhost/customer/' + this.remarkForm.Id + '/remarks', util.getFormDataFromJson(_params)).then(res => {
-
+        addCustomerRemarkAPI(this.remarkForm.Id,util.getFormDataFromJson(_params)).then(res => {
             this.getList()
             this.showRemarkFormDialogVisible = false;
             this.$notify.success({
@@ -141,14 +137,14 @@ export default {
                 message: '修改备注成功',
                 position: 'bottom-right'
             });
-        }).catch(err => {
-            this.$notify.error({
-                title: '失败',
-                message: '修改备注失败',
-                position: 'bottom-right'
-            });
-
         })
+        // .catch(err => {
+        //     this.$notify.error({
+        //         title: '失败',
+        //         message: '修改备注失败',
+        //         position: 'bottom-right'
+        //     });
+        // })
     },
 
 
@@ -166,13 +162,14 @@ export default {
                     message: '删除成功',
                     position: 'bottom-right'
                 });
-            }).catch(err => {
-                this.$notify.error({
-                    title: '错误',
-                    message: err.response.data,
-                    position: 'bottom-right'
-                });
-            });
+            })
+            // .catch(err => {
+            //     this.$notify.error({
+            //         title: '错误',
+            //         message: err.response.data,
+            //         position: 'bottom-right'
+            //     });
+            // });
         })
     },
 
@@ -192,40 +189,43 @@ export default {
     },
 
     //------------------------------表单重置---------------------------
-    formClose(ref) {
-        let _this = this
-        util.resetForm(_this, ref)
-
-        if (ref == 'searchRef') {
-            _this.searchForm.checked = false
-            _this.getList()
+    formClose(formName) {
+        if (formName == 'searchRef') {
+            this.searchForm.checked = false
+            this.getList()
         }
+
+        if (this.$refs[formName] !== undefined) {
+            this.$refs[formName].resetFields();
+        }
+
     },
 
     // ----------------------------------------------------确认出库----------------------------------------------------------
     showSendStock(editForm) {
         this.sendStockVisible = true
-        this.editCustomerForm.shipper = editForm.Shipper
-        this.editCustomerForm.model = editForm.Model
-        this.editCustomerForm.name = editForm.Name
-        this.editCustomerForm.phone = editForm.Phone
-        this.editCustomerForm.address = editForm.Address
-        this.editCustomerForm.saleDate = editForm.SaleDate
-        this.editCustomerForm.deliveryDate = editForm.DeliveryDate
-        this.editCustomerForm.status = editForm.Status
-        this.editCustomerForm.id = editForm.Id
+        this.editCustomerForm.Shipper = editForm.Shipper
+        this.editCustomerForm.Model = editForm.Model
+        this.editCustomerForm.Name = editForm.Name
+        this.editCustomerForm.Phone = editForm.Phone
+        this.editCustomerForm.Address = editForm.Address
+        this.editCustomerForm.SaleDate = editForm.SaleDate
+        this.editCustomerForm.DeliveryDate = editForm.DeliveryDate
+        this.editCustomerForm.Status = editForm.Status
+        this.editCustomerForm.Id = editForm.Id
     },
     sendStock() {
-        this.$axios.put('http://localhost/customer/' + this.editCustomerForm.id, {
-            shipper: this.editCustomerForm.shipper,
-            model: this.editCustomerForm.model,
-            name: this.editCustomerForm.name,
-            phone: this.editCustomerForm.phone,
-            address: this.editCustomerForm.address,
-            saleDate: this.editCustomerForm.saleDate,
-            deliveryDate: this.editCustomerForm.deliveryDate,
-            status: 0
-        }).then(res => {
+        let params = {
+            Shipper: this.editCustomerForm.Shipper,
+            Model: this.editCustomerForm.Model,
+            Name: this.editCustomerForm.Name,
+            Phone: this.editCustomerForm.Phone,
+            Address: this.editCustomerForm.Address,
+            SaleDate: this.editCustomerForm.SaleDate,
+            DeliveryDate: this.editCustomerForm.DeliveryDate,
+            Status: 0
+        }
+        sendCustomerAPI(this.editCustomerForm.Id, params).then(res => {
             this.getList()
             this.sendStockVisible = false
             this.$notify.success({
@@ -233,12 +233,21 @@ export default {
                 message: '出库成功',
                 position: 'bottom-right'
             });
-        }).catch(err => {
-            this.$notify.error({
-                title: '失败',
-                message: '出库失败',
-                position: 'bottom-right'
-            });
         })
+        // .catch(err => {
+        //     this.$notify.error({
+        //         title: '失败',
+        //         message: '出库失败',
+        //         position: 'bottom-right'
+        //     });
+        // })
+    },
+      // 时间格式转换
+      dataFormatter(row, column, cellValue, inde ) {
+        return Datetransformation(cellValue)
+    },
+
+    dataForma(value) {
+        return Datetransformation(value)
     }
 }

@@ -39,16 +39,8 @@
                 </el-row>
                 <el-table :data="customerList" border style="width: 100%" :row-class-name="tableRowClassName">
                     <el-table-column prop="Shipper" label="出货人" align="center"></el-table-column>
-                    <el-table-column prop="SaleDate" label="出单日期" align="center">
-                        <template slot-scope="scope">
-                            <div>{{ scope.row.SaleDate | formatDate }}</div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="DeliveryDate" label="送货日期" align="center">
-                        <template slot-scope="scope">
-                            <div>{{ scope.row.DeliveryDate | formatDate }}</div>
-                        </template>
-                    </el-table-column>
+                    <el-table-column prop="SaleDate" label="出单日期" align="center" :formatter="dataFormatter"> </el-table-column>
+                    <el-table-column prop="DeliveryDate" label="送货日期" align="center" :formatter="dataFormatter"> </el-table-column>
                     <el-table-column prop="Model" label="型号" align="center"></el-table-column>
                     <el-table-column prop="Name" label="顾客姓名" align="center"></el-table-column>
                     <el-table-column prop="Phone" label="联系电话" align="center"></el-table-column>
@@ -70,10 +62,10 @@
                             <el-tooltip class="item" effect="dark" content="添加备注" placement="top" :enterable="false">
                                 <el-button icon="el-icon-edit" size="medium " type="success" @click="showRemark(scope.row)"></el-button>
                             </el-tooltip>
-                             <!-- 确认出库按钮 -->
-                        <el-tooltip class="item" effect="dark" content="确认出库" placement="top" :enterable="false">
-                            <el-button icon="el-icon-s-goods" size="medium " type="warning" @click="showSendStock(scope.row)"></el-button>
-                        </el-tooltip>
+                            <!-- 确认出库按钮 -->
+                            <el-tooltip class="item" effect="dark" content="确认出库" placement="top" :enterable="false">
+                                <el-button icon="el-icon-s-goods" size="medium " type="warning" @click="showSendStock(scope.row)"></el-button>
+                            </el-tooltip>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -83,24 +75,24 @@
         <!--------------------------------------------------------录入客户信息对话框-------------------------------------------------------->
         <el-dialog title="客户信息" :visible.sync="customerFormDialogVisible" width="30%" @close="formClose('setCustomerForm')">
             <el-form ref="setCustomerForm" :model="setCustomerForm" label-width="120px" :rules="formRules">
-                <el-form-item label="出货人" prop="shipper">
-                    <el-input v-model="setCustomerForm.shipper" label="描述文字"></el-input>
+                <el-form-item label="出货人" prop="Shipper">
+                    <el-input v-model="setCustomerForm.Shipper" label="描述文字"></el-input>
                 </el-form-item>
-                <el-form-item label="型号" prop="model">
-                    <el-input v-model="setCustomerForm.model"></el-input>
+                <el-form-item label="型号" prop="Model">
+                    <el-input v-model="setCustomerForm.Model"></el-input>
                 </el-form-item>
-                <el-form-item label="顾客姓名" prop="name">
-                    <el-input v-model="setCustomerForm.name" label="描述文字"></el-input>
+                <el-form-item label="顾客姓名" prop="Name">
+                    <el-input v-model="setCustomerForm.Name" label="描述文字"></el-input>
                 </el-form-item>
-                <el-form-item label="联系电话" prop="phone">
-                    <el-input v-model="setCustomerForm.phone" label="描述文字"></el-input>
+                <el-form-item label="联系电话" prop="Phone">
+                    <el-input v-model="setCustomerForm.Phone" label="描述文字"></el-input>
                 </el-form-item>
-                <el-form-item label="收货地址" prop="address">
-                    <el-input v-model="setCustomerForm.address" label="描述文字"></el-input>
+                <el-form-item label="收货地址" prop="Address">
+                    <el-input v-model="setCustomerForm.Address" label="描述文字"></el-input>
                 </el-form-item>
-                <el-form-item label="出单时间" prop="saleDate">
+                <el-form-item label="出单时间" prop="SaleDate">
                     <el-date-picker
-                        v-model="setCustomerForm.saleDate"
+                        v-model="setCustomerForm.SaleDate"
                         type="date"
                         placeholder="选择日期"
                         format="yyyy 年 MM 月 dd 日"
@@ -108,9 +100,9 @@
                     >
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="送货时间" prop="deliveryDate">
+                <el-form-item label="送货时间" prop="DeliveryDate">
                     <el-date-picker
-                        v-model="setCustomerForm.deliveryDate"
+                        v-model="setCustomerForm.DeliveryDate"
                         type="date"
                         placeholder="选择日期"
                         format="yyyy 年 MM 月 dd 日"
@@ -118,8 +110,8 @@
                     >
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="备注 : " prop="remarks">
-                    <el-input type="textarea" autosize v-model="setCustomerForm.remarks" label="描述文字"></el-input>
+                <el-form-item label="备注 : " prop="Remarks">
+                    <el-input type="textarea" autosize v-model="setCustomerForm.Remarks" label="描述文字"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -131,20 +123,20 @@
         <!--------------------------------------------------------修改客户信息对话框-------------------------------------------------------->
         <el-dialog title="出库" :visible.sync="editCustomerFormDialogVisible" width="30%">
             <el-form ref="setCustomerForm" :model="editCustomerForm" label-width="120px" :rules="formRules">
-                <el-form-item label="出货人" prop="shipper">
-                    <el-input v-model="editCustomerForm.shipper" label="描述文字"></el-input>
+                <el-form-item label="出货人" prop="Shipper">
+                    <el-input v-model="editCustomerForm.Shipper" label="描述文字"></el-input>
                 </el-form-item>
-                <el-form-item label="型号" prop="model">
-                    <el-input v-model="editCustomerForm.model"></el-input>
+                <el-form-item label="型号" prop="Model">
+                    <el-input v-model="editCustomerForm.Model"></el-input>
                 </el-form-item>
-                <el-form-item label="顾客姓名" prop="name" :rules="[{ required: true, message: '请输入顾客姓名' }]">
-                    <el-input v-model="editCustomerForm.name" label="描述文字"></el-input>
+                <el-form-item label="顾客姓名" prop="Name" :rules="[{ required: true, message: '请输入顾客姓名' }]">
+                    <el-input v-model="editCustomerForm.Name" label="描述文字"></el-input>
                 </el-form-item>
-                <el-form-item label="联系电话" prop="phone">
-                    <el-input v-model="editCustomerForm.phone" label="描述文字"></el-input>
+                <el-form-item label="联系电话" prop="Phone">
+                    <el-input v-model="editCustomerForm.Phone" label="描述文字"></el-input>
                 </el-form-item>
-                <el-form-item label="收货地址" prop="address">
-                    <el-input v-model="editCustomerForm.address" label="描述文字"></el-input>
+                <el-form-item label="收货地址" prop="Address">
+                    <el-input v-model="editCustomerForm.Address" label="描述文字"></el-input>
                 </el-form-item>
                 <!-- <el-form-item label="状态" prop="status">
                     <el-radio-group v-model="editCustomerForm.status">
@@ -152,9 +144,9 @@
                         <el-radio :label="0">已送货</el-radio>
                     </el-radio-group>
                 </el-form-item> -->
-                <el-form-item label="出单时间" prop="saleDate">
+                <el-form-item label="出单时间" prop="SaleDate">
                     <el-date-picker
-                        v-model="editCustomerForm.saleDate"
+                        v-model="editCustomerForm.SaleDate"
                         type="date"
                         placeholder="选择日期"
                         format="yyyy 年 MM 月 dd 日"
@@ -162,9 +154,9 @@
                     >
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="送货时间" prop="deliveryDate">
+                <el-form-item label="送货时间" prop="DeliveryDate">
                     <el-date-picker
-                        v-model="editCustomerForm.deliveryDate"
+                        v-model="editCustomerForm.DeliveryDate"
                         type="date"
                         placeholder="选择日期"
                         format="yyyy 年 MM 月 dd 日"
@@ -193,7 +185,7 @@
         </el-dialog>
 
         <!-- 出库对话框 -->
-         <el-dialog title="出库" :visible.sync="sendStockVisible" width="30%">
+        <el-dialog title="出库" :visible.sync="sendStockVisible" width="30%">
             <el-form ref="setCustomerForm" :model="editCustomerForm" label-width="120px" :rules="formRules">
                 <!-- <el-form-item label="状态" prop="status">
                     <el-radio-group v-model="editCustomerForm.status">
@@ -221,12 +213,12 @@
         <!-- 打印对话框 -->
         <el-dialog title="打印预览" :visible.sync="outVisible" width="1086px" class="print">
             <div class="dialog-footer" style="text-align: center; margin-bottom : 15px">
-            <h2 v-if=" show == true">包含已送货的客户信息</h2>
+                <h2 v-if="show == true">包含已送货的客户信息</h2>
                 <el-button @click="outVisible = false">取 消</el-button>
                 <el-button v-print="'#print'" type="primary" @click="print">打印</el-button>
             </div>
             <div id="print">
-                <table  width="100%" height="100%" border="1px solid black">
+                <table width="100%" height="100%" border="1px solid black">
                     <thead>
                         <tr>
                             <td>出货人</td>
@@ -241,8 +233,8 @@
                     </thead>
                     <tr v-for="item in customerList" :key="item.id">
                         <td class="printTwo">{{ item.Shipper }}</td>
-                        <td class="printTwo">{{ item.SaleDate | formatDate }}</td>
-                        <td class="printTwo">{{ item.DeliveryDate | formatDate }}</td>
+                        <td class="printTwo">{{ dataForma(item.SaleDate) }}</td>
+                        <td class="printTwo">{{ dataForma(item.DeliveryDate) }}</td>
                         <td class="printTwo">{{ item.Name }}</td>
                         <td class="printTwo">{{ item.Phone }}</td>
                         <td class="printOne">{{ item.Model }}</td>
@@ -258,6 +250,7 @@
 <script>
 import datas from './datas.js'
 import methods from './methods.js'
+import util from '../../common/js/util'
 var mediaQueryList = window.matchMedia('print')
 
 export default {
@@ -267,23 +260,7 @@ export default {
     created() {
         this.getList()
     },
-    methods: methods,
-    filters: {
-        formatDate: function(value) {
-            // 时间戳转换日期格式方法
-            if (value == null) {
-                return ''
-            } else {
-                let date = new Date(value)
-                let y = date.getFullYear() // 年
-                let MM = date.getMonth() + 1 // 月
-                MM = MM < 10 ? '0' + MM : MM
-                let d = date.getDate() // 日
-                d = d < 10 ? '0' + d : d
-                return y + '-' + MM + '-' + d
-            }
-        }
-    }
+    methods: methods
 }
 </script>
 
@@ -336,7 +313,7 @@ export default {
     font-weight: bold;
 }
 
-#print table  td {
+#print table td {
     padding: 3px;
 }
 

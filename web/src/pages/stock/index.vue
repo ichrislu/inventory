@@ -40,10 +40,7 @@
                 </el-row>
                 <el-table :data="stockList" border style="width: 100% " :row-class-name="tableRowClassName">
                     <el-table-column prop="Provider" label="供货商" align="center"></el-table-column>
-                    <el-table-column prop="Date" label="进货时间" align="center">
-                        <template slot-scope="scope">
-                            <div>{{ scope.row.Date | formatDate }}</div>
-                        </template>
+                    <el-table-column prop="Date" label="进货时间" align="center" :formatter="dataFormatter">
                     </el-table-column>
                     <el-table-column prop="Category" label="品类" align="center"> </el-table-column>
                     <el-table-column prop="Brand" label="品牌" align="center"></el-table-column>
@@ -170,28 +167,28 @@
         <el-dialog title="出库" :visible.sync="outStockFormDialogVisible" width="30%" @close="formClose('outStockForm')">
             <el-form ref="outStockForm" :model="outStockForm" label-width="120px" :rules="addFormRules">
                 <el-form-item label="供应商" >
-                    <el-input v-model="outStockForm.provider" disabled></el-input>
+                    <el-input v-model="outStockForm.Provider" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="品类">
                     <el-input v-model="outStockValue" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="型号" >
-                    <el-input v-model="outStockForm.model" disabled></el-input>
+                    <el-input v-model="outStockForm.Model" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="此单库存(件)" >
-                    <el-input v-model="outStockForm.inventory" disabled></el-input>
+                    <el-input v-model="outStockForm.Inventory" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="进货价格(元)" >
-                    <el-input v-model="outStockForm.price" disabled></el-input>
+                    <el-input v-model="outStockForm.Price" disabled></el-input>
                 </el-form-item>
 
-                <el-form-item label="出货人" prop="shipper">
-                    <el-input v-model="outStockForm.shipper" label="描述文字"></el-input>
+                <el-form-item label="出货人" prop="Shipper">
+                    <el-input v-model="outStockForm.Shipper" label="描述文字"></el-input>
                 </el-form-item>
 
-                <el-form-item label="出库时间" prop="outDate">
+                <el-form-item label="出库时间" prop="OutDate">
                     <el-date-picker
-                        v-model="outStockForm.outDate"
+                        v-model="outStockForm.OutDate"
                         type="date"
                         placeholder="选择日期"
                         format="yyyy 年 MM 月 dd 日"
@@ -200,12 +197,12 @@
                     </el-date-picker>
                 </el-form-item>
 
-                <el-form-item label="出库数量(件)" prop="quantity">
-                    <el-input-number v-model="outStockForm.quantity" label="描述文字" :min="0" :precision="0"></el-input-number>
+                <el-form-item label="出库数量(件)" prop="Quantity">
+                    <el-input-number v-model="outStockForm.Quantity" label="描述文字" :min="0" :precision="0"></el-input-number>
                 </el-form-item>
 
-                <el-form-item label="售价(元)" prop="sell">
-                    <el-input v-model="outStockForm.sell" label="描述文字" oninput="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"> </el-input>
+                <el-form-item label="售价(元)" prop="Sell">
+                    <el-input v-model="outStockForm.Sell" label="描述文字" oninput="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"> </el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -220,6 +217,7 @@
 <script>
 import datas from './datas.js'
 import methods from './methdos.js'
+import util from '../../common/js/util.js'
 
 export default {
     data() {
@@ -229,22 +227,6 @@ export default {
         this.getList()
     },
     methods: methods,
-    filters: {
-        formatDate: function(value) {
-            // 时间戳转换日期格式方法
-            if (value == null) {
-                return ''
-            } else {
-                let date = new Date(value)
-                let y = date.getFullYear() // 年
-                let MM = date.getMonth() + 1 // 月
-                MM = MM < 10 ? '0' + MM : MM
-                let d = date.getDate() // 日
-                d = d < 10 ? '0' + d : d
-                return y + '-' + MM + '-' + d
-            }
-        }
-    }
 }
 </script>
 

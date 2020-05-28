@@ -34,16 +34,10 @@
                 </el-row>
                 <el-table :data="outStockList" border style="width: 100%" stripe>
                     <el-table-column prop="Shipper" label="出货人" align="center"></el-table-column>
-                    <el-table-column prop="InDate" label="出货日期" align="center">
-                        <template slot-scope="scope">
-                            <div>{{ scope.row.OutDate | formatDate }}</div>
-                        </template>
+                    <el-table-column prop="InDate" label="进货日期" align="center" :formatter="dataFormatter">
                     </el-table-column>
                     <el-table-column prop="Provider" label="供应商" align="center"></el-table-column>
-                    <el-table-column prop="OutDate" label="入库日期" align="center">
-                        <template slot-scope="scope">
-                            <div>{{ scope.row.InDate | formatDate }}</div>
-                        </template>
+                    <el-table-column prop="OutDate" label="入库日期" align="center" :formatter="dataFormatter">
                     </el-table-column>
                     <el-table-column prop="Category" label="品类" align="center"></el-table-column>
                     <el-table-column prop="Brand" label="品牌" align="center"></el-table-column>
@@ -84,6 +78,7 @@
 <script>
 import datas from './datas.js'
 import methods from './methods.js'
+import util from '../../common/js/util'
 
 export default {
     data() {
@@ -93,22 +88,22 @@ export default {
         this.getList()
     },
     methods: methods,
-    filters: {
-        formatDate: function(value) {
-            // 时间戳转换日期格式方法
-            if (value == null) {
-                return ''
-            } else {
-                let date = new Date(value)
-                let y = date.getFullYear() // 年
-                let MM = date.getMonth() + 1 // 月
-                MM = MM < 10 ? '0' + MM : MM
-                let d = date.getDate() // 日
-                d = d < 10 ? '0' + d : d
-                return y + '-' + MM + '-' + d
-            }
-        }
-    }
+    // filters: {
+    //     formatDate: function(value) {
+    //         // 时间戳转换日期格式方法
+    //         if (value == null) {
+    //             return ''
+    //         } else {
+    //             let date = new Date(value)
+    //             let y = date.getFullYear() // 年
+    //             let MM = date.getMonth() + 1 // 月
+    //             MM = MM < 10 ? '0' + MM : MM
+    //             let d = date.getDate() // 日
+    //             d = d < 10 ? '0' + d : d
+    //             return y + '-' + MM + '-' + d
+    //         }
+    //     }
+    // }
 }
 </script>
 

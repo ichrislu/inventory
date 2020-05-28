@@ -43,7 +43,7 @@
             </el-row>
 
             <!-- 新增品牌 -->
-            <el-dialog title="新增品牌" width="30%" :visible.sync="showBrandDialogVisible" @close="addBrandsFormClose">
+            <el-dialog title="新增品牌" width="30%" :visible.sync="showBrandDialogVisible" @close="formClose('addBrandsFormRef')">
                 <el-form label-width="80px" :model="addBrandsForm" ref="addBrandsFormRef" :rules="addBrandFormRules">
                     <el-form-item label="品牌" prop="name">
                         <el-input v-model="addBrandsForm.name"></el-input>
