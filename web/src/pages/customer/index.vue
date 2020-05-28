@@ -70,11 +70,10 @@
                             <el-tooltip class="item" effect="dark" content="添加备注" placement="top" :enterable="false">
                                 <el-button icon="el-icon-edit" size="medium " type="success" @click="showRemark(scope.row)"></el-button>
                             </el-tooltip>
-                            <!-- 删除按钮 -->
-                            <!-- <el-tooltip class="item" effect="dark" content="删除" placement="top" :enterable="false">
-                                <el-button icon="el-icon-delete-solid" size="medium " type="danger" @click="deleteCustomer(scope.row.Id)">
-                                </el-button>
-                            </el-tooltip> -->
+                             <!-- 确认出库按钮 -->
+                        <el-tooltip class="item" effect="dark" content="确认出库" placement="top" :enterable="false">
+                            <el-button icon="el-icon-s-goods" size="medium " type="warning" @click="showSendStock(scope.row)"></el-button>
+                        </el-tooltip>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -147,12 +146,12 @@
                 <el-form-item label="收货地址" prop="address">
                     <el-input v-model="editCustomerForm.address" label="描述文字"></el-input>
                 </el-form-item>
-                <el-form-item label="状态" prop="status">
+                <!-- <el-form-item label="状态" prop="status">
                     <el-radio-group v-model="editCustomerForm.status">
                         <el-radio :label="1">未送货</el-radio>
                         <el-radio :label="0">已送货</el-radio>
                     </el-radio-group>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="出单时间" prop="saleDate">
                     <el-date-picker
                         v-model="editCustomerForm.saleDate"
@@ -193,6 +192,32 @@
             </span>
         </el-dialog>
 
+        <!-- 出库对话框 -->
+         <el-dialog title="出库" :visible.sync="sendStockVisible" width="30%">
+            <el-form ref="setCustomerForm" :model="editCustomerForm" label-width="120px" :rules="formRules">
+                <!-- <el-form-item label="状态" prop="status">
+                    <el-radio-group v-model="editCustomerForm.status">
+                        <el-radio :label="1">未送货</el-radio>
+                        <el-radio :label="0">已送货</el-radio>
+                    </el-radio-group>
+                </el-form-item> -->
+                <el-form-item label="送货时间" prop="deliveryDate">
+                    <el-date-picker
+                        v-model="editCustomerForm.deliveryDate"
+                        type="date"
+                        placeholder="选择日期"
+                        format="yyyy 年 MM 月 dd 日"
+                        value-format="timestamp"
+                    >
+                    </el-date-picker>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="sendStockVisible = false">取消</el-button>
+                <el-button type="primary" @click="sendStock">确认</el-button>
+            </span>
+        </el-dialog>
+
         <!-- 打印对话框 -->
         <el-dialog title="打印预览" :visible.sync="outVisible" width="1086px" class="print">
             <div class="dialog-footer" style="text-align: center; margin-bottom : 15px">
@@ -215,13 +240,13 @@
                         </tr>
                     </thead>
                     <tr v-for="item in customerList" :key="item.id">
-                        <td>{{ item.Shipper }}</td>
-                        <td>{{ item.SaleDate | formatDate }}</td>
-                        <td>{{ item.DeliveryDate | formatDate }}</td>
-                        <td>{{ item.Name }}</td>
-                        <td>{{ item.Phone }}</td>
+                        <td class="printTwo">{{ item.Shipper }}</td>
+                        <td class="printTwo">{{ item.SaleDate | formatDate }}</td>
+                        <td class="printTwo">{{ item.DeliveryDate | formatDate }}</td>
+                        <td class="printTwo">{{ item.Name }}</td>
+                        <td class="printTwo">{{ item.Phone }}</td>
                         <td class="printOne">{{ item.Model }}</td>
-                        <td>{{ item.Address }}</td>
+                        <td class="printThree">{{ item.Address }}</td>
                         <td class="printOne">{{ item.Remarks }}</td>
                     </tr>
                 </table>
@@ -312,11 +337,17 @@ export default {
 }
 
 #print table  td {
-    padding: 8px;
-
+    padding: 3px;
 }
 
 .printOne {
-    width: 120px;
+    width: 130px;
+}
+
+.printTwo {
+    width: 100px;
+}
+.printThree {
+    width: 300px;
 }
 </style>

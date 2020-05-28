@@ -1,4 +1,4 @@
-import util from '../../common/util'
+import util from '../../common/js/util'
 
 export default {
     // ---------------------------------------------------获取顾客列表数据-----------------------------
@@ -119,9 +119,6 @@ export default {
         })
     },
 
-
-
-
     // ------------------------------------------------------------ 备注功能 ------------------------------------------------------------
     // 获取备注
     showRemark(row) {
@@ -190,7 +187,7 @@ export default {
     },
 
     //------------------------------打印事件---------------------------
-    print(){
+    print() {
         this.outVisible = true
     },
 
@@ -199,10 +196,49 @@ export default {
         let _this = this
         util.resetForm(_this, ref)
 
-        if(ref == 'searchRef') {
+        if (ref == 'searchRef') {
             _this.searchForm.checked = false
             _this.getList()
         }
     },
 
+    // ----------------------------------------------------确认出库----------------------------------------------------------
+    showSendStock(editForm) {
+        this.sendStockVisible = true
+        this.editCustomerForm.shipper = editForm.Shipper
+        this.editCustomerForm.model = editForm.Model
+        this.editCustomerForm.name = editForm.Name
+        this.editCustomerForm.phone = editForm.Phone
+        this.editCustomerForm.address = editForm.Address
+        this.editCustomerForm.saleDate = editForm.SaleDate
+        this.editCustomerForm.deliveryDate = editForm.DeliveryDate
+        this.editCustomerForm.status = editForm.Status
+        this.editCustomerForm.id = editForm.Id
+    },
+    sendStock() {
+        this.$axios.put('http://localhost/customer/' + this.editCustomerForm.id, {
+            shipper: this.editCustomerForm.shipper,
+            model: this.editCustomerForm.model,
+            name: this.editCustomerForm.name,
+            phone: this.editCustomerForm.phone,
+            address: this.editCustomerForm.address,
+            saleDate: this.editCustomerForm.saleDate,
+            deliveryDate: this.editCustomerForm.deliveryDate,
+            status: 0
+        }).then(res => {
+            this.getList()
+            this.sendStockVisible = false
+            this.$notify.success({
+                title: '成功',
+                message: '出库成功',
+                position: 'bottom-right'
+            });
+        }).catch(err => {
+            this.$notify.error({
+                title: '失败',
+                message: '出库失败',
+                position: 'bottom-right'
+            });
+        })
+    }
 }

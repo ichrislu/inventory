@@ -1,27 +1,19 @@
-import util from '../../common/util'
-import rules from '../../common/js/rules'
-
+import util from '../../common/js/util'
+import {
+    getStockList,
+    searchStock,
+    addNewStock
+} from '../../api/stockApi'
 export default {
     // ---------------------------------------------------- 获取库存列表数据--------------------------------------------------
     getList() {
-        // getList.then(res => {
-        //     this.stockList = util.setCate(res.data)
-        //     if (this.stockList.length > 100) {
-        //         this.$notify({
-        //             title: '警告',
-        //             message: '数据量较大,建议按日期过滤',
-        //             position: 'bottom-right',
-        //             type: 'warning'
-        //         });
-        //     }
-        // }).catch(err => {
-        //     console.log(err);
-        // })
-        if( window.sessionStorage.length == 0) {
-            this.$router.push({path : '/category'})
+        if (window.sessionStorage.length == 0) {
+            this.$router.push({
+                path: '/category'
+            })
         }
 
-        this.$axios.get('http://localhost/stock').then(res => {
+        getStockList().then(res => {
             this.stockList = util.setCate(res.data)
             this.options = JSON.parse(window.sessionStorage.getItem('pickValue'))
 
@@ -41,14 +33,21 @@ export default {
     //-------------------------------------------------------根据 年月日, 供货商查询------------------------------------------------------
     // 查询功能
     search() {
-        this.$axios.get('http://localhost/stock', {
-            params: {
-                provider: this.searchForm.keyword,
-                begin: this.searchForm.time[0],
-                end: this.searchForm.time[1],
-                all: this.searchForm.checked
-            }
-        }).then(res => {
+        let para = {
+            provider: this.searchForm.keyword,
+            begin: this.searchForm.time[0],
+            end: this.searchForm.time[1],
+            all: this.searchForm.checked
+        }
+        // this.$axios.get('http://localhost/stock', {
+        //     params: {
+        //         provider: this.searchForm.keyword,
+        //         begin: this.searchForm.time[0],
+        //         end: this.searchForm.time[1],
+        //         all: this.searchForm.checked
+        //     }
+        // })
+        searchStock(para).then(res => {
             this.stockList = util.setCate(res.data)
         }).catch(err => {
             console.log(err.response);
@@ -74,30 +73,31 @@ export default {
         } else {
             this.$refs['addForm'].validate(valid => {
                 if (valid) {
-                    this.$axios.post('http://localhost/stock', {
-                        provider: this.addForm.Provider,
-                        date: this.addForm.Date,
-                        bid: this.addForm.Bid,
-                        model: this.addForm.Model,
-                        price: parseFloat(this.addForm.Price),
-                        Quantity: this.addForm.Quantity,
-                    }).then(res => {
-                        let _this = this
-                        this.addValue = []
-                        this.$notify.success({
-                            title: '成功',
-                            message: '入库成功',
-                            position: 'bottom-right'
-                        });
-                        this.getList()
-                        this.showAddFormDialogVisible = false
-                    }).catch(err => {
-                        this.$notify.error({
-                            title: '错误',
-                            message: err.response.data,
-                            position: 'bottom-right'
-                        });
-                    })
+                    let para = {
+                            provider: this.addForm.Provider,
+                            date: this.addForm.Date,
+                            bid: this.addForm.Bid,
+                            model: this.addForm.Model,
+                            price: parseFloat(this.addForm.Price),
+                            Quantity: this.addForm.Quantity,
+                        }
+                        addNewStock(para).then(res => {
+                            let _this = this
+                            this.addValue = []
+                            this.$notify.success({
+                                title: '成功',
+                                message: '入库成功',
+                                position: 'bottom-right'
+                            });
+                            this.getList()
+                            this.showAddFormDialogVisible = false
+                        }).catch(err => {
+                            this.$notify.error({
+                                title: '错误',
+                                message: err.response.data,
+                                position: 'bottom-right'
+                            });
+                        })
 
                 }
             })
@@ -173,16 +173,14 @@ export default {
                 position: 'bottom-right'
             });
             return true
-        }
-        else if (this.editForm.Quantity <= 0) {
+        } else if (this.editForm.Quantity <= 0) {
             this.$notify.error({
                 title: '错误',
                 message: '新库存不能为0',
                 position: 'bottom-right'
             });
             return true
-        }
-        else if (this.editForm.Date == null) {
+        } else if (this.editForm.Date == null) {
             this.$notify.error({
                 title: '错误',
                 message: '请输入正确的时间',
@@ -240,65 +238,65 @@ export default {
 
     // 一键出库
     outStock() {
-        // if (parseFloat(this.outStockForm.sell) == 0 || this.outStockForm.sell == '') {
-        //     this.$notify.error({
-        //         title: '错误',
-        //         message: '请输入正确的售价',
-        //         position: 'bottom-right'
-        //     });
-        // } else if (this.outStockForm.quantity <= 0) {
-        //     this.$notify.error({
-        //         title: '错误',
-        //         message: '请输入正确的出库数量',
-        //         position: 'bottom-right'
-        //     });
-        // } else if (this.outStockForm.quantity > this.outStockForm.inventory) {
-        //     this.$notify.error({
-        //         title: '错误',
-        //         message: '库存不足',
-        //         position: 'bottom-right'
-        //     });
-        // } else if (this.outStockForm.outDate == '') {
-        //     this.$notify.error({
-        //         title: '错误',
-        //         message: '请输入正确的时间',
-        //         position: 'bottom-right'
-        //     });
-        // } else if (parseFloat(this.outStockForm.inDate) > parseFloat(this.outStockForm.outDate)) {
-        //     this.$notify.error({
-        //         title: '错误',
-        //         message: '出库时间不能晚于入库时间',
-        //         position: 'bottom-right'
-        //     });
-        // } else {
-        this.$refs['outStockForm'].validate(valid => {
-            if (valid) {
-                this.$axios.post('http://localhost/saled', {
-                    shipper: this.outStockForm.shipper,
-                    date: this.outStockForm.outDate,
-                    sid: this.outStockForm.sid,
-                    price: parseFloat(this.outStockForm.sell),
-                    quantity: this.outStockForm.quantity
-                }).then(() => {
-                    this.outStockFormDialogVisible = false
-                    this.getList()
-                    this.$notify.success({
-                        title: '成功',
-                        message: '出库成功',
-                        position: 'bottom-right'
-                    });
-                }).catch(err => {
-                    this.$notify.error({
-                        title: '错误',
-                        message: err.response.data,
-                        position: 'bottom-right'
-                    });
-                })
-            } else {
-                console.log('出库信息验证未通过');
-            }
-        })
-        // }
+        if (parseFloat(this.outStockForm.sell) == 0 || this.outStockForm.sell == '') {
+            this.$notify.error({
+                title: '错误',
+                message: '请输入正确的售价',
+                position: 'bottom-right'
+            });
+        } else if (this.outStockForm.quantity <= 0) {
+            this.$notify.error({
+                title: '错误',
+                message: '请输入正确的出库数量',
+                position: 'bottom-right'
+            });
+        } else if (this.outStockForm.quantity > this.outStockForm.inventory) {
+            this.$notify.error({
+                title: '错误',
+                message: '库存不足',
+                position: 'bottom-right'
+            });
+        } else if (this.outStockForm.outDate == '') {
+            this.$notify.error({
+                title: '错误',
+                message: '请输入正确的时间',
+                position: 'bottom-right'
+            });
+        } else if (parseFloat(this.outStockForm.inDate) > parseFloat(this.outStockForm.outDate)) {
+            this.$notify.error({
+                title: '错误',
+                message: '出库时间不能晚于入库时间',
+                position: 'bottom-right'
+            });
+        } else {
+            this.$refs['outStockForm'].validate(valid => {
+                if (valid) {
+                    this.$axios.post('http://localhost/saled', {
+                        shipper: this.outStockForm.shipper,
+                        date: this.outStockForm.outDate,
+                        sid: this.outStockForm.sid,
+                        price: parseFloat(this.outStockForm.sell),
+                        quantity: this.outStockForm.quantity
+                    }).then(() => {
+                        this.outStockFormDialogVisible = false
+                        this.getList()
+                        this.$notify.success({
+                            title: '成功',
+                            message: '出库成功',
+                            position: 'bottom-right'
+                        });
+                    }).catch(err => {
+                        this.$notify.error({
+                            title: '错误',
+                            message: err.response.data,
+                            position: 'bottom-right'
+                        });
+                    })
+                } else {
+                    console.log('出库信息验证未通过');
+                }
+            })
+        }
     },
 
     //-----------------------------------------表单重置中心-----------------------------------------

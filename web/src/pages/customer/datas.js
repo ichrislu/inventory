@@ -76,7 +76,9 @@ export default {
                 ],
             },
              // 打印窗口
-             outVisible : false
+             outVisible : false,
+             // 控制出库窗口的显示和隐藏
+             sendStockVisible: false,
         }
     }
 }

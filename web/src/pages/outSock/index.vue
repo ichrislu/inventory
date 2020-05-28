@@ -60,10 +60,6 @@
                         <el-tooltip class="item" effect="dark" content="添加备注" placement="top" :enterable="false">
                             <el-button icon="el-icon-edit" size="medium " type="primary" @click="showRemark(scope.row)"></el-button>
                         </el-tooltip>
-                        <!-- 确认出库按钮 -->
-                        <el-tooltip class="item" effect="dark" content="确认出库" placement="top" :enterable="false">
-                            <el-button icon="el-icon-s-goods" size="medium " type="warning" @click="outStock(scope.row.Id)"></el-button>
-                        </el-tooltip>
                         </template>
                     </el-table-column>
                 </el-table>

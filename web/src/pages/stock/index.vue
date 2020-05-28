@@ -218,7 +218,6 @@
     </section>
 </template>
 <script>
-import formatDate from '../../api/formatDate.js'
 import datas from './datas.js'
 import methods from './methdos.js'
 

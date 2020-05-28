@@ -1,11 +1,14 @@
-import util from '../../common/util'
+import util from '../../common/js/util'
+import {
+    getCate,
+    addCategory,
+    addBrandById
+} from '../../api/cateGoryApi'
 
 export default {
     getList() {
-        // debugger
-        this.$axios.get('http://localhost/category').then(res => {
+        getCate().then(res => {
             this.list = res.data
-            // console.log(res.data);
             if (res.data !== null) {
                 for (let i = 0; i < res.data.length; i++) {
                     for (let j = 0; j < res.data[i].Category.length; j++) {
@@ -35,9 +38,10 @@ export default {
             }
         }
 
-        this.$axios.post('http://localhost/category', {
+        let para = {
             name: this.addForm.name
-        }).then(res => {
+        };
+        addCategory(para).then(res => {
             this.$notify.success({
                 title: '成功',
                 message: '品类添加成功',
@@ -72,24 +76,25 @@ export default {
     },
     //增加品牌
     addBrand() {
-        this.$axios.post('http://localhost/category', {
-            'pid': this.bId,
-            'name': this.addBrandsForm.name
-        }).then(() => {
-            this.$notify.success({
-                title: '成功',
-                message: '品牌添加成功',
-                position: 'bottom-right'
-            });
-            window.sessionStorage.clear();
-            this.getList()
-        }).catch(err => {
-            this.$notify.error({
-                title: '错误',
-                message: '品牌添加失败',
-                position: 'bottom-right'
-            });
-        })
+        let para = {
+            pid: this.bId,
+            name: this.addBrandsForm.name
+        }
+        addBrandById(para).then(() => {
+                this.$notify.success({
+                    title: '成功',
+                    message: '品牌添加成功',
+                    position: 'bottom-right'
+                });
+                window.sessionStorage.clear();
+                this.getList()
+            }).catch(err => {
+                this.$notify.error({
+                    title: '错误',
+                    message: '品牌添加失败',
+                    position: 'bottom-right'
+                });
+            })
         this.showBrandDialogVisible = false
     },
 
@@ -105,7 +110,9 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            this.$axios.delete('http://localhost/category/' + id).then(res => {
+            this.$axios.delete('http://localhost/category/' + id).
+            // deleteCateById(id).
+            then(res => {
                 window.sessionStorage.clear();
                 this.getList()
                 this.$notify.success({

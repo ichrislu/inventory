@@ -1,5 +1,5 @@
 import { getList } from '../../api/stockApi'
-import util from '../../common/util';
+import util from '../../common/js/util';
 
 export default {
     // 获取库存列表数据
@@ -74,29 +74,6 @@ export default {
         })
     },
 
-    // ----------------------------------------------------确认出库----------------------------------------------------------
-    outStock() {
-        this.$confirm('确认出库该商品?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-        }).then(() => {
-
-            this.$notify({
-                title: '成功',
-                message: '成功出库',
-                type: 'success',
-                position: 'bottom-right'
-            });
-        }).catch(() => {
-            this.$notify.error({
-                title: '错误',
-                message: '取消了出库',
-                position: 'bottom-right'
-            });
-        });
-    }
-,
     //--------------------------------表单重置---------------------------------------------
        formClose(ref) {
         let _this = this
