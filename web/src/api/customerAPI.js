@@ -18,13 +18,13 @@ export const addCustomerAPI = params => {
 }
 
 // 新增客户信息
-export const editCustomerAPI = (para,params) => {
-    return axios.put(`${BaseUrl}/customer/${para}`, params)
+export const editCustomerAPI = (id,params) => {
+    return axios.put(`${BaseUrl}/customer/${id}`, params)
 }
 
 // 新增备注
-export const addCustomerRemarkAPI = (para,params) => {
-    return axios.put(`${BaseUrl}/customer/${para}/remarks`, params)
+export const addCustomerRemarkAPI = (id,params) => {
+    return axios.put(`${BaseUrl}/customer/${id}/remarks`, params)
 }
 
 // 出库信息

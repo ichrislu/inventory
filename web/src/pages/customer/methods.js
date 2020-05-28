@@ -84,6 +84,7 @@ export default {
     // 获取选中库存数据
     showEditForm(editForm) {
         this.editCustomerFormDialogVisible = true
+
         this.editCustomerForm = Object.assign(editForm)
     },
 

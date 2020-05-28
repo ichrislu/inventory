@@ -121,8 +121,8 @@
         </el-dialog>
 
         <!--------------------------------------------------------修改客户信息对话框-------------------------------------------------------->
-        <el-dialog title="出库" :visible.sync="editCustomerFormDialogVisible" width="30%">
-            <el-form ref="setCustomerForm" :model="editCustomerForm" label-width="120px" :rules="formRules">
+        <el-dialog title="出库" :visible.sync="editCustomerFormDialogVisible" width="30%" @close="formClose('editCustomerForm')">
+            <el-form ref="editCustomerForm" :model="editCustomerForm" label-width="120px" :rules="formRules">
                 <el-form-item label="出货人" prop="Shipper">
                     <el-input v-model="editCustomerForm.Shipper" label="描述文字"></el-input>
                 </el-form-item>

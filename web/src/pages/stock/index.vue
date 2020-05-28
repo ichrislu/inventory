@@ -112,7 +112,7 @@
         </el-dialog>
 
         <!--------------------------------------------------------修改库存对话框-------------------------------------------------------->
-        <el-dialog title="修改库存" :visible.sync="showEditFormDialogVisible" width="30%" :rules="addFormRules">
+        <el-dialog title="修改库存" :visible.sync="showEditFormDialogVisible" width="30%" :rules="addFormRules" @close="formClose('editForm')">
             <el-form ref="editForm" :model="editForm" label-width="120px" :rules="addFormRules">
                 <el-form-item label="供应商" prop="Provider">
                     <el-input v-model="editForm.Provider"></el-input>

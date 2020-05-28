@@ -4,7 +4,7 @@
             <!-- --------------------------------------------------------------- 查找区 ------------------------------------------------ -->
             <el-row :gutter="20" style="margin-bottom: 20px;">
                 <el-form :model="searchForm" :inline="true" class="demo-form-inline" label-width="110px" ref="searchRef">
-                    <el-form-item prop="time" label="出货日期">
+                    <el-form-item prop="time" label="入库日期">
                         <el-date-picker
                             unlink-panels
                             v-model="searchForm.time"

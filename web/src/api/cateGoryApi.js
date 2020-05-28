@@ -10,7 +10,7 @@ export const getCate = params => {
 
 // 增加分类
 export const addCategory = params => {
-    return axios.post(`${BaseUrl}/category/`, params)
+    return axios.post(`${BaseUrl}/category`, params)
 }
 
 // 增加品牌
