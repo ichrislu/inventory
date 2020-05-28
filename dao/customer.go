@@ -32,5 +32,5 @@ func EditCustomerRemarks(db *gorm.DB, id int64, remarks string) error {
 }
 
 func EditCustomer(db *gorm.DB, customer model.Customer) error {
-	return db.Model(model.Customer{}).Save(customer).Error
+	return db.Model(model.Customer{}).Updates(customer).Error
 }
