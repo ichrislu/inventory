@@ -13,6 +13,6 @@ export const searchOutStockAPI = params => {
 }
 
 // 新增备注
-export const addRemarkAPI = (para, params) => {
-    return axios.put(`${BaseUrl}/saled/${para}/remarks`,params)
+export const addRemarkAPI = (id, params) => {
+    return axios.put(`${BaseUrl}/saled/${id}/remarks`,params)
 }

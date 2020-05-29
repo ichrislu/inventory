@@ -96,6 +96,11 @@ export default {
                     message: '请输入数量',
                     trigger: 'blur'
                 }],
+                // addValue: [{
+                //     required: true,
+                //     message: '请输入品类品牌',
+                //     trigger: 'blur'
+                // }],
             },
             // 控制 修改库存对话框
             showEditFormDialogVisible: false,
@@ -135,7 +140,7 @@ export default {
 
                 Sid :'',
                 OutDate : '',
-                Quantity: 0,
+                Quantity:'',
                 Shipper : '',
                 Sell: '',
             },

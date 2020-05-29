@@ -27,11 +27,8 @@
                         <!-- 二级菜单 -->
                         <el-menu-item :index="'' + subItem.path" v-for="subItem in item.children" :key="subItem.index">
                             <template slot="title">
-                                <!-- <i class="el-icon-user"></i> -->
                                 <!-- 文本 -->
                                 <span>{{ subItem.title }}</span>
-                                <!-- <router-link :to="subItem.path">
-                </router-link>-->
                             </template>
                         </el-menu-item>
                     </el-submenu>

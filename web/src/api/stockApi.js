@@ -31,6 +31,6 @@ export const outStockAPI = params => {
 }
 
 //删除库存
-export const deleteStockAPI = params => {
-    return axios.delete(`${BaseUrl}/stock/${params}`)
+export const deleteStockAPI = id => {
+    return axios.delete(`${BaseUrl}/stock/${id}`)
 }

@@ -17,7 +17,7 @@ export const addCustomerAPI = params => {
     return axios.post(`${BaseUrl}/customer`, params)
 }
 
-// 新增客户信息
+// 修改客户信息
 export const editCustomerAPI = (id,params) => {
     return axios.put(`${BaseUrl}/customer/${id}`, params)
 }
@@ -28,6 +28,6 @@ export const addCustomerRemarkAPI = (id,params) => {
 }
 
 // 出库信息
-export const sendCustomerAPI = (para,params) => {
-    return axios.put(`${BaseUrl}/customer/${para}`, params)
+export const sendCustomerAPI = (id,params) => {
+    return axios.put(`${BaseUrl}/customer/${id}`, params)
 }

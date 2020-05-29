@@ -64,7 +64,6 @@
                             <el-tooltip class="item" effect="dark" content="出库" placement="top" :enterable="false">
                                 <el-button icon="el-icon-s-promotion" size="small" type="warning" @click="showOutStock(scope.row)"></el-button>
                             </el-tooltip>
-
                             <!-- 删除按钮 -->
                             <el-tooltip class="item" effect="dark" content="删除" placement="top" :enterable="false">
                                 <el-button icon="el-icon-delete-solid" size="small" type="danger" @click="deleteStock(scope.row.Id)"></el-button>
@@ -85,7 +84,7 @@
                     <el-date-picker v-model="addForm.Date" type="date" placeholder="选择日期" format="yyyy 年 MM 月 dd 日" value-format="timestamp">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="品类">
+                <el-form-item label="品类" >
                     <el-cascader
                         v-model="addValue"
                         :options="options"

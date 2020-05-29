@@ -1,5 +1,5 @@
 import { getOutStockListAPI,searchOutStockAPI,addRemarkAPI } from '../../api/outStockApi'
-import util , {Datetransformation} from '../../common/js/util';
+import util  from '../../common/js/util';
 
 export default {
     // 获取库存列表数据
@@ -71,6 +71,6 @@ export default {
 
     // 时间格式转换
     dataFormatter(row, column, cellValue, inde ) {
-        return Datetransformation(cellValue)
+        return util.Datetransformation(cellValue)
     }
 }

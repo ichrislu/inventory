@@ -1,4 +1,4 @@
-import util, { Datetransformation } from '../../common/js/util'
+import util from '../../common/js/util'
 import {
     getStockListAPI,
     searchStockAPI,
@@ -66,16 +66,9 @@ export default {
         } else {
             this.$refs['addForm'].validate(valid => {
                 if (valid) {
-                    let para = {
-                            Provider: this.addForm.Provider,
-                            Date: this.addForm.Date,
-                            Bid: this.addForm.Bid,
-                            Model: this.addForm.Model,
-                            Price: parseFloat(this.addForm.Price),
-                            Quantity: this.addForm.Quantity,
-                        }
+                    let para = Object.assign(this.addForm)
+                    para.Price = parseFloat(this.addForm.Price)
                         addStockAPI(para).then(res => {
-                            let _this = this
                             this.addValue = []
                             this.$notify.success({
                                 title: '成功',
@@ -173,15 +166,9 @@ export default {
                 position: 'bottom-right'
             });
         } else {
-            let _params = {
-                Provider: this.editForm.Provider,
-                Date: this.editForm.Date,
-                Model: this.editForm.Model,
-                Price: parseFloat(this.editForm.Price),
-                Quantity: this.editForm.Quantity,
-                Bid: this.editForm.Bid
-            }
-            editStockAPI(this.editForm.Id,util.getFormDataFromJson(_params) ).then(
+            let para = Object.assign(this.editForm)
+            para.Price = parseFloat(this.editForm.Price)
+            editStockAPI(this.editForm.Id,util.getFormDataFromJson(para) ).then(
                 res => {
                     this.$notify.success({
                         title: '成功',
@@ -200,7 +187,6 @@ export default {
     showOutStock(outstock) {
         this.outStockForm = Object.assign(outstock)
         this.outStockValue = outstock.Category + ' / ' + outstock.Brand
-        this.outStockForm.Quantity = 0
         this.outStockForm.Sid = outstock.Id
 
         this.outStockFormDialogVisible = true
@@ -232,13 +218,8 @@ export default {
         else {
             this.$refs['outStockForm'].validate(valid => {
                 if (valid) {
-                    let para = {
-                        Shipper: this.outStockForm.Shipper,
-                        Date: this.outStockForm.OutDate,
-                        Sid: this.outStockForm.Sid,
-                        Price: parseFloat(this.outStockForm.Sell),
-                        Quantity: this.outStockForm.Quantity
-                    }
+                    let para = Object.assign(this.outStockForm)
+                    para.Price = parseFloat(this.outStockForm.Sell)
                     outStockAPI(para).then(() => {
                         this.outStockFormDialogVisible = false
                         this.getList()
@@ -285,9 +266,8 @@ export default {
 
     // 时间格式转换
     dataFormatter(row, column, cellValue, inde ) {
-        return Datetransformation(cellValue)
+        return util.Datetransformation(cellValue)
     },
-
 
     //-----------------------------------------表单重置-----------------------------------------
     formClose(formName) {
@@ -302,5 +282,4 @@ export default {
             this.addValue = []
         }
     },
-
 }

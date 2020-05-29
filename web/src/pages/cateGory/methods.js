@@ -21,6 +21,7 @@ export default {
                         window.sessionStorage.setItem('key_' + res.data[i].Category[j].Id, JSON.stringify(obj));
                     }
                 }
+                // 提供给 分类选择器的数据源
                 window.sessionStorage.setItem('pickValue', JSON.stringify(this.list))
             }
         })
