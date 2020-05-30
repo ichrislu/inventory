@@ -16,10 +16,37 @@ export default {
                 shipper: '',
                 // 时间选择器绑定对象
                 time: [],
-                checked: false
+                checked: false,
+                pickerOptions: {
+                    shortcuts: [{
+                        text: '最近一周',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近一个月',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近三个月',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }]
+                },
             },
             // 控制 打印提示 "包含已送货信息"的显示和隐藏
-            show : false,
+            show: false,
             // 控制客户信息表单的 显示与隐藏
             customerFormDialogVisible: false,
             // 录入客户信息表单
@@ -36,10 +63,10 @@ export default {
             },
 
             // 控制修改客户信息表单的显示和隐藏,
-            editCustomerFormDialogVisible : false,
+            editCustomerFormDialogVisible: false,
             // 修改客户信息表单对象
             editCustomerForm: {
-                Id:'',
+                Id: '',
                 Shipper: '',
                 Model: '',
                 Name: '',
@@ -48,37 +75,74 @@ export default {
                 SaleDate: '',
                 DeliveryDate: '',
                 Remarks: '',
-                Status: 1
+                Status: ''
             },
 
             // 表单验证规则
-            formRules : {
-                Shipper : [
-                    {required : true, message : '请输入出货人', trigger : 'blur'}
-                ],
-                Model : [
-                    {required : true, message : '请输入型号', trigger : 'blur'}
-                ],
-                Name : [
-                    {required : true, message : '请输入顾客', trigger : 'blur'}
-                ],
-                Phone : [
-                    {required : true, message : '请输入联系方式', trigger : 'blur'}
-                ],
-                Address : [
-                    {required : true, message : '请输入收货地址', trigger : 'blur'}
-                ],
-                SaleDate : [
-                    {required : true, message : '请输入出单时间', trigger : 'blur'}
-                ],
-                DeliveryDate : [
-                    {required : true, message : '请输入送货时间', trigger : 'blur'}
-                ],
+            formRules: {
+                Shipper: [{
+                    required: true,
+                    message: '请输入出货人',
+                    trigger: 'blur'
+                }],
+                Model: [{
+                    required: true,
+                    message: '请输入型号',
+                    trigger: 'blur'
+                }],
+                Name: [{
+                    required: true,
+                    message: '请输入顾客',
+                    trigger: 'blur'
+                }],
+                Phone: [{
+                    required: true,
+                    message: '请输入联系方式',
+                    trigger: 'blur'
+                }],
+                Address: [{
+                    required: true,
+                    message: '请输入收货地址',
+                    trigger: 'blur'
+                }],
+                SaleDate: [{
+                    required: true,
+                    message: '请输入出单时间',
+                    trigger: 'blur'
+                }],
+                DeliveryDate: [{
+                    required: true,
+                    message: '请输入送货时间',
+                    trigger: 'blur'
+                }],
             },
-             // 打印窗口
-             outVisible : false,
-             // 控制出库窗口的显示和隐藏
-             sendStockVisible: false,
+            // 打印窗口
+            outVisible: false,
+            // 控制出库窗口的显示和隐藏
+            sendStockVisible: false,
+              // 时间快捷选项
+              pickerOptions: {
+                shortcuts: [{
+                  text: '今天',
+                  onClick(picker) {
+                    picker.$emit('pick', new Date());
+                  }
+                }, {
+                  text: '昨天',
+                  onClick(picker) {
+                    const date = new Date();
+                    date.setTime(date.getTime() - 3600 * 1000 * 24);
+                    picker.$emit('pick', date);
+                  }
+                }, {
+                  text: '一周前',
+                  onClick(picker) {
+                    const date = new Date();
+                    date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+                    picker.$emit('pick', date);
+                  }
+                }]
+              },
         }
     }
 }

@@ -50,7 +50,7 @@ export default {
         this.customerFormDialogVisible = true
         this.$refs['setCustomerForm'].validate(valid => {
             if (valid) {
-                let para = Object.assign( this.setCustomerForm)
+                let para = Object.assign(this.setCustomerForm)
 
                 addCustomerAPI(para).then(res => {
 
@@ -74,9 +74,19 @@ export default {
     showEditForm(editForm) {
         this.editCustomerFormDialogVisible = true
         this.editCustomerForm = Object.assign(editForm)
+        if (editForm.Status == 1 ){
+            this.editCustomerForm.Status = false
+        }else {
+            this.editCustomerForm.Status = true
+        }
     },
 
     EditForm() {
+        if ( this.editCustomerForm.Status ) {
+            this.editCustomerForm.Status = 0
+        } else {
+            this.editCustomerForm.Status = 1
+        }
         let para = Object.assign(this.editCustomerForm)
         editCustomerAPI(this.editCustomerForm.Id, para).then(res => {
             this.getList()
@@ -91,14 +101,16 @@ export default {
 
     // ------------------------------------------------------------ 备注功能 ------------------------------------------------------------
     // 获取备注
-    showRemark(row) {
-        this.remarkForm.Remarks = row.Remarks
-        this.remarkForm.Id = row.Id
-        this.showRemarkFormDialogVisible = true
-    },
+    // showRemark(row) {
+    //     this.remarkForm.Remarks = row.Remarks
+    //     this.remarkForm.Id = row.Id
+    //     this.showRemarkFormDialogVisible = true
+    // },
 
     // 新增备注
-    addRemark() {
+    addRemark(row) {
+        this.remarkForm.Remarks = row.Remarks
+        this.remarkForm.Id = row.Id
         let _params = {
             remarks: this.remarkForm.Remarks
         }
@@ -153,7 +165,6 @@ export default {
             this.searchForm.checked = false
             this.getList()
         }
-
         if (this.$refs[formName] !== undefined) {
             this.$refs[formName].resetFields();
         }
@@ -183,7 +194,7 @@ export default {
     dataFormatter(row, column, cellValue, inde) {
         return util.Datetransformation(cellValue)
     },
-
+    // 打印列表时间转换
     dataForma(value) {
         return util.Datetransformation(value)
     }

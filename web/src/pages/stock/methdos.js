@@ -68,16 +68,16 @@ export default {
                 if (valid) {
                     let para = Object.assign(this.addForm)
                     para.Price = parseFloat(this.addForm.Price)
-                        addStockAPI(para).then(res => {
-                            this.addValue = []
-                            this.$notify.success({
-                                title: '成功',
-                                message: '入库成功',
-                                position: 'bottom-right'
-                            });
-                            this.getList()
-                            this.showAddFormDialogVisible = false
-                        })
+                    addStockAPI(para).then(res => {
+                        this.addValue = []
+                        this.$notify.success({
+                            title: '成功',
+                            message: '入库成功',
+                            position: 'bottom-right'
+                        });
+                        this.getList()
+                        this.showAddFormDialogVisible = false
+                    })
                 }
             })
         }
@@ -91,20 +91,29 @@ export default {
 
     // ------------------------------------------------------------ 备注功能 ------------------------------------------------------------
     // 获取备注
-    showRemark(row) {
-        this.remarkForm.Remarks = row.Remarks
-        this.remarkForm.Id = row.Id
-        this.showRemarkDialogVisible = true
-    },
+    // showRemark(row) {
+    //     this.remarkForm.Remarks = row.Remarks
+    //     this.remarkForm.Id = row.Id
+    //     this.showRemarkDialogVisible = true
+    // },
 
     // 新增备注
-    addRemark() {
+    addRemark(row) {
+
+        this.remarkForm.Remarks = row.Remarks
+        this.remarkForm.Id = row.Id
+
         let _params = {
             remarks: this.remarkForm.Remarks
         }
         addRemarkAPI(this.remarkForm.Id, util.getFormDataFromJson(_params)).then(() => {
             this.getList()
-            this.showRemarkDialogVisible = false;
+            this.$notify.success({
+                title: '成功',
+                message: '备注添加成功',
+                position: 'bottom-right'
+            })
+
         }).catch(err => {
             console.log(err.response);
         })
@@ -168,7 +177,7 @@ export default {
         } else {
             let para = Object.assign(this.editForm)
             para.Price = parseFloat(this.editForm.Price)
-            editStockAPI(this.editForm.Id,util.getFormDataFromJson(para) ).then(
+            editStockAPI(this.editForm.Id, util.getFormDataFromJson(para)).then(
                 res => {
                     this.$notify.success({
                         title: '成功',
@@ -200,22 +209,19 @@ export default {
                 message: '请输入正确的售价',
                 position: 'bottom-right'
             });
-        }
-        else if (this.outStockForm.OutDate == '') {
+        } else if (this.outStockForm.OutDate == '') {
             this.$notify.error({
                 title: '错误',
                 message: '请输入正确的时间',
                 position: 'bottom-right'
             });
-        }
-        else if (parseFloat(this.outStockForm.InDate) > parseFloat(this.outStockForm.OutDate)) {
+        } else if (parseFloat(this.outStockForm.InDate) > parseFloat(this.outStockForm.OutDate)) {
             this.$notify.error({
                 title: '错误',
                 message: '出库时间不能早于入库时间',
                 position: 'bottom-right'
             });
-        }
-        else {
+        } else {
             this.$refs['outStockForm'].validate(valid => {
                 if (valid) {
                     let para = Object.assign(this.outStockForm)
@@ -248,24 +254,18 @@ export default {
 
     // -------------------------------------------删除库存 ----------------------------------
     deleteStock(id) {
-        this.$confirm('确认删除该库存?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-        }).then(() => {
-            deleteStockAPI(id).then(res => {
-                this.getList()
-                this.$notify.success({
-                    title: '成功',
-                    message: '删除成功',
-                    position: 'bottom-right'
-                });
-            })
+        deleteStockAPI(id).then(res => {
+            this.getList()
+            this.$notify.success({
+                title: '成功',
+                message: '删除成功',
+                position: 'bottom-right'
+            });
         })
     },
 
     // 时间格式转换
-    dataFormatter(row, column, cellValue, inde ) {
+    dataFormatter(row, column, cellValue, inde) {
         return util.Datetransformation(cellValue)
     },
 
@@ -281,5 +281,46 @@ export default {
         if (formName == 'addForm') {
             this.addValue = []
         }
+    },
+
+    //--------------------------------------------搜索提醒方法-----------------------------------
+    querySearch(queryString, cb) {
+        var restaurants = this.restaurants;
+
+        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+        // console.log(results);
+        cb(results);
+
+        // 调用 callback 返回建议列表的数据
+    },
+
+    createFilter(queryString) {
+        return (restaurant) => {
+            return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+    },
+    loadAll() {
+        return [{
+                'value': '老赵'
+            },
+            {
+                'value': '老吴'
+            },
+            {
+                'value': '老钱'
+            },
+            {
+                'value': '老周'
+            },
+            {
+                'value': '老王'
+            },
+            {
+                'value': '老蒋'
+            },
+            {
+                'value': '老海'
+            },
+        ];
     },
 }

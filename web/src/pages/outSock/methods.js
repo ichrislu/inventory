@@ -39,20 +39,26 @@ export default {
 
     // ------------------------------------------------------------ 备注功能 ------------------------------------------------------------
     // 获取备注
-    showRemark(row) {
-        this.remarkForm.Remarks = row.Remarks
-        this.remarkForm.Id = row.Id
-        this.showRemarkFormDialogVisible = true
-    },
+    // showRemark(row) {
+    //     this.remarkForm.Remarks = row.Remarks
+    //     this.remarkForm.Id = row.Id
+    //     this.showRemarkFormDialogVisible = true
+    // },
 
     // 新增备注
-    addRemark() {
+    addRemark(row) {
+        this.remarkForm.Remarks = row.Remarks
+        this.remarkForm.Id = row.Id
         let _params = {
             remarks: this.remarkForm.Remarks
         }
         addRemarkAPI(this.remarkForm.Id, util.getFormDataFromJson(_params)).then(() => {
             this.getList()
-            this.showRemarkFormDialogVisible = false;
+            this.$notify.success({
+                title: '成功',
+                message: '备注添加成功',
+                position: 'bottom-right'
+            })
         })
     },
 

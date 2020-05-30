@@ -1,7 +1,7 @@
 <template>
     <section>
-        <el-card style="margin-bottom: 20px;">
-            <!-- --------------------------------------------------------------- 查找区 ------------------------------------------------ -->
+        <!-- --------------------------------------------------------------- 查找区 ------------------------------------------------ -->
+        <el-card style="margin-bottom: 5px;">
             <el-row :gutter="20" style="margin-bottom: 20px;">
                 <el-form :model="searchForm" :inline="true" class="demo-form-inline" label-width="110px" ref="searchRef">
                     <el-form-item prop="time" label="送货日期">
@@ -13,6 +13,7 @@
                             range-separator="至"
                             start-placeholder="开始日期"
                             end-placeholder="结束日期"
+                            :picker-options="searchForm.pickerOptions"
                         >
                         </el-date-picker>
                     </el-form-item>
@@ -25,8 +26,8 @@
                 </el-form>
             </el-row>
         </el-card>
+        <!--------------------------------------------------------数据展示区-------------------------------------------------------->
         <el-card>
-            <!-- --------------------------------------------------------------- 数据展示区 ------------------------------------------------ -->
             <el-row>
                 <el-row type="flex" justify="space-around">
                     <el-col :span="20">
@@ -34,7 +35,7 @@
                     </el-col>
                     <el-row type="flex" justify="end">
                         <el-button type="success" @click="customerFormDialogVisible = true">新增客户</el-button>
-                        <el-button type="primary" @click="print">打印预览</el-button>
+                        <el-button type="info" @click="print">打印预览</el-button>
                     </el-row>
                 </el-row>
                 <el-table :data="customerList" border style="width: 100%" :row-class-name="tableRowClassName">
@@ -45,10 +46,15 @@
                     <el-table-column prop="Name" label="顾客姓名" align="center"></el-table-column>
                     <el-table-column prop="Phone" label="联系电话" align="center"></el-table-column>
                     <el-table-column prop="Address" label="送货地址" align="center"></el-table-column>
-                    <el-table-column prop="Remarks" label="备注" align="center" width="150px"></el-table-column>
+
                     <el-table-column prop="Status" label="状态" align="center">
                         <template slot-scope="scope">
                             <div>{{ scope.row.Status == 1 ? '未送货' : '已送货' }}</div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="Remarks" label="备注" align="center" width="150px">
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.row.Remarks" class="in" autosize @change="addRemark(scope.row)" type="textarea"> </el-input>
                         </template>
                     </el-table-column>
                     <!-- 功能按钮区域 -->
@@ -56,15 +62,11 @@
                         <template slot-scope="scope">
                             <!-- 修改按钮 -->
                             <el-tooltip class="item" effect="dark" content="修改" placement="top" :enterable="false">
-                                <el-button icon="el-icon-setting" size="medium " type="primary" @click="showEditForm(scope.row)"></el-button>
-                            </el-tooltip>
-                            <!-- 备注按钮 -->
-                            <el-tooltip class="item" effect="dark" content="添加备注" placement="top" :enterable="false">
-                                <el-button icon="el-icon-edit" size="medium " type="success" @click="showRemark(scope.row)"></el-button>
+                                <el-button icon="el-icon-setting" type="primary" @click="showEditForm(scope.row)" circle></el-button>
                             </el-tooltip>
                             <!-- 确认出库按钮 -->
                             <el-tooltip class="item" effect="dark" content="确认出库" placement="top" :enterable="false">
-                                <el-button icon="el-icon-s-goods" size="medium " type="warning" @click="showSendStock(scope.row)"></el-button>
+                                <el-button icon="el-icon-s-goods" type="success " @click="showSendStock(scope.row)" circle></el-button>
                             </el-tooltip>
                         </template>
                     </el-table-column>
@@ -72,7 +74,7 @@
             </el-row>
         </el-card>
 
-        <!--------------------------------------------------------录入客户信息对话框-------------------------------------------------------->
+        <!--------------------------------------------------------新增客户信息对话框-------------------------------------------------------->
         <el-dialog title="客户信息" :visible.sync="customerFormDialogVisible" width="30%" @close="formClose('setCustomerForm')">
             <el-form ref="setCustomerForm" :model="setCustomerForm" label-width="120px" :rules="formRules">
                 <el-form-item label="出货人" prop="Shipper">
@@ -97,6 +99,7 @@
                         placeholder="选择日期"
                         format="yyyy 年 MM 月 dd 日"
                         value-format="timestamp"
+                        :picker-options="pickerOptions"
                     >
                     </el-date-picker>
                 </el-form-item>
@@ -107,6 +110,7 @@
                         placeholder="选择日期"
                         format="yyyy 年 MM 月 dd 日"
                         value-format="timestamp"
+                        :picker-options="pickerOptions"
                     >
                     </el-date-picker>
                 </el-form-item>
@@ -138,12 +142,11 @@
                 <el-form-item label="收货地址" prop="Address">
                     <el-input v-model="editCustomerForm.Address" label="描述文字"></el-input>
                 </el-form-item>
-                <!-- <el-form-item label="状态" prop="status">
-                    <el-radio-group v-model="editCustomerForm.status">
-                        <el-radio :label="1">未送货</el-radio>
-                        <el-radio :label="0">已送货</el-radio>
-                    </el-radio-group>
-                </el-form-item> -->
+                <el-form-item label="状态" prop="Status">
+                    <div>
+                        <el-checkbox v-model="editCustomerForm.Status" border label="已送货"></el-checkbox>
+                    </div>
+                </el-form-item>
                 <el-form-item label="出单时间" prop="SaleDate">
                     <el-date-picker
                         v-model="editCustomerForm.SaleDate"
@@ -151,6 +154,7 @@
                         placeholder="选择日期"
                         format="yyyy 年 MM 月 dd 日"
                         value-format="timestamp"
+                        :picker-options="pickerOptions"
                     >
                     </el-date-picker>
                 </el-form-item>
@@ -161,8 +165,12 @@
                         placeholder="选择日期"
                         format="yyyy 年 MM 月 dd 日"
                         value-format="timestamp"
+                        :picker-options="pickerOptions"
                     >
                     </el-date-picker>
+                </el-form-item>
+                <el-form-item label="备注" prop="Remarks">
+                    <el-input v-model="editCustomerForm.Remarks" label="描述文字"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -171,31 +179,18 @@
             </span>
         </el-dialog>
 
-        <!-- 备注对话框 -->
-        <el-dialog title="添加备注" :visible.sync="showRemarkFormDialogVisible" width="30%" @close="formClose('customerForm')">
-            <el-form ref="customerForm" :model="remarkForm" label-width="120px">
-                <el-form-item label="备注" prop="Remarks">
-                    <el-input type="textarea" placeholder="请输入内容" v-model="remarkForm.Remarks" maxlength="200" size="max" autosize> </el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="showRemarkFormDialogVisible = false">取消添加</el-button>
-                <el-button type="primary" @click="addRemark">确定添加</el-button>
-            </span>
-        </el-dialog>
-
-        <!-- 出库对话框 -->
-        <el-dialog title="出库" :visible.sync="sendStockVisible" width="30%">
+        <!------------------------------------------------------- 出库对话框 ------------------------------------------------------->
+        <el-dialog title="出库" :visible.sync="sendStockVisible" width="30%" @close="formClose('setCustomerForm')">
             <el-form ref="setCustomerForm" :model="editCustomerForm" label-width="120px" :rules="formRules">
-                <!-- <el-form-item label="状态" prop="status">
-                    <el-radio-group v-model="editCustomerForm.status">
+                <el-form-item label="状态" prop="Status">
+                    <el-radio-group v-model="editCustomerForm.Status">
                         <el-radio :label="1">未送货</el-radio>
                         <el-radio :label="0">已送货</el-radio>
                     </el-radio-group>
-                </el-form-item> -->
-                <el-form-item label="送货时间" prop="deliveryDate">
+                </el-form-item>
+                <el-form-item label="送货时间" prop="DeliveryDate">
                     <el-date-picker
-                        v-model="editCustomerForm.deliveryDate"
+                        v-model="editCustomerForm.DeliveryDate"
                         type="date"
                         placeholder="选择日期"
                         format="yyyy 年 MM 月 dd 日"
@@ -210,12 +205,12 @@
             </span>
         </el-dialog>
 
-        <!-- 打印对话框 -->
+        <!------------------------------------------------------- 打印对话框 ------------------------------------------------------->
         <el-dialog title="打印预览" :visible.sync="outVisible" width="1086px" class="print">
             <div class="dialog-footer" style="text-align: center; margin-bottom : 15px">
                 <h2 v-if="show == true">包含已送货的客户信息</h2>
                 <el-button @click="outVisible = false">取 消</el-button>
-                <el-button v-print="'#print'" type="primary" @click="print">打印</el-button>
+                <el-button v-print="'#print'" type="info" @click="print">打印</el-button>
             </div>
             <div id="print">
                 <table width="100%" height="100%" border="1px solid black">
@@ -326,5 +321,18 @@ export default {
 }
 .printThree {
     width: 300px;
+}
+
+.el-card /deep/ .el-card__body {
+    padding: 5px;
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+.in /deep/ .el-textarea__inner {
+    border: none;
+    resize: none;
+    padding: 0;
+    font-size: 14px;
 }
 </style>

@@ -1,4 +1,3 @@
-import util from '../../common/js/util'
 import {
     getCate,
     addCategory,
@@ -26,6 +25,7 @@ export default {
             }
         })
     },
+
     //增加品类
     addcate() {
         if (this.list !== null) {
@@ -40,7 +40,6 @@ export default {
                 }
             }
         }
-
         let para = {
             name: this.addForm.name
         };
@@ -59,59 +58,22 @@ export default {
                 position: 'bottom-right'
             });
         });
-
         this.visible = false
     },
 
-    //获取品牌Id
-    addBrandId(id) {
-        this.bId = id
-        this.showBrandDialogVisible = true
-    },
-    //增加品牌
-    addBrand() {
-        let para = {
-            pid: this.bId,
-            name: this.addBrandsForm.name
-        }
-        addBrandById(para).then(() => {
-            this.$notify.success({
-                title: '成功',
-                message: '品牌添加成功',
-                position: 'bottom-right'
-            });
-            window.sessionStorage.clear();
-            this.getList()
-        }).catch(err => {
-            this.$notify.error({
-                title: '错误',
-                message: '品牌添加失败',
-                position: 'bottom-right'
-            });
-        })
-        this.showBrandDialogVisible = false
-    },
-
-
-
     // 删除分类
     deleteBrand(id) {
-        this.$confirm('确认删除该品类?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-        }).then(() => {
-            deleteCateById(id).then(res => {
-                console.log(res)
-                window.sessionStorage.clear();
-                this.getList()
-                this.$notify.success({
-                    title: '成功',
-                    message: '分类已删除',
-                    position: 'bottom-right'
-                });
-            })
+        deleteCateById(id).then(res => {
+            console.log(res)
+            window.sessionStorage.clear();
+            this.getList()
+            this.$notify.success({
+                title: '成功',
+                message: '分类已删除',
+                position: 'bottom-right'
+            });
         })
+        // })
     },
 
     // 删除品牌
@@ -136,4 +98,44 @@ export default {
             this.$refs[formName].resetFields();
         }
     },
+    // ---------------------------------新增品牌tag-----------------------------------------
+
+    showInput(tagsIndex) {
+
+        this.inputVisible = true;
+        this.currentIndex = tagsIndex
+        this.$nextTick(_ => {
+            this.$refs[`saveTagInput${tagsIndex}`].focus();
+        });
+    },
+
+    handleInputConfirm(Id) {
+        let inputValue = this.inputValue;
+        if (inputValue) {
+
+            let para = {
+                pid: Id,
+                name: this.inputValue
+            }
+            addBrandById(para).then(() => {
+                this.$notify.success({
+                    title: '成功',
+                    message: '品牌添加成功',
+                    position: 'bottom-right'
+                });
+                window.sessionStorage.clear();
+                this.getList()
+            }).catch(err => {
+                this.$notify.error({
+                    title: '错误',
+                    message: '品牌添加失败',
+                    position: 'bottom-right'
+                });
+            })
+
+        }
+        this.inputVisible = false;
+        this.currentIndex = -1
+        this.inputValue = '';
+    }
 }

@@ -39,6 +39,7 @@ export default new Router({
                     title: '出库列表',
                     component: OutStock
                 },
+
             ]
         }
     ]

@@ -7,10 +7,6 @@ export default {
             addForm: {
                 name: ''
             },
-            addBrandsForm: {
-                name: ''
-            },
-            bId: '',
             // 控制 新建分类 对话框的 显示与隐藏
             showCateDialogVisible: false,
             // 控制 新建品牌 对话框的 显示与隐藏
@@ -32,6 +28,9 @@ export default {
                     trigger: 'blur'
                 }],
             },
+            inputVisible: false,
+            inputValue: '',
+            currentIndex : -1
         }
     }
 }

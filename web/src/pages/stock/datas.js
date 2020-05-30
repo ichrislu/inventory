@@ -5,14 +5,44 @@ export default {
 
         return {
             // 品类品牌缓存对象
-            session : [],
+            session: [],
             // 搜索栏 表单对象
             searchForm: {
                 keyword: '',
                 // 时间选择器绑定对象
                 time: [],
-                checked : false
+                checked: false,
+                pickerOptions: {
+                    shortcuts: [{
+                        text: '最近一周',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近一个月',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近三个月',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }]
+                },
             },
+            // 搜索提示对象数据
+            restaurants: [],
+
             // 新增库存 分类选择器绑定属性
             addValue: [],
             // 修改库存 分类选择器绑定属性
@@ -28,11 +58,36 @@ export default {
             // 新增库存表单
             addForm: {
                 Provider: '',
-                Date:'',
+                Date: '',
                 Bid: '',
                 Model: '',
                 Price: '',
-                Quantity : 0
+                Quantity: '',
+                pickerOptions: {
+                    disabledDate(time) {
+                      return time.getTime() > Date.now();
+                    },
+                    shortcuts: [{
+                      text: '今天',
+                      onClick(picker) {
+                        picker.$emit('pick', new Date());
+                      }
+                    }, {
+                      text: '昨天',
+                      onClick(picker) {
+                        const date = new Date();
+                        date.setTime(date.getTime() - 3600 * 1000 * 24);
+                        picker.$emit('pick', date);
+                      }
+                    }, {
+                      text: '一周前',
+                      onClick(picker) {
+                        const date = new Date();
+                        date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+                        picker.$emit('pick', date);
+                      }
+                    }]
+                  },
             },
             // 新增库存表单对象预验证规则
             addFormRules: {
@@ -65,7 +120,7 @@ export default {
                     required: true,
                     message: '请输入进货价格',
                     trigger: 'blur'
-                },],
+                }, ],
                 Quantity: [{
                     required: true,
                     message: '请输入数量',
@@ -106,7 +161,7 @@ export default {
             showEditFormDialogVisible: false,
             // 修改库存表单对象
             editForm: {
-                Id : '',
+                Id: '',
                 Provider: '',
                 Date: '',
                 Bid: '',
@@ -116,8 +171,10 @@ export default {
                 Inventory: '',
                 Brand: '',
                 Category: '',
-                EditNum :''
+                EditNum: '',
+
             },
+            //----------------------
             // 备注对话框 表单对象
             remarkForm: {
                 // 备注内容
@@ -135,18 +192,41 @@ export default {
                 Brand: '',
                 Model: '',
                 Price: '',
-                Inventory:'',
-                InDate : '',
+                Inventory: '',
+                InDate: '',
 
-                Sid :'',
-                OutDate : '',
-                Quantity:'',
-                Shipper : '',
+                Sid: '',
+                OutDate: '',
+                Quantity: '',
+                Shipper: '',
                 Sell: '',
             },
             // 出库表单对象 分类属性
-            outStockValue : '',
+            outStockValue: '',
             filters: {},
+            // 时间快捷选项
+            pickerOptions: {
+                shortcuts: [{
+                  text: '今天',
+                  onClick(picker) {
+                    picker.$emit('pick', new Date());
+                  }
+                }, {
+                  text: '昨天',
+                  onClick(picker) {
+                    const date = new Date();
+                    date.setTime(date.getTime() - 3600 * 1000 * 24);
+                    picker.$emit('pick', date);
+                  }
+                }, {
+                  text: '一周前',
+                  onClick(picker) {
+                    const date = new Date();
+                    date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+                    picker.$emit('pick', date);
+                  }
+                }]
+              },
         }
     }
 }

@@ -1,6 +1,6 @@
 <template>
-    <section >
-        <el-card style="margin-bottom: 20px;">
+    <section>
+        <el-card style="margin-bottom: 5px;">
             <!-- --------------------------------------------------------------- 查找区 ------------------------------------------------ -->
             <el-row :gutter="20" style="margin-bottom: 20px;">
                 <el-form :model="searchForm" :inline="true" class="demo-form-inline" label-width="110px" ref="searchRef">
@@ -13,16 +13,24 @@
                             end-placeholder="结束日期"
                             value-format="timestamp"
                             unlink-panels
+                            :picker-options="searchForm.pickerOptions"
                         >
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="供货商" prop="keyword">
-                        <el-input placeholder="请输入供货商" v-model="searchForm.keyword" clearable></el-input>
+                        <el-autocomplete
+                            class="inline-input"
+                            v-model="searchForm.keyword"
+                            :fetch-suggestions="querySearch"
+                            placeholder="请输入内容"
+                            select-when-unmatched
+                        ></el-autocomplete>
+                        <!-- @select="handleSelect" -->
+                        <!-- <el-input placeholder="请输入供货商" v-model="searchForm.keyword" clearable></el-input> -->
                     </el-form-item>
                     <el-checkbox v-model="searchForm.checked">全部库存</el-checkbox>
                     <el-button type="primary" @click="search">查询</el-button>
                     <el-button @click="formClose('searchRef')">重置</el-button>
-
                 </el-form>
             </el-row>
         </el-card>
@@ -40,33 +48,41 @@
                 </el-row>
                 <el-table :data="stockList" border style="width: 100% " :row-class-name="tableRowClassName">
                     <el-table-column prop="Provider" label="供货商" align="center"></el-table-column>
-                    <el-table-column prop="Date" label="进货时间" align="center" :formatter="dataFormatter">
-                    </el-table-column>
+                    <el-table-column prop="Date" label="进货时间" align="center" :formatter="dataFormatter"> </el-table-column>
                     <el-table-column prop="Category" label="品类" align="center"> </el-table-column>
                     <el-table-column prop="Brand" label="品牌" align="center"></el-table-column>
                     <el-table-column prop="Model" label="型号" align="center"></el-table-column>
                     <el-table-column prop="Price" label="进货价格(元)" align="center"></el-table-column>
                     <el-table-column prop="Quantity" label="此单总量(件)" align="center"> </el-table-column>
                     <el-table-column prop="Inventory" label="库存余量(件)" align="center"> </el-table-column>
-                    <el-table-column prop="Remarks" label="备注" width="200px" align="center" class="remark"> </el-table-column>
+                    <el-table-column prop="Remarks" label="备注" width="200px" align="center" class="remark">
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.row.Remarks" class="in" autosize @change="addRemark(scope.row)" type="textarea"> </el-input>
+                        </template>
+                    </el-table-column>
                     <!-- 功能按钮区域 -->
                     <el-table-column width="300px" scope label="操作" align="center">
                         <template slot-scope="scope">
                             <!-- 修改按钮 -->
                             <el-tooltip class="item" effect="dark" content="修改" placement="top" :enterable="false">
-                                <el-button icon="el-icon-setting" size="small" type="primary" @click="showDditForm(scope.row)"></el-button>
-                            </el-tooltip>
-                            <!-- 备注按钮 -->
-                            <el-tooltip class="item" effect="dark" content="添加备注" placement="top" :enterable="false">
-                                <el-button icon="el-icon-edit" size="small" type="success" @click="showRemark(scope.row)"></el-button>
+                                <el-button icon="el-icon-setting" type="primary" @click="showDditForm(scope.row)" circle></el-button>
                             </el-tooltip>
                             <!-- 出库按钮 -->
                             <el-tooltip class="item" effect="dark" content="出库" placement="top" :enterable="false">
-                                <el-button icon="el-icon-s-promotion" size="small" type="warning" @click="showOutStock(scope.row)"></el-button>
+                                <el-button icon="el-icon-s-promotion" type="success" @click="showOutStock(scope.row)" circle></el-button>
                             </el-tooltip>
                             <!-- 删除按钮 -->
-                            <el-tooltip class="item" effect="dark" content="删除" placement="top" :enterable="false">
-                                <el-button icon="el-icon-delete-solid" size="small" type="danger" @click="deleteStock(scope.row.Id)"></el-button>
+                            <el-tooltip class="item" effect="dark" content="删除库存" placement="top" :enterable="false">
+                                <el-popconfirm
+                                    confirmButtonText="确认"
+                                    cancelButtonText="取消"
+                                    icon="el-icon-delete-solid"
+                                    iconColor="red"
+                                    title="确认删除该库存吗?"
+                                    @onConfirm="deleteStock(scope.row.Id)"
+                                >
+                                    <el-button slot="reference" type="danger" circle icon="el-icon-delete-solid"></el-button>
+                                </el-popconfirm>
                             </el-tooltip>
                         </template>
                     </el-table-column>
@@ -81,10 +97,17 @@
                     <el-input v-model="addForm.Provider"></el-input>
                 </el-form-item>
                 <el-form-item label="时间" prop="Date">
-                    <el-date-picker v-model="addForm.Date" type="date" placeholder="选择日期" format="yyyy 年 MM 月 dd 日" value-format="timestamp">
+                    <el-date-picker
+                        v-model="addForm.Date"
+                        type="date"
+                        placeholder="选择日期"
+                        format="yyyy 年 MM 月 dd 日"
+                        value-format="timestamp"
+                        :picker-options="addForm.pickerOptions"
+                    >
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="品类" >
+                <el-form-item label="品类">
                     <el-cascader
                         v-model="addValue"
                         :options="options"
@@ -101,7 +124,7 @@
                     <el-input v-model.number="addForm.Price" oninput="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></el-input>
                 </el-form-item>
                 <el-form-item label="此单总量(件)" prop="Quantity">
-                    <el-input-number v-model="addForm.Quantity" label="描述文字" :min="0" :precision="0"></el-input-number>
+                    <el-input-number v-model="addForm.Quantity" label="描述文字" :min="0" :precision="0" controls-position="right"></el-input-number>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -117,7 +140,14 @@
                     <el-input v-model="editForm.Provider"></el-input>
                 </el-form-item>
                 <el-form-item label="时间" prop="Date">
-                    <el-date-picker v-model="editForm.Date" type="date" placeholder="选择日期" format="yyyy 年 MM 月 dd 日" value-format="timestamp">
+                    <el-date-picker
+                        v-model="editForm.Date"
+                        type="date"
+                        placeholder="选择日期"
+                        format="yyyy 年 MM 月 dd 日"
+                        value-format="timestamp"
+                        :picker-options="pickerOptions"
+                    >
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="品类">
@@ -137,7 +167,7 @@
                     <el-input v-model="editForm.Price" oninput="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" @change="changePrice"></el-input>
                 </el-form-item>
                 <el-form-item label="此单总量(件)" prop="Quantity">
-                    <el-input-number v-model="editForm.Quantity" label="描述文字" :min="0" :precision="0"></el-input-number>
+                    <el-input-number v-model="editForm.Quantity" label="描述文字" :min="0" :precision="0" controls-position="right"></el-input-number>
                 </el-form-item>
                 <el-form-item label="已销售数量(件)" prop="EditNum">
                     <el-input v-model="editForm.EditNum" label="描述文字" disabled></el-input>
@@ -149,35 +179,22 @@
             </span>
         </el-dialog>
 
-        <!--------------------------------------------------------添加备注对话框-------------------------------------------------------->
-        <el-dialog title="修改库存" :visible.sync="showRemarkDialogVisible" width="30%" :rules="addFormRules" @close="formClose('remarkForm')">
-            <el-form ref="remarkForm" :model="remarkForm" label-width="120px" :rules="addFormRules">
-                <el-form-item label="备注 : " prop="Remarks">
-                    <el-input type="textarea" autosize v-model="remarkForm.Remarks" label="描述文字"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="showRemarkDialogVisible = false">取消</el-button>
-                <el-button type="primary" @click="addRemark">确认</el-button>
-            </span>
-        </el-dialog>
-
         <!--------------------------------------------------------出库对话框-------------------------------------------------------->
         <el-dialog title="出库" :visible.sync="outStockFormDialogVisible" width="30%" @close="formClose('outStockForm')">
             <el-form ref="outStockForm" :model="outStockForm" label-width="120px" :rules="addFormRules">
-                <el-form-item label="供应商" >
+                <el-form-item label="供应商">
                     <el-input v-model="outStockForm.Provider" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="品类">
                     <el-input v-model="outStockValue" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="型号" >
+                <el-form-item label="型号">
                     <el-input v-model="outStockForm.Model" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="此单库存(件)" >
+                <el-form-item label="此单库存(件)">
                     <el-input v-model="outStockForm.Inventory" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="进货价格(元)" >
+                <el-form-item label="进货价格(元)">
                     <el-input v-model="outStockForm.Price" disabled></el-input>
                 </el-form-item>
 
@@ -192,12 +209,19 @@
                         placeholder="选择日期"
                         format="yyyy 年 MM 月 dd 日"
                         value-format="timestamp"
+                        :picker-options="pickerOptions"
                     >
                     </el-date-picker>
                 </el-form-item>
 
                 <el-form-item label="出库数量(件)" prop="Quantity">
-                    <el-input-number v-model="outStockForm.Quantity" label="描述文字" :min="0" :precision="0"></el-input-number>
+                    <el-input-number
+                        v-model="outStockForm.Quantity"
+                        label="描述文字"
+                        :min="0"
+                        :precision="0"
+                        controls-position="right"
+                    ></el-input-number>
                 </el-form-item>
 
                 <el-form-item label="售价(元)" prop="Sell">
@@ -209,8 +233,6 @@
                 <el-button type="primary" @click="outStock">确认</el-button>
             </span>
         </el-dialog>
-
-
     </section>
 </template>
 <script>
@@ -226,14 +248,21 @@ export default {
         this.getList()
     },
     methods: methods,
+    mounted() {
+        this.restaurants = this.loadAll()
+    }
 }
 </script>
 
-<style scoped >
-
+<style scoped>
 .el-table {
     margin-top: 15px;
 }
+
+.el-table .el-table-column {
+    padding: 0px;
+}
+
 .el-col {
     margin: 0 20px;
 }
@@ -253,5 +282,16 @@ export default {
     white-space: pre-wrap;
 }
 
+.el-card /deep/ .el-card__body {
+    padding: 5px;
+    padding-top: 10px;
+    margin-top: 10px;
+}
 
+.in /deep/ .el-textarea__inner {
+    border: none;
+    resize: none;
+    padding: 0;
+    font-size: 14px;
+}
 </style>
