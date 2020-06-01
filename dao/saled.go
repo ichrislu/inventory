@@ -17,29 +17,29 @@ func GetSaledQuantity(db *gorm.DB, sid int64) (saledQuantity model.SaledQuantity
 	return saledQuantity, db.Table("saled").Select("SUM(quantity) as Quantity").Where("sid = ?", sid).Find(&saledQuantity).Error
 }
 
-func GetSaledList(db *gorm.DB, shipper string, begin int, end int) (saledList []model.SaledList, err error) {
+func GetSaledList(db *gorm.DB, shipper string, begin int, end int, last int, limit int) (saledList []model.SaledList, err error) {
 	db = db.Table("saled").
 		Select("saled.id,saled.shipper,saled.date as out_date,saled.sid,saled.price as out_price,saled.quantity,saled.profit,stock.price as in_price,stock.date as in_date,stock.bid,stock.model,stock.provider,saled.remarks").
 		Joins("JOIN stock on saled.sid = stock.id").
 		Order("saled.date DESC")
 
-	var whereFlag bool
-
 	if shipper != "" {
-		whereFlag = true
 		db = db.Where("shipper like ?", "%"+shipper+"%")
 	}
 
 	if begin > 0 && end > 0 {
-		whereFlag = true
 		db = db.Where("saled.date >= ? and saled.date <= ?", begin, end)
 	}
 
-	if !whereFlag {
-		db = db.Limit(50)
+	if last > 0 {
+		db = db.Where("saled.date < ?", last)
 	}
 
-	return saledList, db.Find(&saledList).Error
+	return saledList, db.Limit(limit).Find(&saledList).Error
+}
+
+func GetSaledShippers(db *gorm.DB) (shipper []string, err error) {
+	return shipper, db.Table("saled").Pluck("DISTINCT(shipper)", &shipper).Error
 }
 
 func EditSaledRemarks(db *gorm.DB, id int64, remarks string) error {

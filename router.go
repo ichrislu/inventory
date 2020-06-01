@@ -36,16 +36,19 @@ func initRouter() *echo.Echo {
 	e.PUT("/stock/:id", controller.EditStock)
 	e.PUT("/stock/:id/remarks", controller.EditStockRemarks)
 	e.DELETE("/stock/:id", controller.DelStock)
+	e.GET("/stock/provider", controller.GetProviders)
 
 	e.POST("/saled", controller.AddSaled)
 	e.GET("/saled", controller.GetSaledList)
 	e.PUT("/saled/:id/remarks", controller.EditSaledRemarks)
 	e.GET("/saled/profit", controller.GetTotalProfit)
+	e.GET("/saled/shipper", controller.GetSaledShippers)
 
 	e.POST("/customer", controller.AddCustomer)
 	e.PUT("/customer/:id", controller.EditCustomer)
 	e.GET("/customer", controller.GetCustomer)
 	e.PUT("/customer/:id/remarks", controller.EditCustomerRemarks)
+	e.GET("/customer/shipper", controller.GetCustomerShippers)
 
 	return e
 }

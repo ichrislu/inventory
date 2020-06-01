@@ -35,12 +35,16 @@ func GetStocks(db *gorm.DB, provider string, begin int, end int, all bool) (stoc
 	return stocks, db.Find(&stocks).Error
 }
 
+func GetProviders(db *gorm.DB) (provider []string, err error) {
+	return provider, db.Table("stock").Pluck("DISTINCT(provider)", &provider).Error
+}
+
 func EditStockRemarks(db *gorm.DB, id int64, remarks string) error {
 	return db.Model(model.Stock{}).Where("id = ?", id).Update("remarks", remarks).Error
 }
 
 func EditStock(db *gorm.DB, stock model.Stock) error {
-	return db.Model(model.Stock{}).Save(stock).Error
+	return db.Save(&stock).Error
 }
 
 func EditStockInventory(db *gorm.DB, count int, id int64) error {

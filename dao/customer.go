@@ -27,10 +27,14 @@ func GetCustomer(db *gorm.DB, shipper string, begin int, end int, all bool) (cus
 	return customer, db.Find(&customer).Error
 }
 
+func GetCustomerShippers(db *gorm.DB) (shipper []string, err error) {
+	return shipper, db.Table("customer").Pluck("DISTINCT(shipper)", &shipper).Error
+}
+
 func EditCustomerRemarks(db *gorm.DB, id int64, remarks string) error {
 	return db.Model(model.Customer{}).Where("id = ?", id).Update("remarks", remarks).Error
 }
 
 func EditCustomer(db *gorm.DB, customer model.Customer) error {
-	return db.Model(model.Customer{}).Updates(customer).Error
+	return db.Save(&customer).Error
 }

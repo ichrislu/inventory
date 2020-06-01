@@ -70,6 +70,17 @@ func GetCustomer(c echo.Context) error {
 	return c.JSON(http.StatusOK, customers)
 }
 
+func GetCustomerShippers(c echo.Context) error {
+	var shippers []string
+	var err error
+
+	if shippers, err = service.GetCustomerShippers(); err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, shippers)
+}
+
 func EditCustomerRemarks(c echo.Context) error {
 	_id := c.Param("id")
 	id, err := strconv.ParseInt(_id, 10, 64)

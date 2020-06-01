@@ -48,6 +48,11 @@ func GetCustomers(shipper string, begin int, end int, all bool) ([]model.Custome
 	return dao.GetCustomer(db, shipper, begin, end, all)
 }
 
+func GetCustomerShippers() ([]string, error) {
+	db := database.DB
+	return dao.GetCustomerShippers(db)
+}
+
 func EditCustomerRemarks(id int64, remarks string) error {
 	db := database.DB
 	return dao.EditCustomerRemarks(db, id, remarks)
@@ -87,6 +92,5 @@ func EditCustomer(customer model.Customer) (model.Customer, error) {
 	}
 
 	db := database.DB
-
 	return customer, dao.EditCustomer(db, customer)
 }

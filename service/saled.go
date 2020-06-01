@@ -64,9 +64,19 @@ func AddSaled(saled model.Saled) (model.Saled, error) {
 	return result, nil
 }
 
-func GetSaled(shipper string, begin int, end int) ([]model.SaledList, error) {
+func GetSaledList(shipper string, begin, end, last, limit int) ([]model.SaledList, error) {
+	if limit <= 0 {
+		// 页大小默认20
+		limit = 20
+	}
+
 	db := database.DB
-	return dao.GetSaledList(db, shipper, begin, end)
+	return dao.GetSaledList(db, shipper, begin, end, last, limit)
+}
+
+func GetSaledShippers() ([]string, error) {
+	db := database.DB
+	return dao.GetSaledShippers(db)
 }
 
 func GetTotalProfit() (model.Profit, error) {

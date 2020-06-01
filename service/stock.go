@@ -45,6 +45,11 @@ func GetStocks(provider string, begin int, end int, all bool) ([]model.Stock, er
 	return dao.GetStocks(db, provider, begin, end, all)
 }
 
+func GetProviders() ([]string, error) {
+	db := database.DB
+	return dao.GetProviders(db)
+}
+
 func EditStockRemarks(id int64, remarks string) error {
 	db := database.DB
 	return dao.EditStockRemarks(db, id, remarks)
@@ -84,6 +89,10 @@ func EditStock(stock model.Stock) (model.Stock, error) {
 
 	if stock.Model != "" && stock.Model != result.Model {
 		result.Model = stock.Model
+	}
+
+	if stock.Remarks != "" && stock.Remarks != result.Remarks {
+		result.Remarks = stock.Remarks
 	}
 
 	// 算法：当前库存数量 = 新入库数量 - 查出库得出的出库总数量

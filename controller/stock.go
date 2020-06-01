@@ -71,6 +71,17 @@ func GetStock(c echo.Context) error {
 	return c.JSON(http.StatusOK, stocks)
 }
 
+func GetProviders(c echo.Context) error {
+	var providers []string
+	var err error
+
+	if providers, err = service.GetProviders(); err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, providers)
+}
+
 func EditStockRemarks(c echo.Context) error {
 	_id := c.Param("id")
 	id, err := strconv.ParseInt(_id, 10, 64)
