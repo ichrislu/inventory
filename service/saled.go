@@ -5,9 +5,11 @@ import (
 	"inventory/dao"
 	"inventory/database"
 	"inventory/model"
+	"strings"
 )
 
 func AddSaled(saled model.Saled) (model.Saled, error) {
+	saled.Shipper = strings.TrimSpace(saled.Shipper)
 	if saled.Shipper == "" {
 		return model.Saled{}, errors.New("出货人不能为空")
 	}
@@ -44,6 +46,7 @@ func AddSaled(saled model.Saled) (model.Saled, error) {
 		return model.Saled{}, errors.New("库存数量不足")
 	}
 
+	saled.Remarks = strings.TrimSpace(saled.Remarks)
 	saled.Profit = (saled.Price - stock.Price) * float64(saled.Quantity)
 	saled.Id = GetId()
 
@@ -86,5 +89,5 @@ func GetTotalProfit() (model.Profit, error) {
 
 func EditSaledRemarks(id int64, remarks string) error {
 	db := database.DB
-	return dao.EditSaledRemarks(db, id, remarks)
+	return dao.EditSaledRemarks(db, id, strings.TrimSpace(remarks))
 }

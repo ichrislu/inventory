@@ -5,9 +5,11 @@ import (
 	"inventory/dao"
 	"inventory/database"
 	"inventory/model"
+	"strings"
 )
 
 func AddStock(stock model.Stock) (model.Stock, error) {
+	stock.Provider = strings.TrimSpace(stock.Provider)
 	if stock.Provider == "" {
 		return model.Stock{}, errors.New("供应商不能为空")
 	}
@@ -23,8 +25,8 @@ func AddStock(stock model.Stock) (model.Stock, error) {
 	if stock.Quantity <= 0 {
 		return model.Stock{}, errors.New("入库数量不正确")
 	}
-	stock.Inventory = stock.Quantity
 
+	stock.Model = strings.TrimSpace(stock.Model)
 	if stock.Model == "" {
 		return model.Stock{}, errors.New("型号不能为空")
 	}
@@ -32,6 +34,9 @@ func AddStock(stock model.Stock) (model.Stock, error) {
 	if stock.Price <= 0 {
 		return model.Stock{}, errors.New("价格不能是负数")
 	}
+
+	stock.Inventory = stock.Quantity
+	stock.Remarks = strings.TrimSpace(stock.Remarks)
 
 	stock.Id = GetId()
 
@@ -52,7 +57,7 @@ func GetProviders() ([]string, error) {
 
 func EditStockRemarks(id int64, remarks string) error {
 	db := database.DB
-	return dao.EditStockRemarks(db, id, remarks)
+	return dao.EditStockRemarks(db, id, strings.TrimSpace(remarks))
 }
 
 func EditStock(stock model.Stock) (model.Stock, error) {
@@ -75,6 +80,10 @@ func EditStock(stock model.Stock) (model.Stock, error) {
 
 	// 以下内容非零值，则与库中值不同时，则更新
 
+	stock.Provider = strings.TrimSpace(stock.Provider)
+	if stock.Provider == "" {
+		return model.Stock{}, errors.New("供应商不能为空")
+	}
 	if stock.Provider != "" && stock.Provider != result.Provider {
 		result.Provider = stock.Provider
 	}
@@ -87,10 +96,15 @@ func EditStock(stock model.Stock) (model.Stock, error) {
 		result.Date = stock.Date
 	}
 
+	stock.Model = strings.TrimSpace(stock.Model)
+	if stock.Model == "" {
+		return model.Stock{}, errors.New("型号不能为空")
+	}
 	if stock.Model != "" && stock.Model != result.Model {
 		result.Model = stock.Model
 	}
 
+	stock.Remarks = strings.TrimSpace(stock.Remarks)
 	if stock.Remarks != "" && stock.Remarks != result.Remarks {
 		result.Remarks = stock.Remarks
 	}

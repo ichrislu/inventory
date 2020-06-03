@@ -5,6 +5,7 @@ import (
 	"inventory/dao"
 	"inventory/database"
 	"inventory/model"
+	"strings"
 )
 
 func AddCategory(category model.Category) (model.Category, error) {
@@ -12,6 +13,7 @@ func AddCategory(category model.Category) (model.Category, error) {
 		return model.Category{}, errors.New("品类id不正确")
 	}
 
+	category.Name = strings.TrimSpace(category.Name)
 	if len(category.Name) <= 0 {
 		return model.Category{}, errors.New("类目名不能为空")
 	}
