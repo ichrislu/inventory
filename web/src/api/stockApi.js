@@ -34,3 +34,8 @@ export const outStockAPI = params => {
 export const deleteStockAPI = id => {
     return axios.delete(`${BaseUrl}/stock/${id}`)
 }
+
+//获取供货人
+export const getProviderAPI = params => {
+    return axios.get(`${BaseUrl}/stock/provider`)
+}

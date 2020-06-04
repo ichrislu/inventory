@@ -1,20 +1,21 @@
 <template>
     <section>
+        <!-- <el-progress :percentage="50" :format="format"></el-progress> -->
         <el-card>
             <el-row>
                 <el-row type="flex" justify="space-between">
                     <el-row><div>品类列表</div></el-row>
                     <el-row>
                         <!-- <el-button>新增品类</el-button> -->
-                        <el-popover placement="left" width="80px" v-model="visible" @hide="formClose('addCateRef')">
+                        <el-popover placement="left" width="80px" v-model="visible" @hide="formClose('addCateRef')" @show="showFocus">
                             <el-form :model="addForm" ref="addCateRef" :rules="addCateFormRules">
                                 <el-form-item prop="name">
-                                    <el-input class="input" v-model="addForm.name"></el-input>
+                                    <el-input class="input" v-model="addForm.name" ref="inputRef"></el-input>
                                 </el-form-item>
                             </el-form>
-                            <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-                            <el-button type="primary" size="mini" @click="addcate">确定</el-button>
-                            <el-button slot="reference" type="success">新增品类</el-button>
+                            <el-button size="mini"  @click="visible = false" icon="el-icon-close">取消</el-button>
+                            <el-button type="primary" size="mini" @click="addcate" icon="el-icon-check" >确定</el-button>
+                            <el-button slot="reference" type="success" icon="el-icon-plus">新增品类</el-button>
                         </el-popover>
                     </el-row>
                 </el-row>
@@ -22,11 +23,11 @@
                 <!---------------------------------------------------- 分类列表区 ---------------------------------------------->
                 <el-row>
                     <el-table :data="list" stripe style="width: 100%" border highlight-current-row>
-                        <el-table-column label="品类" prop="Name"> </el-table-column>
+                        <el-table-column label="品类" prop="Name" width="300px" > </el-table-column>
                         <el-table-column label="品牌">
                             <template slot-scope="scope">
                                 <el-row>
-                                    <el-col v-for="(item, itemIndex) in scope.row.Category" :key="itemIndex" :span="7">
+                                    <el-col v-for="(item, itemIndex) in scope.row.Category" :key="itemIndex" :span="3">
                                         <el-tag size="medium" hit closable @close="removeBrand(item.Id)">{{ item.Name }}</el-tag>
                                     </el-col>
                                 </el-row>
@@ -43,7 +44,7 @@
                                 <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.$index)">+ 品牌</el-button>
                             </template>
                         </el-table-column>
-                        <el-table-column label="操作" align="center">
+                        <el-table-column label="操作" align="center" width="300px">
                             <template slot-scope="scope">
                                 <el-tooltip class="item" effect="dark" content="删除品类" placement="top">
                                     <el-popconfirm
@@ -77,11 +78,20 @@ export default {
     data() {
         return datas.init()
     },
-    methods: methods
+    methods: methods,
+    mounted() {
+        this.$nextTick(() => {
+            this.$refs.inputRef.focus()
+        })
+    },
 }
 </script>
 
 <style scoped>
+.el-container .el-main {
+    padding: 0px;
+}
+
 .el-button {
     margin: 0 50px;
 }
@@ -91,7 +101,7 @@ export default {
 }
 
 .el-tag {
-    margin: 15px;
+    margin: 10px 0px;
 }
 
 .input {
@@ -99,7 +109,7 @@ export default {
 }
 
 .button-new-tag {
-    margin-left: 10px;
+    margin-left: 0px;
     height: 32px;
     line-height: 30px;
     padding-top: 0;

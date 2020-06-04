@@ -9,8 +9,9 @@ import axios from 'axios'
 
 import Print from 'vue-print-nb'
 
-// axios.defaults.baseURL = process.env.NODE_ENV === 'mock' ? '/mock' : '/api'
-// console.log('process.env.NODE_ENV', process.env.NODE_ENV)
+import elTableInfiniteScroll from 'el-table-infinite-scroll';
+
+Vue.use(elTableInfiniteScroll);
 
 
 Vue.prototype.$axios = axios
