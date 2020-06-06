@@ -202,7 +202,6 @@ export default {
         this.outStockValue = outstock.Category + ' / ' + outstock.Brand
         this.outStockForm.Sid = outstock.Id
         this.outStockForm.Quantity = 0
-
         this.outStockFormDialogVisible = true
     },
 
@@ -220,7 +219,8 @@ export default {
                 message: '请输入正确的时间',
                 position: 'bottom-right'
             });
-        } else if (parseFloat(this.outStockForm.InDate) > parseFloat(this.outStockForm.OutDate)) {
+        // } else if (parseFloat(this.outStockForm.InDate) > parseFloat(this.outStockForm.OutDate)) {
+        } else if (this.outStockForm.Date > this.outStockForm.OutDate) {
             this.$notify.error({
                 title: '错误',
                 message: '出库时间不能早于入库时间',
@@ -231,7 +231,10 @@ export default {
                 if (valid) {
                     let para = Object.assign(this.outStockForm)
                     para.Price = parseFloat(this.outStockForm.Sell)
+                    para.Date = this.outStockForm.OutDate
+
                     outStockAPI(para).then(() => {
+                        // console.log(para);
                         this.outStockFormDialogVisible = false
                         this.getList()
                         this.$notify.success({

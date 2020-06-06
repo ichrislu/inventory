@@ -85,7 +85,6 @@ export default {
                 this.restaurants = arr
             })
         } else {
-
             this.restaurants = JSON.parse(window.sessionStorage.getItem('customerValue'))
         }
     },

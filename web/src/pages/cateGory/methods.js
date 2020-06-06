@@ -71,7 +71,6 @@ export default {
     // 删除分类
     deleteBrand(id) {
         deleteCateById(id).then(res => {
-            console.log(res)
             window.sessionStorage.clear();
             this.getList()
             this.$notify.success({

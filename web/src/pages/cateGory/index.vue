@@ -54,6 +54,7 @@
                                         iconColor="red"
                                         title="确认删除该分类吗?"
                                         @onConfirm="deleteBrand(scope.row.Id)"
+                                        popper-class="popc"
                                     >
                                         <el-button slot="reference" type="danger" circle icon="el-icon-delete-solid"></el-button>
                                     </el-popconfirm>
@@ -120,4 +121,5 @@ export default {
     margin-left: 10px;
     vertical-align: bottom;
 }
+
 </style>

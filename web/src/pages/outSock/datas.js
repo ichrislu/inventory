@@ -87,8 +87,8 @@ export default {
              busy : false,
              // 每组最后一条数据的OutDate
              last : '',
-             // 页数初始值
-             count : 0,
+             // 控制重置按钮的使用
+            //  rest : true
         }
     }
 }

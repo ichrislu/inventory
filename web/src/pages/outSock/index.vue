@@ -14,10 +14,11 @@
                             start-placeholder="开始日期"
                             end-placeholder="结束日期"
                             :picker-options="searchForm.pickerOptions"
+                             style="width:350px"
                         >
                         </el-date-picker>
                     </el-form-item>
-                    <el-form-item label="出货人" prop="shipper">
+                    <el-form-item label="出货人" prop="shipper" >
                         <el-autocomplete
                             class="inline-input"
                             v-model="searchForm.shipper"
@@ -29,7 +30,7 @@
                         ></el-autocomplete>
                     </el-form-item>
                     <el-button type="primary" @click="search" icon="el-icon-search">查询</el-button>
-                    <el-button @click="formClose('searchRef')" icon="el-icon-refresh-right">重置</el-button>
+                    <el-button @click="formClose('searchRef')" icon="el-icon-refresh-right" >重置</el-button>
                 </el-form>
             </el-row>
         </el-card>
@@ -41,7 +42,7 @@
                         <div>数据列表</div>
                     </el-col>
                 </el-row>
-                    <el-table :data="outStockList" border style="width: 100%;" stripe  height="830px" v-el-table-infinite-scroll="scroll">
+                    <el-table :data="outStockList" border style="width: 100%;" stripe  height="930px" v-el-table-infinite-scroll="scroll">
                         <el-table-column prop="Shipper" label="出货人" align="center"></el-table-column>
                         <el-table-column prop="InDate" label="进货日期" align="center" :formatter="dataFormatter"> </el-table-column>
                         <el-table-column prop="Provider" label="供应商" align="center"></el-table-column>
@@ -75,7 +76,6 @@ export default {
         return datas.init()
     },
     created() {
-        this.scroll()
     },
     methods: methods,
     directives: {
@@ -124,5 +124,9 @@ export default {
     resize: none;
     padding: 0;
     font-size: 14px;
+}
+
+.el-form /deep/ .el-input__inner {
+    width: 240px;
 }
 </style>

@@ -14,6 +14,7 @@
                             value-format="timestamp"
                             unlink-panels
                             :picker-options="searchForm.pickerOptions"
+                             style="width:350px"
                         >
                         </el-date-picker>
                     </el-form-item>
@@ -219,17 +220,26 @@
                 <el-form-item label="型号">
                     <el-input v-model="outStockForm.Model" disabled></el-input>
                 </el-form-item>
+                <el-form-item label="入库时间">
+                     <el-date-picker
+                        v-model="outStockForm.Date"
+                        type="date"
+                        placeholder="选择日期"
+                        format="yyyy 年 MM 月 dd 日"
+                        value-format="timestamp"
+                        disabled
+                    >
+                    </el-date-picker>
+                </el-form-item>
                 <el-form-item label="此单库存(件)">
                     <el-input v-model="outStockForm.Inventory" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="进货价格(元)">
                     <el-input v-model="outStockForm.Price" disabled></el-input>
                 </el-form-item>
-
                 <el-form-item label="出货人" prop="Shipper">
                     <el-input v-model="outStockForm.Shipper" label="描述文字"></el-input>
                 </el-form-item>
-
                 <el-form-item label="出库时间" prop="OutDate">
                     <el-date-picker
                         v-model="outStockForm.OutDate"
@@ -336,4 +346,5 @@ export default {
 /* .addStock /deep/ .el-input-number .el-input--suffix {
     width: 240px;
 } */
+
 </style>

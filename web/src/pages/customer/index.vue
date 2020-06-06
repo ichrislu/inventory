@@ -14,6 +14,7 @@
                             start-placeholder="开始日期"
                             end-placeholder="结束日期"
                             :picker-options="searchForm.pickerOptions"
+                            style="width:350px"
                         >
                         </el-date-picker>
                     </el-form-item>
@@ -28,7 +29,7 @@
                             value-key="customerValue"
                         ></el-autocomplete>
                     </el-form-item>
-                    <el-checkbox v-model="searchForm.checked" :disabled="show ? true : false ">全部客户</el-checkbox>
+                    <el-checkbox v-model="searchForm.checked" :disabled="show ? true : false">全部客户</el-checkbox>
                     <el-button type="primary" @click="search" icon="el-icon-search">查询</el-button>
                     <el-button @click="formClose('searchRef')" icon="el-icon-refresh-right">重置</el-button>
                 </el-form>
@@ -47,20 +48,20 @@
                     </el-row>
                 </el-row>
                 <el-table :data="customerList" border style="width: 100%" :row-class-name="tableRowClassName">
-                    <el-table-column prop="Shipper" label="出货人" align="center"></el-table-column>
-                    <el-table-column prop="SaleDate" label="出单日期" align="center" :formatter="dataFormatter"> </el-table-column>
-                    <el-table-column prop="DeliveryDate" label="送货日期" align="center" :formatter="dataFormatter"> </el-table-column>
-                    <el-table-column prop="Model" label="型号" align="center"></el-table-column>
-                    <el-table-column prop="Name" label="顾客姓名" align="center"></el-table-column>
-                    <el-table-column prop="Phone" label="联系电话" align="center"></el-table-column>
-                    <el-table-column prop="Address" label="送货地址" align="center"></el-table-column>
+                    <el-table-column prop="Shipper" label="出货人" align="center" width="130px"></el-table-column>
+                    <el-table-column prop="SaleDate" label="出单日期" align="center" :formatter="dataFormatter" width="140px"> </el-table-column>
+                    <el-table-column prop="DeliveryDate" label="送货日期" align="center" :formatter="dataFormatter" width="150px"> </el-table-column>
+                    <el-table-column prop="Model" label="型号" align="center" width="150px"></el-table-column>
+                    <el-table-column prop="Name" label="顾客姓名" align="center" width="130px"></el-table-column>
+                    <el-table-column prop="Phone" label="联系电话" align="center" width="140px"></el-table-column>
 
-                    <el-table-column prop="Status" label="状态" align="center">
+                    <el-table-column prop="Status" label="状态" align="center" width="140px">
                         <template slot-scope="scope">
                             <div>{{ scope.row.Status == 1 ? '未送货' : '已送货' }}</div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="Remarks" label="备注" align="center" width="150px">
+                    <el-table-column prop="Address" label="送货地址" align="center"></el-table-column>
+                    <el-table-column prop="Remarks" label="备注" align="center" width="160px">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.Remarks" class="in" autosize @change="addRemark(scope.row)" type="textarea"> </el-input>
                         </template>
@@ -241,10 +242,10 @@
         <!------------------------------------------------------- 打印对话框 ------------------------------------------------------->
         <el-dialog title="打印预览" :visible.sync="outVisible" width="1086px" class="print">
             <div class="dialog-footer" style="text-align: center; margin-bottom : 15px">
-                <h2 v-if="show == true && searchForm.checked == true">包含已送货的客户信息</h2>
+                <h2 v-if="show == true && searchForm.checked == true" style="color : red">包含已送货的客户信息</h2>
                 <div style="display : flex; justify-content : space-between">
-                <el-button @click="outVisible = false" icon="el-icon-close">取 消</el-button>
-                <el-button v-print="'#print'" type="info" @click="print" class="printButton" icon="el-icon-check">打印</el-button>
+                    <el-button @click="outVisible = false" icon="el-icon-close">取 消</el-button>
+                    <el-button v-print="'#print'" type="info" @click="print" class="printButton" icon="el-icon-check">打印</el-button>
                 </div>
             </div>
             <div id="print">
@@ -281,7 +282,7 @@
 import datas from './datas.js'
 import methods from './methods.js'
 import util from '../../common/js/util'
-var mediaQueryList = window.matchMedia('print')
+// var mediaQueryList = window.matchMedia('print')
 
 export default {
     data() {
@@ -316,7 +317,7 @@ export default {
 .el-table /deep/ .cell {
     white-space: pre-wrap;
     text-align: center;
-    padding: 0px;
+    /* padding: 0px; */
 }
 
 .el-table /deep/ .operation {

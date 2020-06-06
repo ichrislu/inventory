@@ -7,13 +7,14 @@ import util from '../../common/js/util';
 
 export default {
 
-     scroll() {
-        if (window.sessionStorage.length == 0) {
-            this.$router.push({
-                path: '/category'
-            })
-        }
+    scroll() {
+        // if (window.sessionStorage.length == 0) {
+        //     this.$router.push({
+        //         path: '/category'
+        //     })
+        // }
         // 数据量提示
+        // this.rest = false
         if (this.outStockList.length > 100 && this.count == 120) {
             this.$notify({
                 title: '警告',
@@ -31,30 +32,26 @@ export default {
                 end: this.searchForm.time[1],
                 shipper: this.searchForm.shipper
             }
-            console.log(para);
 
             searchOutStockAPI(para).then(res => {
                 this.outStockList = this.outStockList.concat(util.setCate(res.data))
                 this.last = this.outStockList[this.outStockList.length - 1].OutDate
-                // this.flag = this.last
             }).catch(req => {
-                console.log(req);
+                // console.log(req);
             })
-
         } else {
             let para = {
                 last: this.last,
                 limit: this.limit,
                 shipper: this.searchForm.shipper
             }
-
             searchOutStockAPI(para).then(res => {
                 this.outStockList = this.outStockList.concat(util.setCate(res.data))
                 this.last = this.outStockList[this.outStockList.length - 1].OutDate
-
             }).catch(req => {
-                console.log(req);
+                // console.log(req);
             })
+
         }
 
     },
@@ -65,7 +62,7 @@ export default {
             this.searchForm.time = []
         }
         this.last = ''
-        this.outStockList = []
+        this.outStockList.length = 0
         this.scroll()
     },
 
@@ -88,6 +85,16 @@ export default {
     getShipper() {
         if (window.sessionStorage.getItem('outStockValue') == null) {
             getShipperAPI().then(res => {
+                if (res.data == null) {
+                    this.$notify({
+                        title: '警告',
+                        message: '没有出货人数据可查询',
+                        type: 'warning',
+                        position: 'bottom-right'
+                    })
+                    return ''
+                }
+
                 var list = res.data
                 var arr = []
                 for (var i = 0; i < list.length; i++) {
@@ -131,15 +138,12 @@ export default {
             this.$refs[formName].resetFields();
         }
         if (formName == 'searchRef') {
-            this.outStockList = []
             this.last = ''
-
+            // this.outStockList = []
+            this.outStockList.length = 0
             this.scroll()
         }
-
-
     },
-
 
     // 时间格式转换
     dataFormatter(row, column, cellValue, inde) {
