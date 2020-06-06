@@ -2,9 +2,9 @@ package service
 
 import (
 	"errors"
-	"inventory/dao"
 	"inventory/database"
 	"inventory/model"
+	"inventory/repository"
 	"strings"
 )
 
@@ -21,20 +21,20 @@ func AddCategory(category model.Category) (model.Category, error) {
 	category.Id = GetId()
 
 	db := database.DB
-	return dao.AddCategory(db, category)
+	return repository.AddCategory(db, category)
 }
 
 func GetCategory() ([]model.Schema, error) {
 	db := database.DB
 
 	var schemas []model.Schema
-	categories, err := dao.GetCategories(db, 0)
+	categories, err := repository.GetCategories(db, 0)
 	if err != nil {
 		return nil, err
 	}
 
 	for _, category := range categories {
-		subCategories, err := dao.GetCategories(db, category.Id)
+		subCategories, err := repository.GetCategories(db, category.Id)
 		if err != nil {
 			return nil, err
 		}
@@ -49,14 +49,14 @@ func GetCategory() ([]model.Schema, error) {
 func DelCategory(category model.Category) error {
 	db := database.DB
 
-	_category, err := dao.GetCategory(db, category.Id)
+	_category, err := repository.GetCategory(db, category.Id)
 	if err != nil {
 		return err
 	}
 
 	if _category.Pid == 0 {
 		// 品类
-		subCategories, err := dao.GetCategories(db, _category.Id)
+		subCategories, err := repository.GetCategories(db, _category.Id)
 		if err != nil {
 			return err
 		}
@@ -66,7 +66,7 @@ func DelCategory(category model.Category) error {
 		}
 	} else {
 		// 品牌
-		count, err := dao.GetStockCount(db, _category.Id)
+		count, err := repository.GetStockCount(db, _category.Id)
 		if err != nil {
 			return err
 		}
@@ -76,5 +76,5 @@ func DelCategory(category model.Category) error {
 		}
 	}
 
-	return dao.DelCategory(db, category)
+	return repository.DelCategory(db, category)
 }

@@ -2,9 +2,9 @@ package service
 
 import (
 	"errors"
-	"inventory/dao"
 	"inventory/database"
 	"inventory/model"
+	"inventory/repository"
 	"strings"
 )
 
@@ -42,22 +42,22 @@ func AddStock(stock model.Stock) (model.Stock, error) {
 
 	db := database.DB
 
-	return dao.AddStock(db, stock)
+	return repository.AddStock(db, stock)
 }
 
 func GetStocks(provider string, begin int, end int, all bool) ([]model.Stock, error) {
 	db := database.DB
-	return dao.GetStocks(db, provider, begin, end, all)
+	return repository.GetStocks(db, provider, begin, end, all)
 }
 
 func GetProviders() ([]string, error) {
 	db := database.DB
-	return dao.GetProviders(db)
+	return repository.GetProviders(db)
 }
 
 func EditStockRemarks(id int64, remarks string) error {
 	db := database.DB
-	return dao.EditStockRemarks(db, id, strings.TrimSpace(remarks))
+	return repository.EditStockRemarks(db, id, strings.TrimSpace(remarks))
 }
 
 func EditStock(stock model.Stock) (model.Stock, error) {
@@ -73,7 +73,7 @@ func EditStock(stock model.Stock) (model.Stock, error) {
 	var err error
 	var priceFlag bool
 
-	if result, err = dao.GetStock(tx, stock.Id); err != nil {
+	if result, err = repository.GetStock(tx, stock.Id); err != nil {
 		tx.Rollback()
 		return model.Stock{}, err
 	}
@@ -116,7 +116,7 @@ func EditStock(stock model.Stock) (model.Stock, error) {
 	if stock.Quantity > 0 && stock.Quantity != result.Quantity {
 		var saledQuantity model.SaledQuantity
 		var err error
-		if saledQuantity, err = dao.GetSaledQuantity(tx, stock.Id); err != nil {
+		if saledQuantity, err = repository.GetSaledQuantity(tx, stock.Id); err != nil {
 			tx.Rollback()
 			return model.Stock{}, err
 		}
@@ -137,14 +137,14 @@ func EditStock(stock model.Stock) (model.Stock, error) {
 		priceFlag = true
 	}
 
-	if err := dao.EditStock(tx, result); err != nil {
+	if err := repository.EditStock(tx, result); err != nil {
 		tx.Rollback()
 		return stock, err
 	}
 
 	if priceFlag {
 		// 修改价格后，出库表需要重新计算相关利润
-		if err := dao.RepairProfit(tx, result.Id, result.Price); err != nil {
+		if err := repository.RepairProfit(tx, result.Id, result.Price); err != nil {
 			tx.Rollback()
 			return model.Stock{}, nil
 		}
@@ -158,7 +158,7 @@ func EditStock(stock model.Stock) (model.Stock, error) {
 func DelStock(stock model.Stock) error {
 	db := database.DB
 
-	result, err := dao.GetStock(db, stock.Id)
+	result, err := repository.GetStock(db, stock.Id)
 	if err != nil {
 		return err
 	}
@@ -167,5 +167,5 @@ func DelStock(stock model.Stock) error {
 		return errors.New("已出库的记录不能删除")
 	}
 
-	return dao.DelStock(db, stock)
+	return repository.DelStock(db, stock)
 }
