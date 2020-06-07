@@ -16,3 +16,8 @@ export const searchOutStockAPI = params => {
 export const addRemarkAPI = (id, params) => {
     return axios.put(`${BaseUrl}/saled/${id}/remarks`,params)
 }
+
+//获取出货人
+export const getShipperAPI = params => {
+    return axios.get(`${BaseUrl}/saled/shipper`)
+}

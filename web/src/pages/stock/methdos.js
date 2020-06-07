@@ -6,7 +6,8 @@ import {
     addRemarkAPI,
     editStockAPI,
     outStockAPI,
-    deleteStockAPI
+    deleteStockAPI,
+    getProviderAPI
 } from '../../api/stockApi'
 export default {
     // ---------------------------------------------------- 获取库存列表数据--------------------------------------------------
@@ -29,11 +30,16 @@ export default {
                 });
             }
         })
+
+
     },
 
     //-------------------------------------------------------根据 年月日, 供货商查询------------------------------------------------------
     // 查询功能
     search() {
+        if (this.searchForm.time == null) {
+            this.searchForm.time = []
+        }
         let para = {
             provider: this.searchForm.keyword,
             begin: this.searchForm.time[0],
@@ -75,6 +81,8 @@ export default {
                             message: '入库成功',
                             position: 'bottom-right'
                         });
+                        window.sessionStorage.removeItem('stockValue');
+                        this.getProvider()
                         this.getList()
                         this.showAddFormDialogVisible = false
                     })
@@ -90,12 +98,6 @@ export default {
     },
 
     // ------------------------------------------------------------ 备注功能 ------------------------------------------------------------
-    // 获取备注
-    // showRemark(row) {
-    //     this.remarkForm.Remarks = row.Remarks
-    //     this.remarkForm.Id = row.Id
-    //     this.showRemarkDialogVisible = true
-    // },
 
     // 新增备注
     addRemark(row) {
@@ -122,7 +124,7 @@ export default {
     // ----------------------------------------------------------修改库存数据------------------------------------------
     // 获取选中库存数据
     showDditForm(editForm) {
-        this.editForm = Object.assign(editForm)
+        this.editForm = Object.assign({}, editForm)
         this.editValue = [editForm.Category, editForm.Brand]
         this.editForm.Id = editForm.Id
         this.editForm.EditNum = editForm.Quantity - editForm.Inventory
@@ -175,7 +177,7 @@ export default {
                 position: 'bottom-right'
             });
         } else {
-            let para = Object.assign(this.editForm)
+            let para = Object.assign({}, this.editForm)
             para.Price = parseFloat(this.editForm.Price)
             editStockAPI(this.editForm.Id, util.getFormDataFromJson(para)).then(
                 res => {
@@ -184,6 +186,8 @@ export default {
                         message: '修改成功',
                         position: 'bottom-right'
                     });
+                    window.sessionStorage.removeItem('stockValue');
+                    this.getProvider()
                     this.getList()
                     this.showEditFormDialogVisible = false
                 }
@@ -194,10 +198,10 @@ export default {
     // ------------------------------------------- 出库功能 ------------------------------
     // 获取 将要出库的商品信息
     showOutStock(outstock) {
-        this.outStockForm = Object.assign(outstock)
+        this.outStockForm = Object.assign({}, outstock)
         this.outStockValue = outstock.Category + ' / ' + outstock.Brand
         this.outStockForm.Sid = outstock.Id
-
+        this.outStockForm.Quantity = 0
         this.outStockFormDialogVisible = true
     },
 
@@ -215,7 +219,8 @@ export default {
                 message: '请输入正确的时间',
                 position: 'bottom-right'
             });
-        } else if (parseFloat(this.outStockForm.InDate) > parseFloat(this.outStockForm.OutDate)) {
+        // } else if (parseFloat(this.outStockForm.InDate) > parseFloat(this.outStockForm.OutDate)) {
+        } else if (this.outStockForm.Date > this.outStockForm.OutDate) {
             this.$notify.error({
                 title: '错误',
                 message: '出库时间不能早于入库时间',
@@ -226,7 +231,10 @@ export default {
                 if (valid) {
                     let para = Object.assign(this.outStockForm)
                     para.Price = parseFloat(this.outStockForm.Sell)
+                    para.Date = this.outStockForm.OutDate
+
                     outStockAPI(para).then(() => {
+                        // console.log(para);
                         this.outStockFormDialogVisible = false
                         this.getList()
                         this.$notify.success({
@@ -288,7 +296,6 @@ export default {
         var restaurants = this.restaurants;
 
         var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
-        // console.log(results);
         cb(results);
 
         // 调用 callback 返回建议列表的数据
@@ -296,31 +303,51 @@ export default {
 
     createFilter(queryString) {
         return (restaurant) => {
-            return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+            return (restaurant.stockValue.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
         };
     },
-    loadAll() {
-        return [{
-                'value': '老赵'
-            },
-            {
-                'value': '老吴'
-            },
-            {
-                'value': '老钱'
-            },
-            {
-                'value': '老周'
-            },
-            {
-                'value': '老王'
-            },
-            {
-                'value': '老蒋'
-            },
-            {
-                'value': '老海'
-            },
-        ];
+
+    // 获取所有供货商
+    getProvider() {
+        if (window.sessionStorage.getItem('stockValue') == null) {
+            getProviderAPI().then(res => {
+                if( res.data == null) {
+                    this.$notify({
+                        title : '警告',
+                        message : '没有供货商数据可查询',
+                        type: 'warning',
+                        position: 'bottom-right'
+                    })
+                    return ''
+                }
+                var list = res.data
+                var arr = []
+                for (var i = 0; i < list.length; i++) {
+                    arr.push({
+                        stockValue: list[i]
+                    })
+                }
+                window.sessionStorage.setItem('stockValue', JSON.stringify(arr))
+                this.restaurants = arr
+
+            })
+        } else {
+            this.restaurants = JSON.parse(window.sessionStorage.getItem('stockValue'))
+        }
     },
+
+    handleSelect(item) {
+        this.searchForm.keyword = item.stockValue
+    },
+
+    addSelect(item) {
+        this.addForm.Provider = item.stockValue
+    },
+    editSelect(item) {
+        this.editForm.Provider = item.stockValue
+    }
+
+
+
+
 }

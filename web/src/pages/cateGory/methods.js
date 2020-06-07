@@ -25,9 +25,15 @@ export default {
             }
         })
     },
+    showFocus(){
+        setTimeout(() => {
+            this.$refs.inputRef.focus();
+         }, 100);
+    },
 
     //增加品类
     addcate() {
+
         if (this.list !== null) {
             for (var i = 0; i < this.list.length; i++) {
                 if (this.list[i].Name == this.addForm.name) {
@@ -43,6 +49,7 @@ export default {
         let para = {
             name: this.addForm.name
         };
+
         addCategory(para).then(res => {
             this.$notify.success({
                 title: '成功',
@@ -64,7 +71,6 @@ export default {
     // 删除分类
     deleteBrand(id) {
         deleteCateById(id).then(res => {
-            console.log(res)
             window.sessionStorage.clear();
             this.getList()
             this.$notify.success({
@@ -100,6 +106,7 @@ export default {
     },
     // ---------------------------------新增品牌tag-----------------------------------------
 
+    //显示制定输入框并聚焦
     showInput(tagsIndex) {
 
         this.inputVisible = true;
@@ -109,6 +116,7 @@ export default {
         });
     },
 
+    // 根据选中类别ID 添加该类别下品牌
     handleInputConfirm(Id) {
         let inputValue = this.inputValue;
         if (inputValue) {
@@ -122,7 +130,9 @@ export default {
                     title: '成功',
                     message: '品牌添加成功',
                     position: 'bottom-right'
+
                 });
+                // this.format(100)
                 window.sessionStorage.clear();
                 this.getList()
             }).catch(err => {
@@ -137,5 +147,10 @@ export default {
         this.inputVisible = false;
         this.currentIndex = -1
         this.inputValue = '';
-    }
+    },
+
+    //--------------------------------- 进度条 ---------------------------------
+    // format(percentage) {
+    //     return percentage === 100 ? '满' : `${percentage}%`;
+    //   }
 }

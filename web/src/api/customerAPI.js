@@ -31,3 +31,8 @@ export const addCustomerRemarkAPI = (id,params) => {
 export const sendCustomerAPI = (id,params) => {
     return axios.put(`${BaseUrl}/customer/${id}`, params)
 }
+
+//获取出货人
+export const getShipperAPI = params => {
+    return axios.get(`${BaseUrl}/customer/shipper`)
+}

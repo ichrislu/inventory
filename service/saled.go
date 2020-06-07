@@ -2,9 +2,9 @@ package service
 
 import (
 	"errors"
-	"inventory/dao"
 	"inventory/database"
 	"inventory/model"
+	"inventory/repository"
 	"strings"
 )
 
@@ -36,7 +36,7 @@ func AddSaled(saled model.Saled) (model.Saled, error) {
 	var stock model.Stock
 	var err error
 
-	if stock, err = dao.GetStock(tx, saled.Sid); err != nil {
+	if stock, err = repository.GetStock(tx, saled.Sid); err != nil {
 		tx.Rollback()
 		return model.Saled{}, err
 	}
@@ -52,13 +52,13 @@ func AddSaled(saled model.Saled) (model.Saled, error) {
 
 	// 添加出库记录
 	var result model.Saled
-	if result, err = dao.AddSaled(tx, saled); err != nil {
+	if result, err = repository.AddSaled(tx, saled); err != nil {
 		tx.Rollback()
 		return model.Saled{}, err
 	}
 
 	// 减库存
-	if err = dao.EditStockInventory(tx, saled.Quantity, saled.Sid); err != nil {
+	if err = repository.EditStockInventory(tx, saled.Quantity, saled.Sid); err != nil {
 		tx.Rollback()
 		return model.Saled{}, err
 	}
@@ -74,20 +74,20 @@ func GetSaledList(shipper string, begin, end, last, limit int) ([]model.SaledLis
 	}
 
 	db := database.DB
-	return dao.GetSaledList(db, shipper, begin, end, last, limit)
+	return repository.GetSaledList(db, shipper, begin, end, last, limit)
 }
 
 func GetSaledShippers() ([]string, error) {
 	db := database.DB
-	return dao.GetSaledShippers(db)
+	return repository.GetSaledShippers(db)
 }
 
 func GetTotalProfit() (model.Profit, error) {
 	db := database.DB
-	return dao.GetTotalProfit(db)
+	return repository.GetTotalProfit(db)
 }
 
 func EditSaledRemarks(id int64, remarks string) error {
 	db := database.DB
-	return dao.EditSaledRemarks(db, id, strings.TrimSpace(remarks))
+	return repository.EditSaledRemarks(db, id, strings.TrimSpace(remarks))
 }

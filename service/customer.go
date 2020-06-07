@@ -2,9 +2,9 @@ package service
 
 import (
 	"errors"
-	"inventory/dao"
 	"inventory/database"
 	"inventory/model"
+	"inventory/repository"
 	"strings"
 )
 
@@ -47,22 +47,22 @@ func AddCustomer(customer model.Customer) (model.Customer, error) {
 
 	db := database.DB
 
-	return dao.AddCustomer(db, customer)
+	return repository.AddCustomer(db, customer)
 }
 
 func GetCustomers(shipper string, begin int, end int, all bool) ([]model.Customer, error) {
 	db := database.DB
-	return dao.GetCustomer(db, shipper, begin, end, all)
+	return repository.GetCustomer(db, shipper, begin, end, all)
 }
 
 func GetCustomerShippers() ([]string, error) {
 	db := database.DB
-	return dao.GetCustomerShippers(db)
+	return repository.GetCustomerShippers(db)
 }
 
 func EditCustomerRemarks(id int64, remarks string) error {
 	db := database.DB
-	return dao.EditCustomerRemarks(db, id, strings.TrimSpace(remarks))
+	return repository.EditCustomerRemarks(db, id, strings.TrimSpace(remarks))
 }
 
 func EditCustomer(customer model.Customer) (model.Customer, error) {
@@ -106,5 +106,5 @@ func EditCustomer(customer model.Customer) (model.Customer, error) {
 	customer.Remarks = strings.TrimSpace(customer.Remarks)
 
 	db := database.DB
-	return customer, dao.EditCustomer(db, customer)
+	return customer, repository.EditCustomer(db, customer)
 }

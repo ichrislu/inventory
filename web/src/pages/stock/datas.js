@@ -63,38 +63,13 @@ export default {
                 Model: '',
                 Price: '',
                 Quantity: '',
-                pickerOptions: {
-                    disabledDate(time) {
-                      return time.getTime() > Date.now();
-                    },
-                    shortcuts: [{
-                      text: '今天',
-                      onClick(picker) {
-                        picker.$emit('pick', new Date());
-                      }
-                    }, {
-                      text: '昨天',
-                      onClick(picker) {
-                        const date = new Date();
-                        date.setTime(date.getTime() - 3600 * 1000 * 24);
-                        picker.$emit('pick', date);
-                      }
-                    }, {
-                      text: '一周前',
-                      onClick(picker) {
-                        const date = new Date();
-                        date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-                        picker.$emit('pick', date);
-                      }
-                    }]
-                  },
             },
             // 新增库存表单对象预验证规则
             addFormRules: {
                 Provider: [{
                     required: true,
                     message: '请输入供应商',
-                    trigger: 'blur'
+                    trigger: 'change'
                 }],
                 Date: [{
                     required: true,
@@ -151,11 +126,6 @@ export default {
                     message: '请输入数量',
                     trigger: 'blur'
                 }],
-                // addValue: [{
-                //     required: true,
-                //     message: '请输入品类品牌',
-                //     trigger: 'blur'
-                // }],
             },
             // 控制 修改库存对话框
             showEditFormDialogVisible: false,
@@ -172,7 +142,7 @@ export default {
                 Brand: '',
                 Category: '',
                 EditNum: '',
-
+                Remarks: '',
             },
             //----------------------
             // 备注对话框 表单对象
@@ -206,27 +176,52 @@ export default {
             filters: {},
             // 时间快捷选项
             pickerOptions: {
-                shortcuts: [{
-                  text: '今天',
-                  onClick(picker) {
-                    picker.$emit('pick', new Date());
-                  }
-                }, {
-                  text: '昨天',
-                  onClick(picker) {
+                disabledDate(time) {
                     const date = new Date();
-                    date.setTime(date.getTime() - 3600 * 1000 * 24);
-                    picker.$emit('pick', date);
-                  }
-                }, {
-                  text: '一周前',
-                  onClick(picker) {
-                    const date = new Date();
-                    date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-                    picker.$emit('pick', date);
-                  }
-                }]
-              },
+                    date.setTime(date.getTime() + 3600 * 1000 * 24 * 2 );
+                    return time.getTime() > date
+                },
+                shortcuts: [
+                    {
+                        text: '前天',
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() - 3600 * 1000 * 24 * 2 );
+                            picker.$emit('pick', date);
+                        }
+                    },{
+                        text: '昨天',
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() - 3600 * 1000 * 24);
+                            picker.$emit('pick', date);
+                        }
+                    }, {
+
+                        text: '今天',
+                        onClick(picker) {
+                            picker.$emit('pick', new Date());
+                        }
+                    },
+                    {
+                        text: '明天',
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() + 3600 * 1000 * 24);
+                            picker.$emit('pick', date);
+                        }
+                    },
+                    {
+                        text: '后天',
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() + 3600 * 1000 * 24 * 2);
+                            picker.$emit('pick', date);
+                        }
+                    },
+                ]
+            },
+
         }
     }
 }

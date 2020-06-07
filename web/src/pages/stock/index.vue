@@ -1,10 +1,10 @@
 <template>
     <section>
-        <el-card style="margin-bottom: 5px;">
+        <el-card style="margin-bottom: 5px;height:70px;" >
             <!-- --------------------------------------------------------------- 查找区 ------------------------------------------------ -->
             <el-row :gutter="20" style="margin-bottom: 20px;">
-                <el-form :model="searchForm" :inline="true" class="demo-form-inline" label-width="110px" ref="searchRef">
-                    <el-form-item prop="time" label="进货时间">
+                <el-form :model="searchForm" :inline="true" class="form-inline" label-width="110px" ref="searchRef">
+                    <el-form-item prop="time" label="进货时间" >
                         <el-date-picker
                             v-model="searchForm.time"
                             type="daterange"
@@ -14,6 +14,7 @@
                             value-format="timestamp"
                             unlink-panels
                             :picker-options="searchForm.pickerOptions"
+                             style="width:350px"
                         >
                         </el-date-picker>
                     </el-form-item>
@@ -22,15 +23,15 @@
                             class="inline-input"
                             v-model="searchForm.keyword"
                             :fetch-suggestions="querySearch"
-                            placeholder="请输入内容"
-                            select-when-unmatched
+                            placeholder="请输入供货商"
+                            @focus="getProvider"
+                            @select="handleSelect"
+                            value-key="stockValue"
                         ></el-autocomplete>
-                        <!-- @select="handleSelect" -->
-                        <!-- <el-input placeholder="请输入供货商" v-model="searchForm.keyword" clearable></el-input> -->
                     </el-form-item>
                     <el-checkbox v-model="searchForm.checked">全部库存</el-checkbox>
-                    <el-button type="primary" @click="search">查询</el-button>
-                    <el-button @click="formClose('searchRef')">重置</el-button>
+                    <el-button type="primary" @click="search" icon="el-icon-search">查询</el-button>
+                    <el-button @click="formClose('searchRef')" icon="el-icon-refresh-right">重置</el-button>
                 </el-form>
             </el-row>
         </el-card>
@@ -43,7 +44,7 @@
                         <div>数据列表</div>
                     </el-col>
                     <el-col :span="2">
-                        <el-button type="success" @click="showAddFormDialogVisible = true">新增库存</el-button>
+                        <el-button type="success" @click="showAddFormDialogVisible = true" icon="el-icon-plus">新增库存</el-button>
                     </el-col>
                 </el-row>
                 <el-table :data="stockList" border style="width: 100% " :row-class-name="tableRowClassName">
@@ -65,11 +66,18 @@
                         <template slot-scope="scope">
                             <!-- 修改按钮 -->
                             <el-tooltip class="item" effect="dark" content="修改" placement="top" :enterable="false">
-                                <el-button icon="el-icon-setting" type="primary" @click="showDditForm(scope.row)" circle></el-button>
+                                <el-button icon="el-icon-setting" type="primary" @click="showDditForm(scope.row)" circle class="operation"></el-button>
                             </el-tooltip>
                             <!-- 出库按钮 -->
                             <el-tooltip class="item" effect="dark" content="出库" placement="top" :enterable="false">
-                                <el-button icon="el-icon-s-promotion" type="success" @click="showOutStock(scope.row)" circle></el-button>
+                                <el-button
+                                    icon="el-icon-s-promotion"
+                                    type="success"
+                                    @click="showOutStock(scope.row)"
+                                    circle
+                                    :disabled="scope.row.Inventory == 0 ? true : false"
+                                    class="operation"
+                                ></el-button>
                             </el-tooltip>
                             <!-- 删除按钮 -->
                             <el-tooltip class="item" effect="dark" content="删除库存" placement="top" :enterable="false">
@@ -80,6 +88,7 @@
                                     iconColor="red"
                                     title="确认删除该库存吗?"
                                     @onConfirm="deleteStock(scope.row.Id)"
+                                    class="operation"
                                 >
                                     <el-button slot="reference" type="danger" circle icon="el-icon-delete-solid"></el-button>
                                 </el-popconfirm>
@@ -91,19 +100,27 @@
         </el-card>
 
         <!--------------------------------------------------------新增库存对话框-------------------------------------------------------->
-        <el-dialog title="新增库存" :visible.sync="showAddFormDialogVisible" width="30%" :rules="addFormRules" @close="formClose('addForm')">
-            <el-form ref="addForm" :model="addForm" label-width="120px" :rules="addFormRules">
-                <el-form-item label="供应商" prop="Provider">
-                    <el-input v-model="addForm.Provider"></el-input>
+        <el-dialog title="新增库存" :visible.sync="showAddFormDialogVisible" width="30%"  @close="formClose('addForm')">
+            <el-form ref="addForm" :model="addForm" label-width="170px" :rules="addFormRules">
+                <el-form-item label="供货商" prop="Provider">
+                     <el-autocomplete
+                            class="inline-input"
+                            v-model="addForm.Provider"
+                            :fetch-suggestions="querySearch"
+                            placeholder="请输入供货商"
+                            @focus="getProvider"
+                            @select="addSelect"
+                            value-key="stockValue"
+                        ></el-autocomplete>
                 </el-form-item>
-                <el-form-item label="时间" prop="Date">
+                <el-form-item label="进货时间" prop="Date">
                     <el-date-picker
                         v-model="addForm.Date"
                         type="date"
                         placeholder="选择日期"
                         format="yyyy 年 MM 月 dd 日"
                         value-format="timestamp"
-                        :picker-options="addForm.pickerOptions"
+                        :picker-options="pickerOptions"
                     >
                     </el-date-picker>
                 </el-form-item>
@@ -128,18 +145,27 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="showAddFormDialogVisible = false">取消</el-button>
-                <el-button type="primary" @click="addStock">确定</el-button>
+                <el-button @click="showAddFormDialogVisible = false" icon="el-icon-close">取消</el-button>
+                <el-button type="primary" @click="addStock" icon="el-icon-check">确定</el-button>
             </span>
         </el-dialog>
 
         <!--------------------------------------------------------修改库存对话框-------------------------------------------------------->
-        <el-dialog title="修改库存" :visible.sync="showEditFormDialogVisible" width="30%" :rules="addFormRules" @close="formClose('editForm')">
-            <el-form ref="editForm" :model="editForm" label-width="120px" :rules="addFormRules">
+        <el-dialog title="修改库存" :visible.sync="showEditFormDialogVisible" width="30%"  @close="formClose('editForm')">
+            <el-form ref="editForm" :model="editForm" label-width="170px" :rules="addFormRules">
                 <el-form-item label="供应商" prop="Provider">
-                    <el-input v-model="editForm.Provider"></el-input>
+                    <!-- <el-input v-model="editForm.Provider"></el-input> -->
+                     <el-autocomplete
+                            class="inline-input"
+                            v-model="editForm.Provider"
+                            :fetch-suggestions="querySearch"
+                            placeholder="请输入供货商"
+                            @focus="getProvider"
+                            @select="editSelect"
+                            value-key="stockValue"
+                        ></el-autocomplete>
                 </el-form-item>
-                <el-form-item label="时间" prop="Date">
+                <el-form-item label="进货时间" prop="Date">
                     <el-date-picker
                         v-model="editForm.Date"
                         type="date"
@@ -172,16 +198,19 @@
                 <el-form-item label="已销售数量(件)" prop="EditNum">
                     <el-input v-model="editForm.EditNum" label="描述文字" disabled></el-input>
                 </el-form-item>
+                <el-form-item label="备注" prop="Remarks">
+                    <el-input v-model="editForm.Remarks" label="描述文字" type="textarea" autosize></el-input>
+                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="showEditFormDialogVisible = false">取消</el-button>
-                <el-button type="primary" @click="editFormHandler">确认</el-button>
+                <el-button @click="showEditFormDialogVisible = false" icon="el-icon-close">取消</el-button>
+                <el-button type="primary" @click="editFormHandler" icon="el-icon-check">确认</el-button>
             </span>
         </el-dialog>
 
         <!--------------------------------------------------------出库对话框-------------------------------------------------------->
         <el-dialog title="出库" :visible.sync="outStockFormDialogVisible" width="30%" @close="formClose('outStockForm')">
-            <el-form ref="outStockForm" :model="outStockForm" label-width="120px" :rules="addFormRules">
+            <el-form ref="outStockForm" :model="outStockForm" label-width="170px" :rules="addFormRules">
                 <el-form-item label="供应商">
                     <el-input v-model="outStockForm.Provider" disabled></el-input>
                 </el-form-item>
@@ -191,17 +220,26 @@
                 <el-form-item label="型号">
                     <el-input v-model="outStockForm.Model" disabled></el-input>
                 </el-form-item>
+                <el-form-item label="入库时间">
+                     <el-date-picker
+                        v-model="outStockForm.Date"
+                        type="date"
+                        placeholder="选择日期"
+                        format="yyyy 年 MM 月 dd 日"
+                        value-format="timestamp"
+                        disabled
+                    >
+                    </el-date-picker>
+                </el-form-item>
                 <el-form-item label="此单库存(件)">
                     <el-input v-model="outStockForm.Inventory" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="进货价格(元)">
                     <el-input v-model="outStockForm.Price" disabled></el-input>
                 </el-form-item>
-
                 <el-form-item label="出货人" prop="Shipper">
                     <el-input v-model="outStockForm.Shipper" label="描述文字"></el-input>
                 </el-form-item>
-
                 <el-form-item label="出库时间" prop="OutDate">
                     <el-date-picker
                         v-model="outStockForm.OutDate"
@@ -229,8 +267,8 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="outStockFormDialogVisible = false">取消</el-button>
-                <el-button type="primary" @click="outStock">确认</el-button>
+                <el-button @click="outStockFormDialogVisible = false" icon="el-icon-close">取消</el-button>
+                <el-button type="primary" @click="outStock" icon="el-icon-check">确认</el-button>
             </span>
         </el-dialog>
     </section>
@@ -247,10 +285,7 @@ export default {
     created() {
         this.getList()
     },
-    methods: methods,
-    mounted() {
-        this.restaurants = this.loadAll()
-    }
+    methods: methods
 }
 </script>
 
@@ -261,6 +296,10 @@ export default {
 
 .el-table .el-table-column {
     padding: 0px;
+}
+
+.el-table /deep/ .operation {
+    margin: 0 20px;
 }
 
 .el-col {
@@ -284,8 +323,10 @@ export default {
 
 .el-card /deep/ .el-card__body {
     padding: 5px;
-    padding-top: 10px;
-    margin-top: 10px;
+}
+
+.el-row /deep/ .form-inline {
+    padding-top : 10px;
 }
 
 .in /deep/ .el-textarea__inner {
@@ -294,4 +335,16 @@ export default {
     padding: 0;
     font-size: 14px;
 }
+
+.el-form /deep/ .el-input__inner {
+    width: 240px;
+}
+.el-form /deep/ .el-input-number {
+    width: 240px;
+}
+
+/* .addStock /deep/ .el-input-number .el-input--suffix {
+    width: 240px;
+} */
+
 </style>

@@ -45,6 +45,8 @@ export default {
                     }]
                 },
             },
+            // 搜索提示对象数据
+            restaurants: [],
             // 控制 打印提示 "包含已送货信息"的显示和隐藏
             show: false,
             // 控制客户信息表单的 显示与隐藏
@@ -59,7 +61,8 @@ export default {
                 SaleDate: '',
                 DeliveryDate: '',
                 Remarks: '',
-                Status: 1
+                Status: 1,
+
             },
 
             // 控制修改客户信息表单的显示和隐藏,
@@ -83,7 +86,7 @@ export default {
                 Shipper: [{
                     required: true,
                     message: '请输入出货人',
-                    trigger: 'blur'
+                    trigger: 'change'
                 }],
                 Model: [{
                     required: true,
@@ -120,29 +123,51 @@ export default {
             outVisible: false,
             // 控制出库窗口的显示和隐藏
             sendStockVisible: false,
-              // 时间快捷选项
-              pickerOptions: {
+            // 时间快捷选项
+            pickerOptions: {
+                // disabledDate(time) {
+                //     return time.getTime() > Date.now();
+                // },
                 shortcuts: [{
-                  text: '今天',
-                  onClick(picker) {
-                    picker.$emit('pick', new Date());
-                  }
-                }, {
-                  text: '昨天',
-                  onClick(picker) {
-                    const date = new Date();
-                    date.setTime(date.getTime() - 3600 * 1000 * 24);
-                    picker.$emit('pick', date);
-                  }
-                }, {
-                  text: '一周前',
-                  onClick(picker) {
-                    const date = new Date();
-                    date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-                    picker.$emit('pick', date);
-                  }
-                }]
-              },
+                        text: '前天',
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() - 3600 * 1000 * 24 * 2);
+                            picker.$emit('pick', date);
+                        }
+                    }, {
+                        text: '昨天',
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() - 3600 * 1000 * 24);
+                            picker.$emit('pick', date);
+                        }
+                    }, {
+
+                        text: '今天',
+                        onClick(picker) {
+                            picker.$emit('pick', new Date());
+                        }
+                    },
+                    {
+                        text: '明天',
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() + 3600 * 1000 * 24);
+                            picker.$emit('pick', date);
+                        }
+                    },
+                    {
+
+                        text: '后天',
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() + 3600 * 1000 * 24 * 2);
+                            picker.$emit('pick', date);
+                        }
+                    },
+                ]
+            },
         }
     }
 }
