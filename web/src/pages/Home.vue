@@ -37,7 +37,7 @@
             <el-container>
                 <!-- 右侧主体 -->
                 <el-main>
-                    <router-view ></router-view>
+                    <router-view></router-view>
                 </el-main>
             </el-container>
         </el-container>
@@ -49,12 +49,9 @@ export default {
     name: 'home',
     data() {
         return {
-
         }
     },
-    methods: {
-
-    }
+    methods: {}
 }
 </script>
 <style>

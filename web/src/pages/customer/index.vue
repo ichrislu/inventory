@@ -2,72 +2,67 @@
     <section>
         <!-- --------------------------------------------------------------- 查找区 ------------------------------------------------ -->
         <el-card style="margin-bottom: 5px;height:70px">
-            <el-row :gutter="20" style="margin-bottom: 20px;">
-                <el-form :model="searchForm" :inline="true" class="form-inline" label-width="110px" ref="searchRef">
-                    <el-form-item prop="time" label="送货日期">
-                        <el-date-picker
-                            unlink-panels
-                            v-model="searchForm.time"
-                            value-format="timestamp"
-                            type="daterange"
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"
-                            :picker-options="searchForm.pickerOptions"
-                            style="width:350px"
-                        >
-                        </el-date-picker>
-                    </el-form-item>
-                    <el-form-item label="出货人" prop="shipper">
-                        <el-autocomplete
-                            class="inline-input"
-                            v-model="searchForm.shipper"
-                            :fetch-suggestions="querySearch"
-                            placeholder="请输入出货人"
-                            @focus="getShipper"
-                            @select="handleSelect"
-                            value-key="customerValue"
-                        ></el-autocomplete>
-                    </el-form-item>
-                    <el-checkbox v-model="searchForm.checked" :disabled="show ? true : false">全部客户</el-checkbox>
-                    <el-button type="primary" @click="search" icon="el-icon-search">查询</el-button>
-                    <el-button @click="formClose('searchRef')" icon="el-icon-refresh-right">重置</el-button>
-                </el-form>
+            <el-row :gutter="20" style="margin-bottom: 20px;" type="flex" justify="space-around">
+                <el-col style="padding:0px">
+                    <el-form :model="searchForm" :inline="true" class="form-inline" label-width="70px" ref="searchRef">
+                        <el-form-item prop="time" label="送货日期">
+                            <el-date-picker
+                                unlink-panels
+                                v-model="searchForm.time"
+                                value-format="timestamp"
+                                type="daterange"
+                                range-separator="至"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期"
+                                :picker-options="searchForm.pickerOptions"
+                                style="width:260px"
+                            >
+                            </el-date-picker>
+                        </el-form-item>
+                        <el-form-item label="出货人" prop="shipper">
+                            <el-autocomplete
+                                v-model="searchForm.shipper"
+                                :fetch-suggestions="querySearch"
+                                placeholder="请输入出货人"
+                                @focus="getShipper"
+                                @select="handleSelect"
+                                value-key="customerValue"
+                            ></el-autocomplete>
+                        </el-form-item>
+                        <el-checkbox v-model="searchForm.checked" @change="search">全部客户</el-checkbox>
+                        <el-button type="primary" @click="search" icon="el-icon-search" >查询</el-button>
+                        <el-button @click="formClose('searchRef')" icon="el-icon-refresh-right">重置</el-button>
+                    </el-form>
+                </el-col>
+                <el-col class="btns" style="width:355px;padding:0px;padding-top:10px;margin:0px" type="flex" justify="end">
+                    <el-button type="success" @click="customerFormDialogVisible = true" icon="el-icon-plus" >新增顾客</el-button>
+                    <el-button type="info" @click="print" class="printButton" icon="el-icon-printer">打印预览</el-button>
+                </el-col>
             </el-row>
         </el-card>
         <!--------------------------------------------------------数据展示区-------------------------------------------------------->
         <el-card>
             <el-row>
-                <el-row type="flex" justify="space-around">
-                    <el-col :span="20">
-                        <div>数据列表</div>
-                    </el-col>
-                    <el-row type="flex" justify="end">
-                        <el-button type="success" @click="customerFormDialogVisible = true" icon="el-icon-plus">新增客户</el-button>
-                        <el-button type="info" @click="print" class="printButton" icon="el-icon-printer">打印预览</el-button>
-                    </el-row>
-                </el-row>
                 <el-table :data="customerList" border style="width: 100%" :row-class-name="tableRowClassName">
                     <el-table-column prop="Shipper" label="出货人" align="center" width="130px"></el-table-column>
+                    <el-table-column prop="DeliveryDate" label="送货日期" align="center" :formatter="dataFormatter" width="140px"> </el-table-column>
+                    <el-table-column prop="Model" label="型号" align="center" width="140px"></el-table-column>
                     <el-table-column prop="SaleDate" label="出单日期" align="center" :formatter="dataFormatter" width="140px"> </el-table-column>
-                    <el-table-column prop="DeliveryDate" label="送货日期" align="center" :formatter="dataFormatter" width="150px"> </el-table-column>
-                    <el-table-column prop="Model" label="型号" align="center" width="150px"></el-table-column>
                     <el-table-column prop="Name" label="顾客姓名" align="center" width="130px"></el-table-column>
                     <el-table-column prop="Phone" label="联系电话" align="center" width="140px"></el-table-column>
-
-                    <el-table-column prop="Status" label="状态" align="center" width="140px">
+                    <el-table-column prop="Status" label="状态" align="center" width="130px">
                         <template slot-scope="scope">
                             <div>{{ scope.row.Status == 1 ? '未送货' : '已送货' }}</div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="Address" label="送货地址" align="center"></el-table-column>
+                    <el-table-column prop="Address" label="送货地址" align="center" min-width="160px"></el-table-column>
                     <el-table-column prop="Remarks" label="备注" align="center" width="160px">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.Remarks" class="in" autosize @change="addRemark(scope.row)" type="textarea"> </el-input>
                         </template>
                     </el-table-column>
                     <!-- 功能按钮区域 -->
-                    <el-table-column scope align="center" label="操作" width="300px">
+                    <el-table-column scope align="center" label="操作" width="260px">
                         <template slot-scope="scope">
                             <!-- 修改按钮 -->
                             <el-tooltip class="item" effect="dark" content="修改" placement="top" :enterable="false">
@@ -79,8 +74,8 @@
                                     class="operation"
                                 ></el-button>
                             </el-tooltip>
-                            <!-- 确认出库按钮 -->
-                            <el-tooltip class="item" effect="dark" content="快速出库" placement="top" :enterable="false">
+                            <!-- 修改送货状态 -->
+                            <el-tooltip class="item" effect="dark" content="送货状态修改" placement="top" :enterable="false">
                                 <el-button
                                     icon="el-icon-s-goods"
                                     type="success "
@@ -97,7 +92,7 @@
         </el-card>
 
         <!--------------------------------------------------------新增客户信息对话框-------------------------------------------------------->
-        <el-dialog title="客户信息" :visible.sync="customerFormDialogVisible" width="30%" @close="formClose('setCustomerForm')">
+        <el-dialog title="客户信息" :visible.sync="customerFormDialogVisible" width="40%" @close="formClose('setCustomerForm')">
             <el-form ref="setCustomerForm" :model="setCustomerForm" label-width="170px" :rules="formRules">
                 <el-form-item label="出货人" prop="Shipper">
                     <el-autocomplete
@@ -155,7 +150,7 @@
         </el-dialog>
 
         <!--------------------------------------------------------修改客户信息对话框-------------------------------------------------------->
-        <el-dialog title="修改客户信息" :visible.sync="editCustomerFormDialogVisible" width="30%" @close="formClose('editCustomerForm')">
+        <el-dialog title="修改客户信息" :visible.sync="editCustomerFormDialogVisible" width="40%" @close="formClose('editCustomerForm')">
             <el-form ref="editCustomerForm" :model="editCustomerForm" label-width="170px" :rules="formRules">
                 <el-form-item label="出货人" prop="Shipper">
                     <el-autocomplete
@@ -218,7 +213,7 @@
         </el-dialog>
 
         <!------------------------------------------------------- 出库对话框 ------------------------------------------------------->
-        <el-dialog title="出库" :visible.sync="sendStockVisible" width="30%" @close="formClose('setCustomerForm')">
+        <el-dialog title="出库" :visible.sync="sendStockVisible" width="40%" @close="formClose('setCustomerForm')">
             <el-form ref="setCustomerForm" :model="editCustomerForm" label-width="120px" :rules="formRules">
                 <el-form-item label="送货时间" prop="DeliveryDate">
                     <el-date-picker
@@ -382,8 +377,9 @@ export default {
 }
 
 .el-form /deep/ .el-input__inner {
-    width: 240px;
+    width: 220px;
 }
+
 .el-form /deep/ .el-input-number {
     width: 240px;
 }
@@ -392,4 +388,5 @@ export default {
     background-color: #bf1f1f;
     border-color: #bf1f1f;
 }
+
 </style>

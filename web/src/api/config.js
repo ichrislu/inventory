@@ -2,7 +2,6 @@ import axios from 'axios'
 import {
     Notification
 } from 'element-ui'
-import cateGory from '../pages/cateGory/index'
 
 // 统一路径
 let BaseUrl = 'http://localhost'
@@ -15,6 +14,7 @@ export {
 // // 请求拦截器
 // axios.interceptors.request.use(function (resp) {
 //     // 在发送请求之前做些什么
+
 //     return resp;
 //   }, function (error) {
 //     // 对请求错误做些什么
@@ -24,6 +24,7 @@ export {
 
 // 响应拦截  配置请求回来的信息
 axios.interceptors.response.use(function (resp) {
+    // this.loading = false
     return resp
 }, function (error) {
 

@@ -4,13 +4,13 @@
         <el-card>
             <el-row>
                 <el-row type="flex" justify="space-between">
-                    <el-row><div>品类列表</div></el-row>
-                    <el-row>
+                    <el-row><div></div></el-row>
+                    <el-row style="width:180px;">
                         <!-- <el-button>新增品类</el-button> -->
-                        <el-popover placement="left" width="80px" v-model="visible" @hide="formClose('addCateRef')" @show="showFocus">
+                        <el-popover placement="left" width="80px" v-model="visible" @hide="formClose('addCateRef')" @show="showFocus" >
                             <el-form :model="addForm" ref="addCateRef" :rules="addCateFormRules">
                                 <el-form-item prop="name">
-                                    <el-input class="input" v-model="addForm.name" ref="inputRef"></el-input>
+                                    <el-input class="input" v-model="addForm.name" ref="inputRef" @keyup.enter.native="addcate"  @keyup.esc.native="() => { visible = !visible }"></el-input>
                                 </el-form-item>
                             </el-form>
                             <el-button size="mini"  @click="visible = false" icon="el-icon-close">取消</el-button>

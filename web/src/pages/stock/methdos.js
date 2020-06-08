@@ -31,7 +31,6 @@ export default {
             }
         })
 
-
     },
 
     //-------------------------------------------------------根据 年月日, 供货商查询------------------------------------------------------
@@ -338,6 +337,7 @@ export default {
 
     handleSelect(item) {
         this.searchForm.keyword = item.stockValue
+        this.search()
     },
 
     addSelect(item) {
@@ -345,9 +345,6 @@ export default {
     },
     editSelect(item) {
         this.editForm.Provider = item.stockValue
-    }
-
-
-
+    },
 
 }

@@ -9,13 +9,6 @@
          return arr
      },
 
-     // 修改库存 分类级联选择
-     //  editChangeRef() {
-     //      const nodesObj = this.$refs['editCascader'].getCheckedNodes();
-     //      const Id = nodesObj[0].data.Id
-     //      this.editForm.Bid = Id
-     //  },
-
      // 处理添加备注参数
      getFormDataFromJson(json) {
          let params = new URLSearchParams()
@@ -39,5 +32,27 @@
              return y + '-' + MM + '-' + d
          }
      },
+     // 时间快捷选项
+     getTime() {
+         var date = new Date();
+         var d = new Date(date);
+         var yue = (d.getMonth() + 1) > 9 ? (d.getMonth() + 1) : '0' + (d.getMonth() + 1);
+         var re = d.getDate() > 9 ? d.getDate() : '0' + d.getDate();
+         var youWant = d.getFullYear() + '-' + yue + '-' + re;
+         date = youWant;
+         var da = new Date(date.replace(/-/g, '/'))
+         return da
+     },
+
+     // loading 开启
+    //  openFullScreen() {
+    //      const loading = this.$loading({
+    //          lock: true,
+    //          text: 'Loading',
+    //          spinner: 'el-icon-loading',
+    //          background: 'rgba(0, 0, 0, 0.7)'
+    //      });
+    //     return loading
+    //  }
 
  }

@@ -8,13 +8,7 @@ import util from '../../common/js/util';
 export default {
 
     scroll() {
-        // if (window.sessionStorage.length == 0) {
-        //     this.$router.push({
-        //         path: '/category'
-        //     })
-        // }
         // 数据量提示
-        // this.rest = false
         if (this.outStockList.length > 100 && this.count == 120) {
             this.$notify({
                 title: '警告',
@@ -23,37 +17,50 @@ export default {
                 type: 'warning'
             });
         }
-        if (this.searchForm.time[0] !== undefined) {
 
-            let para = {
-                last: this.last,
-                limit: this.limit,
-                begin: this.searchForm.time[0],
-                end: this.searchForm.time[1],
-                shipper: this.searchForm.shipper
-            }
-
-            searchOutStockAPI(para).then(res => {
-                this.outStockList = this.outStockList.concat(util.setCate(res.data))
-                this.last = this.outStockList[this.outStockList.length - 1].OutDate
-            }).catch(req => {
-                // console.log(req);
-            })
-        } else {
-            let para = {
-                last: this.last,
-                limit: this.limit,
-                shipper: this.searchForm.shipper
-            }
-            searchOutStockAPI(para).then(res => {
-                this.outStockList = this.outStockList.concat(util.setCate(res.data))
-                this.last = this.outStockList[this.outStockList.length - 1].OutDate
-            }).catch(req => {
-                // console.log(req);
-            })
-
+        let para = {
+            last: this.last,
+            limit: this.limit,
+            shipper: this.searchForm.shipper
         }
 
+        if (this.searchForm.time[0] !== undefined) {
+            // let para = {
+            //     last: this.last,
+            //     limit: this.limit,
+            //     begin: this.searchForm.time[0],
+            //     end: this.searchForm.time[1],
+            //     shipper: this.searchForm.shipper
+            // }
+            para.begin = this.searchForm.time[0],
+                para.end = this.searchForm.time[1]
+
+            // searchOutStockAPI(para).then(res => {
+            //     this.outStockList = this.outStockList.concat(util.setCate(res.data))
+            //     this.last = this.outStockList[this.outStockList.length - 1].OutDate
+            // }).catch(req => {
+            //     // console.log(req);
+            // })
+        }
+        // else {
+        //     let para = {
+        //         last: this.last,
+        //         limit: this.limit,
+        //         shipper: this.searchForm.shipper
+        //     }
+        // searchOutStockAPI(para).then(res => {
+        //     this.outStockList = this.outStockList.concat(util.setCate(res.data))
+        //     this.last = this.outStockList[this.outStockList.length - 1].OutDate
+        // }).catch(req => {
+        //     // console.log(req);
+        // })
+        // }
+        searchOutStockAPI(para).then(res => {
+            this.outStockList = this.outStockList.concat(util.setCate(res.data))
+            this.last = this.outStockList[this.outStockList.length - 1].OutDate
+        }).catch(req => {
+            // console.log(req);
+        })
     },
 
     //-------------------------------------------------------根据 年月日, 供货商查询------------------------------------------------------
@@ -63,6 +70,7 @@ export default {
         }
         this.last = ''
         this.outStockList.length = 0
+        // this.outStockList = []
         this.scroll()
     },
 
@@ -112,6 +120,7 @@ export default {
 
     handleSelect(item) {
         this.searchForm.shipper = item.outStockValue
+        this.search()
     },
 
     // ------------------------------------------------------------ 备注功能 ------------------------------------------------------------
@@ -148,5 +157,5 @@ export default {
     // 时间格式转换
     dataFormatter(row, column, cellValue, inde) {
         return util.Datetransformation(cellValue)
-    }
+    },
 }

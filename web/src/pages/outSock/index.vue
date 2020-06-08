@@ -2,9 +2,9 @@
     <section>
         <el-card style="margin-bottom: 5px;height:70px">
             <!-- --------------------------------------------------------------- 查找区 ------------------------------------------------ -->
-            <el-row :gutter="20" style="margin-bottom: 20px;">
-                <el-form :model="searchForm" :inline="true" class="form-inline" label-width="110px" ref="searchRef">
-                    <el-form-item prop="time" label="入库日期">
+            <el-row :gutter="20" style="margin-bottom: 20px;padding-left:20px">
+                <el-form :model="searchForm" :inline="true" class="form-inline" label-width="70px" ref="searchRef">
+                    <el-form-item prop="time" label="入库日期" >
                         <el-date-picker
                             unlink-panels
                             v-model="searchForm.time"
@@ -14,7 +14,7 @@
                             start-placeholder="开始日期"
                             end-placeholder="结束日期"
                             :picker-options="searchForm.pickerOptions"
-                             style="width:350px"
+                             style="width:260px"
                         >
                         </el-date-picker>
                     </el-form-item>
@@ -39,14 +39,14 @@
             <el-row>
                 <el-row>
                     <el-col :span="15">
-                        <div>数据列表</div>
+                        <div></div>
                     </el-col>
                 </el-row>
                     <el-table :data="outStockList" border style="width: 100%;" stripe  height="930px" v-el-table-infinite-scroll="scroll">
                         <el-table-column prop="Shipper" label="出货人" align="center"></el-table-column>
-                        <el-table-column prop="InDate" label="进货日期" align="center" :formatter="dataFormatter"> </el-table-column>
-                        <el-table-column prop="Provider" label="供应商" align="center"></el-table-column>
                         <el-table-column prop="OutDate" label="入库日期" align="center" :formatter="dataFormatter"> </el-table-column>
+                        <el-table-column prop="Provider" label="供应商" align="center"></el-table-column>
+                        <el-table-column prop="InDate" label="进货日期" align="center" :formatter="dataFormatter"> </el-table-column>
                         <el-table-column prop="Category" label="品类" align="center"></el-table-column>
                         <el-table-column prop="Brand" label="品牌" align="center"></el-table-column>
                         <el-table-column prop="Model" label="型号" align="center"></el-table-column>
@@ -127,6 +127,6 @@ export default {
 }
 
 .el-form /deep/ .el-input__inner {
-    width: 240px;
+    width: 220px;
 }
 </style>

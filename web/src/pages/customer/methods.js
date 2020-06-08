@@ -90,6 +90,7 @@ export default {
     },
     handleSelect(item) {
         this.searchForm.shipper = item.customerValue
+        this.search()
     },
     addSelect(item) {
         this.setCustomerForm.Shipper = item.customerValue

@@ -1,3 +1,4 @@
+import util from '../../common/js/util'
 export default {
     init: () => {
         return {
@@ -21,29 +22,56 @@ export default {
                     shortcuts: [{
                         text: '最近一周',
                         onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                            const end = util.getTime();
+                            const start = util.getTime()
+                            start.setTime(start - 3600 * 1000 * 24 * 7)
                             picker.$emit('pick', [start, end]);
                         }
                     }, {
                         text: '最近一个月',
                         onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                            const end = util.getTime();
+                            const start = util.getTime()
+                            start.setTime(start - 3600 * 1000 * 24 * 30)
                             picker.$emit('pick', [start, end]);
                         }
                     }, {
                         text: '最近三个月',
                         onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                            const end = util.getTime();
+                            const start = util.getTime()
+                            start.setTime(start - 3600 * 1000 * 24 * 90)
                             picker.$emit('pick', [start, end]);
                         }
                     }]
                 },
+                // pickerOptions: {
+                //     shortcuts: [{
+                //         text: '最近一周',
+                //         onClick(picker) {
+                //             const end = new Date();
+                //             const start = new Date();
+                //             start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                //             picker.$emit('pick', [start, end]);
+                //         }
+                //     }, {
+                //         text: '最近一个月',
+                //         onClick(picker) {
+                //             const end = new Date();
+                //             const start = new Date();
+                //             start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                //             picker.$emit('pick', [start, end]);
+                //         }
+                //     }, {
+                //         text: '最近三个月',
+                //         onClick(picker) {
+                //             const end = new Date();
+                //             const start = new Date();
+                //             start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                //             picker.$emit('pick', [start, end]);
+                //         }
+                //     }]
+                // },
             },
             // 搜索提示对象数据
             restaurants: [],
@@ -123,47 +151,38 @@ export default {
             outVisible: false,
             // 控制出库窗口的显示和隐藏
             sendStockVisible: false,
-            // 时间快捷选项
-            pickerOptions: {
-                // disabledDate(time) {
-                //     return time.getTime() > Date.now();
-                // },
+             // 时间快捷选项
+             pickerOptions: {
+                disabledDate(time) {
+                    return time.getTime() > (util.getTime() - 0 + 3600 * 1000 * 24 * 2)
+                },
                 shortcuts: [{
                         text: '前天',
                         onClick(picker) {
-                            const date = new Date();
-                            date.setTime(date.getTime() - 3600 * 1000 * 24 * 2);
-                            picker.$emit('pick', date);
+                            picker.$emit('pick', (util.getTime() - 3600 * 1000 * 24 * 2));
                         }
                     }, {
                         text: '昨天',
                         onClick(picker) {
-                            const date = new Date();
-                            date.setTime(date.getTime() - 3600 * 1000 * 24);
-                            picker.$emit('pick', date);
+                            picker.$emit('pick', (util.getTime() - 3600 * 1000 * 24) );
                         }
                     }, {
 
                         text: '今天',
                         onClick(picker) {
-                            picker.$emit('pick', new Date());
+                            picker.$emit('pick', util.getTime());
                         }
                     },
                     {
                         text: '明天',
                         onClick(picker) {
-                            const date = new Date();
-                            date.setTime(date.getTime() + 3600 * 1000 * 24);
-                            picker.$emit('pick', date);
+                            picker.$emit('pick', (util.getTime() - 0 + 3600 * 1000 * 24));
                         }
                     },
                     {
-
                         text: '后天',
                         onClick(picker) {
-                            const date = new Date();
-                            date.setTime(date.getTime() + 3600 * 1000 * 24 * 2);
-                            picker.$emit('pick', date);
+                            picker.$emit('pick', (util.getTime() - 0 + 3600 * 1000 * 24 * 2));
                         }
                     },
                 ]
