@@ -11,8 +11,10 @@ import {
 export default {
     // ---------------------------------------------------获取顾客列表数据-----------------------------
     getList() {
+        this.loading = true
         getCustomerListAPI().then(res => {
             this.customerList = res.data
+            this.loading = false
         })
     },
 
@@ -40,9 +42,11 @@ export default {
             end: this.searchForm.time[1],
             all: this.searchForm.checked
         }
+        this.loading = true
         searchCustomerAPI(para).then(res => {
             this.customerList = res.data
             this.show = true
+            this.loading = false
         })
     },
 

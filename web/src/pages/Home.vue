@@ -2,7 +2,7 @@
     <el-container class="home-container">
         <el-container>
             <!-- 侧边栏 -->
-            <el-aside width="200px">
+            <el-aside width="150px">
                 <!-- 侧边栏菜单 -->
                 <el-menu
                     class="el-menu-vertical-demo"
@@ -88,4 +88,5 @@ a {
 .el-menu {
     border-right-width: 0;
 }
+
 </style>

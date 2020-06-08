@@ -1,6 +1,5 @@
 <template>
     <section>
-        <!-- <el-progress :percentage="50" :format="format"></el-progress> -->
         <el-card>
             <el-row>
                 <el-row type="flex" justify="space-between">
@@ -10,7 +9,7 @@
                         <el-popover placement="left" width="80px" v-model="visible" @hide="formClose('addCateRef')" @show="showFocus" >
                             <el-form :model="addForm" ref="addCateRef" :rules="addCateFormRules">
                                 <el-form-item prop="name">
-                                    <el-input class="input" v-model="addForm.name" ref="inputRef" @keyup.enter.native="addcate"  @keyup.esc.native="() => { visible = !visible }"></el-input>
+                                    <el-input class="input" v-model="addForm.name" ref="inputRef" @keyup.prevent.enter.native="addcate"  @keyup.prevent.esc.native="() => { visible = !visible }"></el-input>
                                 </el-form-item>
                             </el-form>
                             <el-button size="mini"  @click="visible = false" icon="el-icon-close">取消</el-button>
@@ -22,7 +21,7 @@
 
                 <!---------------------------------------------------- 分类列表区 ---------------------------------------------->
                 <el-row>
-                    <el-table :data="list" stripe style="width: 100%" border highlight-current-row>
+                    <el-table :data="list" stripe style="width: 100%" border highlight-current-row v-loading="loading">
                         <el-table-column label="品类" prop="Name" width="300px" > </el-table-column>
                         <el-table-column label="品牌">
                             <template slot-scope="scope">

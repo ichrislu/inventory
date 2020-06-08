@@ -28,6 +28,8 @@
                                 @focus="getProvider"
                                 @select="handleSelect"
                                 value-key="stockValue"
+                                clearable
+                                @input = "search"
                             ></el-autocomplete>
                         </el-form-item>
                         <el-checkbox v-model="searchForm.checked" @change="search">全部库存</el-checkbox>
@@ -44,22 +46,22 @@
         <!----------------------------------------------------------------- 数据展示区 ------------------------------------------------ -->
         <el-card>
             <el-row>
-                <el-table :data="stockList" border style="width: 100% " :row-class-name="tableRowClassName">
+                <el-table :data="stockList" border style="width: 100% " :row-class-name="tableRowClassName" v-loading="loading">
                     <el-table-column prop="Provider" label="供货商" align="center"></el-table-column>
-                    <el-table-column prop="Date" label="进货时间" align="center" :formatter="dataFormatter"> </el-table-column>
+                    <el-table-column prop="Date" label="进货时间" align="center" :formatter="dataFormatter" min-width="100px"> </el-table-column>
                     <el-table-column prop="Category" label="品类" align="center"> </el-table-column>
                     <el-table-column prop="Brand" label="品牌" align="center"></el-table-column>
                     <el-table-column prop="Model" label="型号" align="center"></el-table-column>
                     <el-table-column prop="Price" label="进货价格(元)" align="center"></el-table-column>
                     <el-table-column prop="Quantity" label="此单总量(件)" align="center"> </el-table-column>
                     <el-table-column prop="Inventory" label="库存余量(件)" align="center"> </el-table-column>
-                    <el-table-column prop="Remarks" label="备注" width="200px" align="center" class="remark">
+                    <el-table-column prop="Remarks" label="备注" min-width="200px" align="center" class="remark">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.Remarks" class="in" autosize @change="addRemark(scope.row)" type="textarea"> </el-input>
                         </template>
                     </el-table-column>
                     <!-- 功能按钮区域 -->
-                    <el-table-column width="300px" scope label="操作" align="center">
+                    <el-table-column width="220px" scope label="操作" align="center">
                         <template slot-scope="scope">
                             <!-- 修改按钮 -->
                             <el-tooltip class="item" effect="dark" content="修改" placement="top" :enterable="false">
@@ -103,8 +105,8 @@
         </el-card>
 
         <!--------------------------------------------------------新增库存对话框-------------------------------------------------------->
-        <el-dialog title="新增库存" :visible.sync="showAddFormDialogVisible" width="30%" @close="formClose('addForm')">
-            <el-form ref="addForm" :model="addForm" label-width="170px" :rules="addFormRules">
+        <el-dialog title="新增库存" :visible.sync="showAddFormDialogVisible" width="500px" @close="formClose('addForm')">
+            <el-form ref="addForm" :model="addForm" label-width="160px" :rules="addFormRules">
                 <el-form-item label="供货商" prop="Provider">
                     <el-autocomplete
                         class="inline-input"
@@ -154,8 +156,8 @@
         </el-dialog>
 
         <!--------------------------------------------------------修改库存对话框-------------------------------------------------------->
-        <el-dialog title="修改库存" :visible.sync="showEditFormDialogVisible" width="30%" @close="formClose('editForm')">
-            <el-form ref="editForm" :model="editForm" label-width="170px" :rules="addFormRules">
+        <el-dialog title="修改库存" :visible.sync="showEditFormDialogVisible" width="500px" @close="formClose('editForm')">
+            <el-form ref="editForm" :model="editForm" label-width="160px" :rules="addFormRules">
                 <el-form-item label="供应商" prop="Provider">
                     <el-autocomplete
                         class="inline-input"
@@ -211,8 +213,8 @@
         </el-dialog>
 
         <!--------------------------------------------------------出库对话框-------------------------------------------------------->
-        <el-dialog title="出库" :visible.sync="outStockFormDialogVisible" width="30%" @close="formClose('outStockForm')">
-            <el-form ref="outStockForm" :model="outStockForm" label-width="170px" :rules="addFormRules">
+        <el-dialog title="出库" :visible.sync="outStockFormDialogVisible" width="500px" @close="formClose('outStockForm')">
+            <el-form ref="outStockForm" :model="outStockForm" label-width="160px" :rules="addFormRules">
                 <el-form-item label="供应商">
                     <el-input v-model="outStockForm.Provider" disabled></el-input>
                 </el-form-item>
@@ -302,14 +304,11 @@ export default {
 }
 
 .el-table /deep/ .operation {
-    margin: 0 20px;
+    margin: 0 10px;
 }
 
 .el-col {
     margin: 0 20px;
-}
-.el-button {
-    margin: 0 6px;
 }
 
 .coll {

@@ -17,10 +17,11 @@ export default {
                 path: '/category'
             })
         }
-
+        this.loading = true
         getStockListAPI().then(res => {
             this.stockList = util.setCate(res.data)
             this.options = JSON.parse(window.sessionStorage.getItem('pickValue'))
+            this.loading = false
             if (this.stockList.length > 100) {
                 this.$notify({
                     title: '警告',
@@ -36,6 +37,7 @@ export default {
     //-------------------------------------------------------根据 年月日, 供货商查询------------------------------------------------------
     // 查询功能
     search() {
+        this.loading = true
         if (this.searchForm.time == null) {
             this.searchForm.time = []
         }
@@ -47,6 +49,7 @@ export default {
         }
         searchStockAPI(para).then(res => {
             this.stockList = util.setCate(res.data)
+            this.loading = false
         }).catch(err => {
             console.log(err.response);
         })

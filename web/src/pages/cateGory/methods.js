@@ -8,6 +8,7 @@ import {
 
 export default {
     getList() {
+        this.loading = true
         getCate().then(res => {
             this.list = res.data
             if (res.data !== null) {
@@ -23,6 +24,7 @@ export default {
                 // 提供给 分类选择器的数据源
                 window.sessionStorage.setItem('pickValue', JSON.stringify(this.list))
             }
+            this.loading = false
         })
     },
     showFocus(){

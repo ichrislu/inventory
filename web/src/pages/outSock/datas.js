@@ -2,6 +2,8 @@ import util from '../../common/js/util'
 export default {
     init : () => {
         return {
+            // 数据表格高度
+            // tableHeight : 800,
             // 出库列表数据
             outStockList: [],
             date: '',
@@ -90,6 +92,8 @@ export default {
              last : '',
              // 控制重置按钮的使用
             //  rest : true
+            // loading 开启
+            loading : true
         }
     }
 }

@@ -9,6 +9,7 @@ export default {
 
     scroll() {
         // 数据量提示
+        this.loading = true
         if (this.outStockList.length > 100 && this.count == 120) {
             this.$notify({
                 title: '警告',
@@ -58,6 +59,7 @@ export default {
         searchOutStockAPI(para).then(res => {
             this.outStockList = this.outStockList.concat(util.setCate(res.data))
             this.last = this.outStockList[this.outStockList.length - 1].OutDate
+            this.loading = false
         }).catch(req => {
             // console.log(req);
         })

@@ -24,7 +24,6 @@ export {
 
 // 响应拦截  配置请求回来的信息
 axios.interceptors.response.use(function (resp) {
-    // this.loading = false
     return resp
 }, function (error) {
 
