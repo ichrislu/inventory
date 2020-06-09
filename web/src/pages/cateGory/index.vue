@@ -7,9 +7,9 @@
                     <el-row style="width:180px;">
                         <!-- <el-button>新增品类</el-button> -->
                         <el-popover placement="left" width="80px" v-model="visible" @hide="formClose('addCateRef')" @show="showFocus" >
-                            <el-form :model="addForm" ref="addCateRef" :rules="addCateFormRules">
+                            <el-form :model="addForm" ref="addCateRef" :rules="addCateFormRules" @submit.native.prevent>
                                 <el-form-item prop="name">
-                                    <el-input class="input" v-model="addForm.name" ref="inputRef" @keyup.prevent.enter.native="addcate"  @keyup.prevent.esc.native="() => { visible = !visible }"></el-input>
+                                    <el-input class="input" v-model="addForm.name" ref="inputRef" @keyup.enter.native="addcate"  @keyup.prevent.esc.native="() => { visible = !visible }"></el-input>
                                 </el-form-item>
                             </el-form>
                             <el-button size="mini"  @click="visible = false" icon="el-icon-close">取消</el-button>
