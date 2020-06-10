@@ -22,11 +22,11 @@
                 <!---------------------------------------------------- 分类列表区 ---------------------------------------------->
                 <el-row>
                     <el-table :data="list" stripe style="width: 100%" border highlight-current-row v-loading="loading">
-                        <el-table-column label="品类" prop="Name" width="300px" > </el-table-column>
+                        <el-table-column label="品类" prop="Name" width="200px" > </el-table-column>
                         <el-table-column label="品牌">
                             <template slot-scope="scope">
                                 <el-row>
-                                    <el-col v-for="(item, itemIndex) in scope.row.Category" :key="itemIndex" :span="3">
+                                    <el-col v-for="(item, itemIndex) in scope.row.Category" :key="itemIndex" :span="4">
                                         <el-tag size="medium" hit closable @close="removeBrand(item.Id)">{{ item.Name }}</el-tag>
                                     </el-col>
                                 </el-row>
@@ -43,7 +43,7 @@
                                 <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.$index)">+ 品牌</el-button>
                             </template>
                         </el-table-column>
-                        <el-table-column label="操作" align="center" width="300px">
+                        <el-table-column label="操作" align="center" width="200px">
                             <template slot-scope="scope">
                                 <el-tooltip class="item" effect="dark" content="删除品类" placement="top">
                                     <el-popconfirm

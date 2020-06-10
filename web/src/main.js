@@ -9,10 +9,10 @@ import axios from 'axios'
 
 import Print from 'vue-print-nb'
 
+import '../app.css'
+
 import elTableInfiniteScroll from 'el-table-infinite-scroll';
-
 Vue.use(elTableInfiniteScroll);
-
 
 Vue.prototype.$axios = axios
 

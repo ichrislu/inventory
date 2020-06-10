@@ -31,7 +31,7 @@ export default {
             inputVisible: false,
             inputValue: '',
             currentIndex : -1,
-            loading : true
+            loading : false
         }
     }
 }

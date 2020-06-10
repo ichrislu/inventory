@@ -5,6 +5,17 @@ import {
 
 // 统一路径
 let BaseUrl = 'http://localhost'
+// if (process.env.NODE_ENV === 'development') {
+//     /**
+//      * 开发环境下，开发人员根据需要自定义内容
+//      */
+//     BaseUrl = 'http://localhost';
+// } else {
+//     /**
+//      * 集成运行环境。开发人员请不用修改以下内容！！！
+//      */
+//     BaseUrl = '';
+// };
 
 export {
     BaseUrl

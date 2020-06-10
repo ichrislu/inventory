@@ -188,7 +188,7 @@ export default {
                 ]
             },
             // loading 开启
-            loading : true
+            loading : false
         }
     }
 }

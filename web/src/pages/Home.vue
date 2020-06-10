@@ -1,37 +1,20 @@
 <template>
-    <el-container class="home-container">
+    <el-container>
         <el-container>
             <!-- 侧边栏 -->
-            <el-aside width="150px">
+            <el-aside style="width:150px">
                 <!-- 侧边栏菜单 -->
                 <el-menu
-                    class="el-menu-vertical-demo"
                     background-color="#333744"
                     text-color="white"
                     :router="true"
                     :default-active="this.$route.path"
                 >
-                    <!-- 一级菜单模板区域 -->
-                    <el-submenu
-                        index="1"
-                        v-for="item in $router.options.routes"
-                        :key="item.index"
-                        default-active="this.$route.path"
-                        text-color="white"
-                    >
-                        <template slot="title">
-                            <!-- <i class="el-icon-location"></i> -->
-                            <!-- 文本 -->
-                            <span>{{ item.title }}</span>
-                        </template>
-                        <!-- 二级菜单 -->
-                        <el-menu-item :index="'' + subItem.path" v-for="subItem in item.children" :key="subItem.index">
-                            <template slot="title">
-                                <!-- 文本 -->
-                                <span>{{ subItem.title }}</span>
-                            </template>
-                        </el-menu-item>
-                    </el-submenu>
+                <el-menu-item-group v-for="item in $router.options.routes" :key="item.index"  default-active="this.$route.path">
+                    <el-menu-item v-for="subItem in item.children" :key="subItem.index" :index="'' + subItem.path" style="text-align:center">
+                        <span>{{subItem.title}}</span>
+                    </el-menu-item>
+                </el-menu-item-group>
                 </el-menu>
             </el-aside>
             <el-container>
@@ -73,7 +56,8 @@ body,
 
 .el-main {
     background-color: #eaedf1;
-    padding: 5px;
+    padding: 0px;
+
 }
 
 a {
@@ -81,12 +65,15 @@ a {
     /* color: white; */
 }
 
-/* a:hover {
-  color: red;
-} */
 
 .el-menu {
-    border-right-width: 0;
+    border-right-width: 0!important;
+    width: auto;
+}
+
+textarea {
+    min-height: 20px;
+	overflow-y:hidden
 }
 
 </style>

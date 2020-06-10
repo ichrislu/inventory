@@ -10,7 +10,7 @@ export default {
     scroll() {
         // 数据量提示
         this.loading = true
-        if (this.outStockList.length > 100 && this.count == 120) {
+        if (this.outStockList.length > 100) {
             this.$notify({
                 title: '警告',
                 message: '数据量较大,建议按日期过滤',
@@ -26,40 +26,17 @@ export default {
         }
 
         if (this.searchForm.time[0] !== undefined) {
-            // let para = {
-            //     last: this.last,
-            //     limit: this.limit,
-            //     begin: this.searchForm.time[0],
-            //     end: this.searchForm.time[1],
-            //     shipper: this.searchForm.shipper
-            // }
             para.begin = this.searchForm.time[0],
                 para.end = this.searchForm.time[1]
-
-            // searchOutStockAPI(para).then(res => {
-            //     this.outStockList = this.outStockList.concat(util.setCate(res.data))
-            //     this.last = this.outStockList[this.outStockList.length - 1].OutDate
-            // }).catch(req => {
-            //     // console.log(req);
-            // })
         }
-        // else {
-        //     let para = {
-        //         last: this.last,
-        //         limit: this.limit,
-        //         shipper: this.searchForm.shipper
-        //     }
-        // searchOutStockAPI(para).then(res => {
-        //     this.outStockList = this.outStockList.concat(util.setCate(res.data))
-        //     this.last = this.outStockList[this.outStockList.length - 1].OutDate
-        // }).catch(req => {
-        //     // console.log(req);
-        // })
-        // }
         searchOutStockAPI(para).then(res => {
+            this.loading = false
+            if (res.data.length == 0) {
+                this.test = true
+                return
+            }
             this.outStockList = this.outStockList.concat(util.setCate(res.data))
             this.last = this.outStockList[this.outStockList.length - 1].OutDate
-            this.loading = false
         }).catch(req => {
             // console.log(req);
         })
@@ -72,7 +49,6 @@ export default {
         }
         this.last = ''
         this.outStockList.length = 0
-        // this.outStockList = []
         this.scroll()
     },
 
