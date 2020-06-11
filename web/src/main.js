@@ -6,6 +6,7 @@ import router from './routers/router.js'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
+import './app.css'
 
 import Print from 'vue-print-nb'
 

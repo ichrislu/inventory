@@ -81,15 +81,13 @@ export default {
 		return datas.init()
 	},
 	created() {
-		 this._tableHeight = document.documentElement.clientHeight - 100
+		//页面加载完毕计算高度
+		///屏幕高度 - 表格头部的元素高度+padding+margin  ---100我现在是测量的,后面需要用动态高度
+		this._tableHeight = document.documentElement.clientHeight - 100
 	},
-	methods: methods,
 	mounted() {
-		// console.log(this.$refs.table.$el.offsetTop);
-		let _this = this
 		window.onresize = () => {
-			// _this.tableHeight = document.documentElement.clientHeight - _this.$refs.table.$el.offsetTop -10
-			this._tableHeight = document.documentElement.clientHeight -100
+			this._tableHeight = document.documentElement.clientHeight - 100
 		}
 	},
 	directives: {
