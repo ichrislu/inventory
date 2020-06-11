@@ -6,14 +6,14 @@
                     <el-row><div></div></el-row>
                     <el-row style="width:180px;">
                         <!-- <el-button>新增品类</el-button> -->
-                        <el-popover placement="left" width="80px" v-model="visible" @hide="formClose('addCateRef')" @show="showFocus" >
-                            <el-form :model="addForm" ref="addCateRef" :rules="addCateFormRules" @submit.native.prevent>
+                        <el-popover placement="left" width="80px" v-model="visible" @hide="formClose('addCategoryRef')" @show="showFocus" >
+                            <el-form :model="addForm" ref="addCategoryRef" :rules="addCategoryFormRules" @submit.native.prevent>
                                 <el-form-item prop="name">
-                                    <el-input class="input" v-model="addForm.name" ref="inputRef" @keyup.enter.native="addcate"  @keyup.prevent.esc.native="() => { visible = !visible }"></el-input>
+                                    <el-input class="input" v-model="addForm.name" ref="inputRef" @keyup.enter.native="addCategory"  @keyup.prevent.esc.native="() => { visible = !visible }"></el-input>
                                 </el-form-item>
                             </el-form>
                             <el-button size="mini"  @click="visible = false" icon="el-icon-close">取消</el-button>
-                            <el-button type="primary" size="mini" @click="addcate" icon="el-icon-check" >确定</el-button>
+                            <el-button type="primary" size="mini" @click="addCategory" icon="el-icon-check" >确定</el-button>
                             <el-button slot="reference" type="success" icon="el-icon-plus">新增品类</el-button>
                         </el-popover>
                     </el-row>
@@ -27,7 +27,7 @@
                             <template slot-scope="scope">
                                 <el-row>
                                     <el-col v-for="(item, itemIndex) in scope.row.Category" :key="itemIndex" :span="4">
-                                        <el-tag size="medium" hit closable @close="removeBrand(item.Id)">{{ item.Name }}</el-tag>
+                                        <el-tag size="medium" hit closable @close="deleteBrandById(item.Id)">{{ item.Name }}</el-tag>
                                     </el-col>
                                 </el-row>
                                 <el-input
@@ -36,8 +36,8 @@
                                     v-if="inputVisible && currentIndex == scope.$index"
                                     v-model="inputValue"
                                     :ref="`saveTagInput${scope.$index}`"
-                                    @keyup.enter.native="handleInputConfirm(scope.row.Id)"
-                                    @blur="handleInputConfirm(scope.row.Id)"
+                                    @keyup.enter.native="addBrandById(scope.row.Id)"
+                                    @blur="addBrandById(scope.row.Id)"
                                 >
                                 </el-input>
                                 <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.$index)">+ 品牌</el-button>
@@ -52,7 +52,7 @@
                                         icon="el-icon-info"
                                         iconColor="red"
                                         title="确认删除该分类吗?"
-                                        @onConfirm="deleteBrand(scope.row.Id)"
+                                        @onConfirm="deleteCategoryById(scope.row.Id)"
                                         popper-class="popc"
                                     >
                                         <el-button slot="reference" type="danger" circle icon="el-icon-delete-solid"></el-button>
@@ -73,7 +73,7 @@ import datas from '../cateGory/datas.js'
 
 export default {
     created() {
-        this.getList()
+        this.getALllCategoryList()
     },
     data() {
         return datas.init()

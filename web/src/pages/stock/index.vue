@@ -46,9 +46,17 @@
 		<!----------------------------------------------------------------- 数据展示区 ------------------------------------------------ -->
 		<el-card>
 			<el-row>
-				<el-table :data="stockList" border style="width: 100% " :row-class-name="tableRowClassName" v-loading="loading" ref="table"
-				v-el-table-infinite-scroll="getList"
-				:height="_tableHeight">
+				<el-table
+					:data="stockList"
+					border
+					style="width: 100% "
+					:row-class-name="tableRowClassName"
+					v-loading="loading"
+					height="850px"
+				>
+					<!-- ref="table" -->
+				<!-- v-el-table-infinite-scroll="getList" -->
+					<!-- :height="_tableHeight" -->
 					<el-table-column prop="Provider" label="供货商" align="center"></el-table-column>
 					<el-table-column prop="Date" label="进货时间" align="center" :formatter="dataFormatter" min-width="95px"> </el-table-column>
 					<el-table-column prop="Category" label="品类" align="center"> </el-table-column>
@@ -59,7 +67,8 @@
 					<el-table-column prop="Inventory" label="库存余量" align="center"> </el-table-column>
 					<el-table-column prop="Remarks" label="备注" min-width="200px" align="center" class="remark">
 						<template slot-scope="scope">
-							<el-input v-model="scope.row.Remarks" class="in" autosize @change="addRemark(scope.row)" type="textarea"> </el-input>
+							<el-input v-model="scope.row.Remarks" class="editRemark" autosize @change="addRemark(scope.row)" type="textarea">
+							</el-input>
 						</template>
 					</el-table-column>
 					<!-- 功能按钮区域 -->
@@ -145,7 +154,7 @@
 					<el-input v-model="addForm.Model"></el-input>
 				</el-form-item>
 				<el-form-item label="进货价格(元)" prop="Price">
-					<el-input v-model.number="addForm.Price" oninput="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></el-input>
+					<el-input v-model="addForm.Price"> </el-input>
 				</el-form-item>
 				<el-form-item label="此单总量(件)" prop="Quantity">
 					<el-input-number v-model="addForm.Quantity" label="描述文字" :min="0" :precision="0" controls-position="right"></el-input-number>
@@ -196,7 +205,7 @@
 					<el-input v-model="editForm.Model"></el-input>
 				</el-form-item>
 				<el-form-item label="进货价格(元)" prop="Price">
-					<el-input v-model="editForm.Price" oninput="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" @change="changePrice"></el-input>
+					<el-input v-model="editForm.Price"></el-input>
 				</el-form-item>
 				<el-form-item label="此单总量(件)" prop="Quantity">
 					<el-input-number v-model="editForm.Quantity" label="描述文字" :min="0" :precision="0" controls-position="right"></el-input-number>
@@ -269,7 +278,7 @@
 				</el-form-item>
 
 				<el-form-item label="售价(元)" prop="Sell">
-					<el-input v-model="outStockForm.Sell" label="描述文字" oninput="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"> </el-input>
+					<el-input v-model="outStockForm.Sell" label="描述文字"> </el-input>
 				</el-form-item>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
@@ -283,31 +292,29 @@
 import datas from './datas.js'
 import methods from './methdos.js'
 import util from '../../common/js/util.js'
-import elTableInfiniteScroll from 'el-table-infinite-scroll'
+// import elTableInfiniteScroll from 'el-table-infinite-scroll'
 
 export default {
 	data() {
 		return datas.init()
 	},
 	created() {
-		// this.openFullScreen()
-		// this.getList()
-		this._tableHeight = document.documentElement.clientHeight - 100
+		// this._tableHeight = document.documentElement.clientHeight - 100
+		this.getList()
 	},
 	methods: methods,
 	mounted() {
-		window.onresize = () => {
-			this._tableHeight = document.documentElement.clientHeight - 100
-		}
+		// window.onresize = () => {
+		// 	this._tableHeight = document.documentElement.clientHeight - 100
+		// }
 	},
-	directives: {
-		'el-table-infinite-scroll': elTableInfiniteScroll
-	},
+	// directives: {
+	// 	'el-table-infinite-scroll': elTableInfiniteScroll
+	// }
 }
 </script>
 
 <style scoped>
-
 .el-table {
 	margin-top: 15px;
 }
@@ -344,7 +351,7 @@ export default {
 	padding-top: 10px;
 }
 
-.in /deep/ .el-textarea__inner {
+.editRemark /deep/ .el-textarea__inner {
 	border: none;
 	resize: none;
 	padding: 0;

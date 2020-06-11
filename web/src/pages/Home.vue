@@ -60,6 +60,6 @@ a {
 }
 
 .el-menu {
-	border-right-width: 0px;
+	border-right-width: 0px!important;
 }
 </style>

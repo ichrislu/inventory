@@ -1,18 +1,18 @@
 import util from '../../common/js/util'
 import {
-    getCustomerListAPI,
-    searchCustomerAPI,
-    addCustomerAPI,
-    editCustomerAPI,
-    addCustomerRemarkAPI,
-    getShipperAPI
+    getCustomerListApi,
+    searchCustomerApi,
+    addCustomerApi,
+    editCustomerApi,
+    addCustomerRemarkApi,
+    getShipperApi
 } from '../../api/customerAPI'
 
 export default {
     // ---------------------------------------------------获取顾客列表数据-----------------------------
-    getList() {
+    getCustomerList() {
         this.loading = true
-        getCustomerListAPI().then(res => {
+        getCustomerListApi().then(res => {
             this.customerList = res.data
             this.loading = false
         })
@@ -43,7 +43,7 @@ export default {
             all: this.searchForm.checked
         }
         this.loading = true
-        searchCustomerAPI(para).then(res => {
+        searchCustomerApi(para).then(res => {
             this.customerList = res.data
             this.show = true
             this.loading = false
@@ -68,7 +68,7 @@ export default {
     // 获取所有出货人
     getShipper() {
         if (window.sessionStorage.getItem('customerValue') == null) {
-            getShipperAPI().then(res => {
+            getShipperApi().then(res => {
                 if( res.data == null) {
                     this.$notify({
                         title : '警告',
@@ -91,14 +91,18 @@ export default {
         } else {
             this.restaurants = JSON.parse(window.sessionStorage.getItem('customerValue'))
         }
-    },
-    handleSelect(item) {
+	},
+
+	// 搜索栏 选择出货人 触发的事件
+    searchSelect(item) {
         this.searchForm.shipper = item.customerValue
         this.search()
-    },
+	},
+	// 新增顾客 选择出货人 触发的事件
     addSelect(item) {
         this.setCustomerForm.Shipper = item.customerValue
-    },
+	},
+	// 修改顾客 选择出货人 触发的事件
     editSelect(item) {
         this.editCustomerForm.Shipper = item.customerValue
     },
@@ -114,16 +118,13 @@ export default {
                     message: '送货时间晚于出单时间',
                     position: 'bottom-right'
                 });
-
             } else if (valid) {
                 let para = Object.assign(this.setCustomerForm)
-
-                addCustomerAPI(para).then(res => {
-
+                addCustomerApi(para).then(res => {
                     window.sessionStorage.removeItem('customerValue');
                     this.getShipper()
 
-                    this.getList()
+                    this.getCustomerList()
                     this.customerFormDialogVisible = false
                     this.$notify.success({
                         title: '成功',
@@ -139,7 +140,7 @@ export default {
     },
 
     // ----------------------------------------------------------修改客户信息------------------------------------------
-    // 获取选中库存数据
+    // 获取选中客户信息
     showEditForm(editForm) {
         this.editCustomerFormDialogVisible = true
         this.editCustomerForm = Object.assign({}, editForm)
@@ -150,6 +151,7 @@ export default {
         }
     },
 
+	// 修改客户信息
     EditForm() {
         if (this.editCustomerForm.DeliveryDate < this.editCustomerForm.SaleDate) {
             this.$notify.error({
@@ -167,12 +169,10 @@ export default {
         }
 
         let para = Object.assign({}, this.editCustomerForm)
-        editCustomerAPI(this.editCustomerForm.Id, para).then(res => {
-
+        editCustomerApi(this.editCustomerForm.Id, para).then(res => {
             window.sessionStorage.removeItem('customerValue');
             this.getShipper()
-
-            this.getList()
+            this.getCustomerList()
             this.editCustomerFormDialogVisible = false
             this.$notify.success({
                 title: '成功',
@@ -191,8 +191,8 @@ export default {
         let _params = {
             remarks: this.remarkForm.Remarks
         }
-        addCustomerRemarkAPI(this.remarkForm.Id, util.getFormDataFromJson(_params)).then(res => {
-            this.getList()
+        addCustomerRemarkApi(this.remarkForm.Id, util.getFormDataFromJson(_params)).then(res => {
+            this.getCustomerList()
             this.showRemarkFormDialogVisible = false;
             this.$notify.success({
                 title: '成功',
@@ -211,7 +211,7 @@ export default {
             type: 'warning'
         }).then(() => {
             this.$axios.delete('http://localhost/customer/' + id).then(res => {
-                this.getList()
+                this.getCustomerList()
                 this.$notify.success({
                     title: '成功',
                     message: '删除成功',
@@ -221,7 +221,7 @@ export default {
         })
     },
 
-    //-----------------------设置表格每行样式--------------------
+    //-----------------------设置 已送货状态客户数据 行样式--------------------
     tableRowClassName({
         row
     }) {
@@ -231,7 +231,7 @@ export default {
         return ''
     },
 
-    //------------------------------打印事件---------------------------
+    //------------------------------显示打印预览---------------------------
     print() {
         this.outVisible = true
     },
@@ -241,7 +241,7 @@ export default {
         if (formName == 'searchRef') {
             this.searchForm.checked = false
             this.show = false
-            this.getList()
+            this.getCustomerList()
         }
         if (this.$refs[formName] !== undefined) {
             this.$refs[formName].resetFields();
@@ -249,18 +249,18 @@ export default {
 
     },
 
-    // ----------------------------------------------------确认出库----------------------------------------------------------
-    showSendStock(editForm) {
-        this.sendStockVisible = true
+    // ----------------------------------------------------快速编辑 客户出货状态, 出货时间----------------------------------------------------------
+     showFastEditStock(editForm) {
+        this.showFastEditStockVisible = true
         this.editCustomerForm = Object.assign({}, editForm)
     },
 
-    sendStock() {
+    fastEditStock() {
         this.editCustomerForm.Status = 0
         let para = Object.assign({}, this.editCustomerForm)
-        editCustomerAPI(this.editCustomerForm.Id, para).then(res => {
-            this.getList()
-            this.sendStockVisible = false
+        editCustomerApi(this.editCustomerForm.Id, para).then(res => {
+            this.getCustomerList()
+            this.showFastEditStockVisible = false
             this.$notify.success({
                 title: '成功',
                 message: '出库成功',
@@ -268,14 +268,6 @@ export default {
             });
         })
     },
-
-    test(){
-        console.log(this.editCustomerForm.Status);
-        this.sendStockVisible = false
-
-    },
-
-
 
     // 时间格式转换
     dataFormatter(row, column, cellValue, inde) {

@@ -25,7 +25,7 @@
 								:fetch-suggestions="querySearch"
 								placeholder="请输入出货人"
 								@focus="getShipper"
-								@select="handleSelect"
+								@select="searchSelect"
 								value-key="customerValue"
 								clearable
 								@input="search"
@@ -46,7 +46,7 @@
 		<!--------------------------------------------------------数据展示区-------------------------------------------------------->
 		<el-card>
 			<el-row>
-				<el-table :data="customerList" border style="width:100%" :row-class-name="tableRowClassName" v-loading="loading">
+				<el-table :data="customerList" border style="width:100%" :row-class-name="tableRowClassName" v-loading="loading" height="850px">
 					<el-table-column prop="Shipper" label="出货人" align="center" min-width="80px"></el-table-column>
 					<el-table-column prop="DeliveryDate" label="送货日期" align="center" :formatter="dataFormatter" min-width="110px">
 					</el-table-column>
@@ -85,7 +85,7 @@
 								<el-button
 									icon="el-icon-s-goods"
 									type="success"
-									@click="showSendStock(scope.row)"
+									@click="showFastEditStock(scope.row)"
 									circle
 									:disabled="scope.row.Status == 0 ? true : false"
 									class="operation"
@@ -219,7 +219,7 @@
 		</el-dialog>
 
 		<!------------------------------------------------------- 修改送货状态对话框 ------------------------------------------------------->
-		<el-dialog title="修改送货状态" :visible.sync="sendStockVisible" width="500px" @close="formClose('setCustomerForm')">
+		<el-dialog title="修改送货状态" :visible.sync="showFastEditStockVisible" width="500px" @close="formClose('setCustomerForm')">
 			<el-form ref="setCustomerForm" :model="editCustomerForm" label-width="160px" :rules="formRules">
 				<el-form-item label="送货时间" prop="DeliveryDate">
 					<el-date-picker
@@ -234,7 +234,7 @@
 				</el-form-item>
 				<el-form-item label="状态" prop="Status">
 					<div>
-						<el-checkbox v-model="editCustomerForm.Status" border label="已送货" @change="sendStock"></el-checkbox>
+						<el-checkbox v-model="editCustomerForm.Status" border label="已送货" @change="fastEditStock"></el-checkbox>
 					</div>
 				</el-form-item>
 			</el-form>
@@ -295,7 +295,7 @@ export default {
 		return datas.init()
 	},
 	created() {
-		this.getList()
+		this.getCustomerList()
 	},
 	methods: methods
 }

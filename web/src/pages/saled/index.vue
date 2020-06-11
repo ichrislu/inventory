@@ -25,7 +25,7 @@
 							:fetch-suggestions="querySearch"
 							placeholder="请输入出货人"
 							@focus="getShipper"
-							@select="handleSelect"
+							@select="searchSelect"
 							value-key="outStockValue"
 							clearable
 							@input="search"
@@ -45,7 +45,7 @@
 				stripe
 				v-loading="loading"
 				ref="table"
-				v-el-table-infinite-scroll="scroll"
+				v-el-table-infinite-scroll="getSaledList"
 				:height="_tableHeight"
 			>
 				<el-table-column prop="Shipper" label="出货人" align="center"></el-table-column>
@@ -94,18 +94,6 @@ export default {
 	directives: {
 		'el-table-infinite-scroll': elTableInfiniteScroll
 	}
-	// mounted() {
-	//     this.$nextTick(function() {
-	//         this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 10
-
-	//         // 监听窗口大小变化
-	//         let self = this
-	//         window.onresize = function() {
-	//             self.tableHeight = window.innerHeight - self.$refs.table.$el.offsetTop -10
-	//         }
-	//     })
-	//     //this.$refs.table.$el.offsetTop：表格距离浏览器的高度 //50表示你想要调整的表格距离底部的高度（你可以自己随意调整），因为我们一般都有放分页组件的，所以需要给它留一个高度
-	// }
 }
 </script>
 

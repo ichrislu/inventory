@@ -1,13 +1,14 @@
 import {
-    searchOutStockAPI,
-    addRemarkAPI,
-    getShipperAPI
-} from '../../api/outStockApi'
+    getSaledListApi,
+    editRemarkApi,
+    getShipperApi
+} from '../../api/saledApi'
 import util from '../../common/js/util';
 
 export default {
 
-    scroll() {
+	// 滚动加载触发的方法
+    getSaledList() {
         // 数据量提示
         this.loading = true
         if (this.outStockList.length > 100) {
@@ -29,16 +30,13 @@ export default {
             para.begin = this.searchForm.time[0],
                 para.end = this.searchForm.time[1]
         }
-        searchOutStockAPI(para).then(res => {
+        getSaledListApi(para).then(res => {
             this.loading = false
-            if (res.data.length == 0) {
-                this.test = true
-                return
-            }
             this.outStockList = this.outStockList.concat(util.setCate(res.data))
             this.last = this.outStockList[this.outStockList.length - 1].OutDate
         }).catch(req => {
-            // console.log(req);
+			// console.log(req);
+			this.loading = false
         })
     },
 
@@ -49,7 +47,7 @@ export default {
         }
         this.last = ''
         this.outStockList.length = 0
-        this.scroll()
+        this.getSaledList()
     },
 
     //--------------------------------------------搜索提醒方法-----------------------------------
@@ -60,7 +58,7 @@ export default {
 
         // 调用 callback 返回建议列表的数据
     },
-
+	//根据搜索框内容过滤
     createFilter(queryString) {
         return (restaurant) => {
             return (restaurant.outStockValue.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
@@ -70,7 +68,7 @@ export default {
     // 获取所有供货商
     getShipper() {
         if (window.sessionStorage.getItem('outStockValue') == null) {
-            getShipperAPI().then(res => {
+            getShipperApi().then(res => {
                 if (res.data == null) {
                     this.$notify({
                         title: '警告',
@@ -96,21 +94,22 @@ export default {
         }
     },
 
-    handleSelect(item) {
+	// 搜索栏 选择出货人 触发的事件
+    searchSelect(item) {
         this.searchForm.shipper = item.outStockValue
         this.search()
     },
 
     // ------------------------------------------------------------ 备注功能 ------------------------------------------------------------
-    // 新增备注
+    // 新增/修改备注
     addRemark(row) {
         this.remarkForm.Remarks = row.Remarks
         this.remarkForm.Id = row.Id
         let _params = {
             remarks: this.remarkForm.Remarks
         }
-        addRemarkAPI(this.remarkForm.Id, util.getFormDataFromJson(_params)).then(() => {
-            this.scroll()
+        editRemarkApi(this.remarkForm.Id, util.getFormDataFromJson(_params)).then(() => {
+            this.getSaledList()
             this.$notify.success({
                 title: '成功',
                 message: '备注添加成功',
@@ -128,7 +127,7 @@ export default {
             this.last = ''
             // this.outStockList = []
             this.outStockList.length = 0
-            this.scroll()
+            this.getSaledList()
         }
     },
 

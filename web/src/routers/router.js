@@ -4,11 +4,18 @@ import Home from '../pages/Home.vue'
 import Category from '../pages/cateGory/index'
 // import Brand from '../pages/Brand.vue'
 import Stock from '../pages/stock/index'
-import OutStock from '../pages/outSock/index'
+import Saled from '../pages/saled/index'
 import Customer from '../pages/customer/index'
 
 //查询界面
 // import Demo from '../pages/Demo.vue'
+
+
+//处理elementUI 重复点击菜单报错问题
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 
 
 Vue.use(Router)
@@ -35,9 +42,9 @@ export default new Router({
                     title: '顾客信息',
                     component: Customer
                 },{
-                    path: '/outstock',
+                    path: '/saled',
                     title: '出库列表',
-                    component: OutStock
+                    component: Saled
                 },
 
             ]
