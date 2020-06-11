@@ -2,7 +2,7 @@
 	<section>
 		<!-- --------------------------------------------------------------- 查找区 ------------------------------------------------ -->
 		<el-card style="margin-bottom: 5px;height:70px">
-			<el-row :gutter="20" style="margin-bottom: 20px;" type="flex" justify="space-around">
+			<el-row :gutter="20" type="flex" justify="space-around">
 				<el-col style="padding:0px">
 					<el-form :model="searchForm" :inline="true" class="form-inline" label-width="70px" ref="searchRef">
 						<el-form-item prop="time" label="送货日期">
@@ -84,7 +84,7 @@
 							<el-tooltip class="item" effect="dark" content="送货状态修改" placement="top" :enterable="false">
 								<el-button
 									icon="el-icon-s-goods"
-									type="success "
+									type="success"
 									@click="showSendStock(scope.row)"
 									circle
 									:disabled="scope.row.Status == 0 ? true : false"
@@ -375,7 +375,7 @@ export default {
 }
 
 .el-card /deep/ .el-card__body {
-	padding: 3px;
+	padding: 5px;
 }
 
 .el-row /deep/ .form-inline {

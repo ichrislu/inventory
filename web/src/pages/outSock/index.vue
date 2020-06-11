@@ -85,6 +85,7 @@ export default {
 		///屏幕高度 - 表格头部的元素高度+padding+margin  ---100我现在是测量的,后面需要用动态高度
 		this._tableHeight = document.documentElement.clientHeight - 100
 	},
+	methods: methods,
 	mounted() {
 		window.onresize = () => {
 			this._tableHeight = document.documentElement.clientHeight - 100
@@ -92,7 +93,7 @@ export default {
 	},
 	directives: {
 		'el-table-infinite-scroll': elTableInfiniteScroll
-	},
+	}
 	// mounted() {
 	//     this.$nextTick(function() {
 	//         this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 10
@@ -109,6 +110,7 @@ export default {
 </script>
 
 <style scoped>
+
 .el-table {
 	margin-top: 15px;
 }

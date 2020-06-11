@@ -5,6 +5,7 @@ export default {
         //TODO  自定义规则
 
         return {
+			_tableHeight: 0,
             // 品类品牌缓存对象
             session: [],
             // 搜索栏 表单对象

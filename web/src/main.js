@@ -10,7 +10,6 @@ import './app.css'
 
 import Print from 'vue-print-nb'
 
-import '../app.css'
 
 import elTableInfiniteScroll from 'el-table-infinite-scroll';
 Vue.use(elTableInfiniteScroll);
