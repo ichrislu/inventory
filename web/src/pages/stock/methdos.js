@@ -1,13 +1,13 @@
 import util from '../../common/js/util'
 import {
-	getStockListAPI,
-	searchStockAPI,
-	addStockAPI,
-	addRemarkAPI,
-	editStockAPI,
-	outStockAPI,
-	deleteStockAPI,
-	getProviderAPI
+	getStockListApi,
+	searchStockApi,
+	addStockApi,
+	addRemarkApi,
+	editStockApi,
+	outStockApi,
+	deleteStockApi,
+	getProviderApi
 } from '../../api/stockApi'
 export default {
 	// ---------------------------------------------------- 获取库存列表数据--------------------------------------------------
@@ -18,7 +18,7 @@ export default {
 			})
 		}
 		this.loading = true
-		getStockListAPI().then(res => {
+		getStockListApi().then(res => {
 			this.stockList = util.setCategory(res.data)
 			this.options = JSON.parse(window.sessionStorage.getItem('pickValue'))
 			this.loading = false
@@ -46,7 +46,7 @@ export default {
 			end: this.searchForm.time[1],
 			all: this.searchForm.checked
 		}
-		searchStockAPI(para)
+		searchStockApi(para)
 			.then(res => {
 				this.stockList = util.setCategory(res.data)
 				this.loading = false
@@ -64,7 +64,7 @@ export default {
 				console.log(para.Bid);
 
 				para.Price = parseFloat(this.addForm.Price)
-				addStockAPI(para).then(res => {
+				addStockApi(para).then(res => {
 					this.addValue = []
 					this.$notify.success({
 						title: '成功',
@@ -96,7 +96,7 @@ export default {
 		let _params = {
 			remarks: this.remarkForm.Remarks
 		}
-		addRemarkAPI(this.remarkForm.Id, util.getFormDataFromJson(_params))
+		addRemarkApi(this.remarkForm.Id, util.getFormDataFromJson(_params))
 			.then(() => {
 				this.getList()
 				this.$notify.success({
@@ -142,7 +142,7 @@ export default {
 				if (valid) {
 					let para = Object.assign({}, this.editForm)
 					para.Price = parseFloat(this.editForm.Price)
-					editStockAPI(this.editForm.Id, util.getFormDataFromJson(para)).then(res => {
+					editStockApi(this.editForm.Id, util.getFormDataFromJson(para)).then(res => {
 						this.$notify.success({
 							title: '成功',
 							message: '修改成功',
@@ -183,7 +183,7 @@ export default {
 					para.Price = parseFloat(this.outStockForm.Sell)
 					para.Date = this.outStockForm.OutDate
 
-					outStockAPI(para).then(() => {
+					outStockApi(para).then(() => {
 						this.outStockFormDialogVisible = false
 						this.getList()
 						this.$notify.success({
@@ -209,7 +209,7 @@ export default {
 
 	// -------------------------------------------删除库存 ----------------------------------
 	deleteStock(id) {
-		deleteStockAPI(id).then(res => {
+		deleteStockApi(id).then(res => {
 			this.getList()
 			this.$notify.success({
 				title: '成功',
@@ -259,7 +259,7 @@ export default {
 	// 获取所有供货商
 	getProvider() {
 		if (window.sessionStorage.getItem('stockValue') == null) {
-			getProviderAPI().then(res => {
+			getProviderApi().then(res => {
 				if (res.data == null) {
 					this.$notify({
 						title: '警告',
