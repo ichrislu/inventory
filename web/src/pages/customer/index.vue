@@ -98,12 +98,12 @@
 		</el-card>
 
 		<!--------------------------------------------------------新增顾客信息对话框-------------------------------------------------------->
-		<el-dialog title="顾客信息" :visible.sync="customerFormDialogVisible" width="800px" @close="formClose('setCustomerForm')">
-			<el-form ref="setCustomerForm" :model="setCustomerForm" label-width="130px" :rules="formRules" :inline="true">
+		<el-dialog title="顾客信息" :visible.sync="customerFormDialogVisible" width="800px" @close="formClose('addCustomerForm')">
+			<el-form ref="addCustomerForm" :model="addCustomerForm" label-width="130px" :rules="formRules" :inline="true">
 				<el-form-item label="出货人" prop="Shipper">
 					<el-autocomplete
 						class="inline-input"
-						v-model="setCustomerForm.Shipper"
+						v-model="addCustomerForm.Shipper"
 						:fetch-suggestions="querySearch"
 						placeholder="请输入出货人"
 						@focus="getShipper"
@@ -112,41 +112,41 @@
 					></el-autocomplete>
 				</el-form-item>
 				<el-form-item label="型号" prop="Model">
-					<el-input v-model="setCustomerForm.Model"></el-input>
+					<el-input v-model="addCustomerForm.Model"></el-input>
 				</el-form-item>
 				<el-form-item label="顾客姓名" prop="Name">
-					<el-input v-model="setCustomerForm.Name" label="描述文字"></el-input>
+					<el-input v-model="addCustomerForm.Name" label="描述文字"></el-input>
 				</el-form-item>
 				<el-form-item label="联系电话" prop="Phone">
-					<el-input v-model="setCustomerForm.Phone" label="描述文字"></el-input>
+					<el-input v-model="addCustomerForm.Phone" label="描述文字"></el-input>
 				</el-form-item>
 				<el-form-item label="收货地址" prop="Address">
-					<el-input v-model="setCustomerForm.Address" label="描述文字"></el-input>
+					<el-input v-model="addCustomerForm.Address" label="描述文字"></el-input>
 				</el-form-item>
 				<el-form-item label="出单时间" prop="SaleDate">
 					<el-date-picker
-						v-model="setCustomerForm.SaleDate"
+						v-model="addCustomerForm.SaleDate"
 						type="date"
 						placeholder="选择日期"
 						format="yyyy 年 MM 月 dd 日"
 						value-format="timestamp"
-						:picker-options="pickerOptions"
+						:picker-options="issuingTimePickerOptions"
 					>
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="送货时间" prop="DeliveryDate">
 					<el-date-picker
-						v-model="setCustomerForm.DeliveryDate"
+						v-model="addCustomerForm.DeliveryDate"
 						type="date"
 						placeholder="选择日期"
 						format="yyyy 年 MM 月 dd 日"
 						value-format="timestamp"
-						:picker-options="pickerOptions"
+						:picker-options="deliveryTimePickerOptions"
 					>
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="备注 : " prop="Remarks">
-					<el-input type="textarea" autosize v-model="setCustomerForm.Remarks" label="描述文字" style="width:220px"></el-input>
+					<el-input type="textarea" autosize v-model="addCustomerForm.Remarks" label="描述文字" style="width:220px"></el-input>
 				</el-form-item>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
@@ -219,8 +219,8 @@
 		</el-dialog>
 
 		<!------------------------------------------------------- 修改送货状态对话框 ------------------------------------------------------->
-		<el-dialog title="修改送货状态" :visible.sync="showFastEditStockVisible" width="500px" @close="formClose('setCustomerForm')">
-			<el-form ref="setCustomerForm" :model="editCustomerForm" label-width="160px" :rules="formRules">
+		<el-dialog title="修改送货状态" :visible.sync="showFastEditStockVisible" width="500px" @close="formClose('sendCustomerForm')">
+			<el-form ref="sendCustomerForm" :model="editCustomerForm" label-width="160px" :rules="formRules">
 				<el-form-item label="送货时间" prop="DeliveryDate">
 					<el-date-picker
 						v-model="editCustomerForm.DeliveryDate"

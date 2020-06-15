@@ -70,6 +70,32 @@ export default {
 				Price: '',
 				Quantity: ''
 			},
+			// 新增库存时间快捷选项
+			addFormPickerOptions: {
+				disabledDate(time) {
+					return time.getTime() > util.getTime() - 0
+				},
+				shortcuts: [
+					{
+						text: '前天',
+						onClick(picker) {
+							picker.$emit('pick', util.getTime() - 3600 * 1000 * 24 * 2)
+						}
+					},
+					{
+						text: '昨天',
+						onClick(picker) {
+							picker.$emit('pick', util.getTime() - 3600 * 1000 * 24)
+						}
+					},
+					{
+						text: '今天',
+						onClick(picker) {
+							picker.$emit('pick', util.getTime())
+						}
+					},
+				]
+			},
 			// 新增库存表单对象预验证规则
 			addFormRules: {
 				Provider: [
@@ -212,9 +238,9 @@ export default {
 			filters: {},
 			// 时间快捷选项
 			pickerOptions: {
-				disabledDate(time) {
-					return time.getTime() > util.getTime() - 0 + 3600 * 1000 * 24 * 2
-				},
+				// disabledDate(time) {
+				// 	return time.getTime() > util.getTime() - 0 + 3600 * 1000 * 24 * 2
+				// },
 				shortcuts: [
 					{
 						text: '前天',

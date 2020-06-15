@@ -31,6 +31,8 @@ export function isPurchasePrice( rule, value, callback) {
 export function isQuantity(rule, value, callback) {
 	if( value == 0 ){
 		callback( new Error('新库存不能为0'))
+	} else {
+		callback()
 	}
 }
 

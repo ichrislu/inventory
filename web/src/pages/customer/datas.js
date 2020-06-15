@@ -57,8 +57,8 @@ export default {
 			show: false,
 			// 控制客户信息表单的 显示与隐藏
 			customerFormDialogVisible: false,
-			// 录入客户信息表单
-			setCustomerForm: {
+			// 新增顾客信息表单
+			addCustomerForm: {
 				Shipper: '',
 				Model: '',
 				Name: '',
@@ -70,6 +70,70 @@ export default {
 				Status: 1
 			},
 
+			// 新增顾客 出单时间快捷选项
+
+			issuingTimePickerOptions: {
+				disabledDate(time) {
+					return time.getTime() > util.getTime() - 0
+				},
+				shortcuts: [
+					{
+						text: '前天',
+						onClick(picker) {
+							picker.$emit('pick', util.getTime() - 3600 * 1000 * 24 * 2)
+						}
+					},
+					{
+						text: '昨天',
+						onClick(picker) {
+							picker.$emit('pick', util.getTime() - 3600 * 1000 * 24)
+						}
+					},
+					{
+						text: '今天',
+						onClick(picker) {
+							picker.$emit('pick', util.getTime())
+						}
+					},
+				]
+			},
+
+			// 新增顾客 出货时间快捷选项
+
+			deliveryTimePickerOptions: {
+				shortcuts: [
+					{
+						text: '前天',
+						onClick(picker) {
+							picker.$emit('pick', util.getTime() - 3600 * 1000 * 24 * 2)
+						}
+					},
+					{
+						text: '昨天',
+						onClick(picker) {
+							picker.$emit('pick', util.getTime() - 3600 * 1000 * 24)
+						}
+					},
+					{
+						text: '今天',
+						onClick(picker) {
+							picker.$emit('pick', util.getTime())
+						}
+					},
+					{
+						text: '明天',
+						onClick(picker) {
+							picker.$emit('pick', util.getTime() - 0 + 3600 * 1000 * 24)
+						}
+					},
+					{
+						text: '后天',
+						onClick(picker) {
+							picker.$emit('pick', util.getTime()  - 0 + 3600 * 1000 * 24 * 2)
+						}
+					},
+				]
+			},
 			// 控制修改客户信息表单的显示和隐藏,
 			editCustomerFormDialogVisible: false,
 			// 修改客户信息表单对象
@@ -114,7 +178,7 @@ export default {
 						required: true,
 						message: '请输入联系方式',
 						trigger: 'blur'
-					},
+					}
 					// { validator: isPhone, trigger: 'blur' }
 				],
 				Address: [
