@@ -5,7 +5,6 @@
                 <el-row type="flex" justify="space-between">
                     <el-row><div></div></el-row>
                     <el-row style="width:180px;">
-                        <!-- <el-button>新增品类</el-button> -->
                         <el-popover placement="left" width="80px" v-model="visible" @hide="formClose('addCategoryRef')" @show="showFocus" >
                             <el-form :model="addForm" ref="addCategoryRef" :rules="addCategoryFormRules" @submit.native.prevent>
                                 <el-form-item prop="name">

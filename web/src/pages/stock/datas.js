@@ -119,7 +119,7 @@ export default {
 						trigger: 'blur'
 					}
 				],
-				// Category: [
+				// 'Category': [
 				// 	{
 				// 		required: true,
 				// 		message: '请输入品类品牌',

@@ -54,9 +54,6 @@
 					v-loading="loading"
 					height="850px"
 				>
-					<!-- ref="table" -->
-				<!-- v-el-table-infinite-scroll="getList" -->
-					<!-- :height="_tableHeight" -->
 					<el-table-column prop="Provider" label="供货商" align="center"></el-table-column>
 					<el-table-column prop="Date" label="进货时间" align="center" :formatter="dataFormatter" min-width="95px"> </el-table-column>
 					<el-table-column prop="Category" label="品类" align="center"> </el-table-column>
@@ -140,7 +137,7 @@
 					>
 					</el-date-picker>
 				</el-form-item>
-				<el-form-item label="品类"  >
+				<el-form-item label="品类" >
 					<el-cascader
 						v-model="addValue"
 						:options="options"
