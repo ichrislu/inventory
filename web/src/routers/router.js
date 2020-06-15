@@ -1,15 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '../pages/Home.vue'
-import Category from '../pages/cateGory/index'
-// import Brand from '../pages/Brand.vue'
+import Category from '../pages/category/index'
 import Stock from '../pages/stock/index'
 import Saled from '../pages/saled/index'
 import Customer from '../pages/customer/index'
-
-//查询界面
-// import Demo from '../pages/Demo.vue'
-
 
 //处理elementUI 重复点击菜单报错问题
 const originalPush = Router.prototype.push

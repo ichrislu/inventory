@@ -68,12 +68,12 @@
 </template>
 
 <script>
-import methods from '../cateGory/methods.js'
-import datas from '../cateGory/datas.js'
+import methods from '../category/methods.js'
+import datas from '../category/datas.js'
 
 export default {
     created() {
-        this.getALllCategoryList()
+        this.getAllCategoryList()
     },
     data() {
         return datas.init()

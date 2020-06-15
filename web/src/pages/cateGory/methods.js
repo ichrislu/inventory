@@ -4,11 +4,11 @@ import {
     addBrandByIdApi,
     deleteCategoryByIdApi,
     deleteBrandByIdApi
-} from '../../api/cateGoryApi'
+} from '../../api/categoryApi'
 
 export default {
 	// 获取所有品类,品牌信息
-    getALllCategoryList() {
+    getAllCategoryList() {
         this.loading = true
         getAllCategoryApi().then(res => {
             this.list = res.data
@@ -61,7 +61,7 @@ export default {
                 position: 'bottom-right'
             });
             window.sessionStorage.clear();
-            this.getALllCategoryList()
+            this.getAllCategoryList()
         }).catch(err => {
             this.$notify.error({
                 title: '错误',
@@ -76,7 +76,7 @@ export default {
     deleteCategoryById(id) {
         deleteCategoryByIdApi(id).then(res => {
             window.sessionStorage.clear();
-            this.getALllCategoryList()
+            this.getAllCategoryList()
             this.$notify.success({
                 title: '成功',
                 message: '分类已删除',
@@ -91,7 +91,7 @@ export default {
         deleteBrandByIdApi(id).then(
             res => {
                 window.sessionStorage.clear();
-                this.getALllCategoryList(),
+                this.getAllCategoryList(),
                     this.$notify.success({
                         title: '成功',
                         message: '品牌已删除',
@@ -136,7 +136,7 @@ export default {
 
                 });
                 window.sessionStorage.clear();
-                this.getALllCategoryList()
+                this.getAllCategoryList()
             }).catch(err => {
                 this.$notify.error({
                     title: '错误',

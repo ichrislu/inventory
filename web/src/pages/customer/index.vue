@@ -214,7 +214,7 @@
 			</el-form>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="editCustomerFormDialogVisible = false" icon="el-icon-close">取消</el-button>
-				<el-button type="primary" @click="EditForm" icon="el-icon-check">确认</el-button>
+				<el-button type="primary" @click="editForm" icon="el-icon-check">确认</el-button>
 			</span>
 		</el-dialog>
 

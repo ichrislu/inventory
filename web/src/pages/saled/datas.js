@@ -83,11 +83,8 @@ export default {
             // 搜索提示对象数据
             restaurants: [],
              // 每次加载的数据
-             list: [],
              // 每次加载数据数量
              limit : 20,
-             // 控制页面是否停止加载数据
-             busy : false,
              // 每组最后一条数据的OutDate
              last : '',
              // 控制重置按钮的使用

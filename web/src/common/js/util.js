@@ -1,6 +1,6 @@
  export default {
      //  根据缓存设置品牌品类
-     setCate(arr) {
+     setCategory(arr) {
          for (let i = 0; i < arr.length; i++) {
              var obj = JSON.parse(window.sessionStorage.getItem('key_' + arr[i].Bid))
              arr[i].Brand = obj.brand,
@@ -19,7 +19,7 @@
      },
 
      // 时间戳转换日期格式方法
-     Datetransformation(value) {
+     dateTransformation(value) {
          if (value == null) {
              return ''
          } else {

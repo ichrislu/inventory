@@ -140,7 +140,7 @@
 					>
 					</el-date-picker>
 				</el-form-item>
-				<el-form-item label="品类">
+				<el-form-item label="品类"  >
 					<el-cascader
 						v-model="addValue"
 						:options="options"
@@ -230,7 +230,7 @@
 					<el-input v-model="outStockForm.Provider" disabled></el-input>
 				</el-form-item>
 				<el-form-item label="品类">
-					<el-input v-model="outStockValue" disabled></el-input>
+					<el-input v-model="classification" disabled></el-input>
 				</el-form-item>
 				<el-form-item label="型号">
 					<el-input v-model="outStockForm.Model" disabled></el-input>
@@ -292,25 +292,17 @@
 import datas from './datas.js'
 import methods from './methdos.js'
 import util from '../../common/js/util.js'
-// import elTableInfiniteScroll from 'el-table-infinite-scroll'
 
 export default {
 	data() {
 		return datas.init()
 	},
 	created() {
-		// this._tableHeight = document.documentElement.clientHeight - 100
 		this.getList()
 	},
 	methods: methods,
 	mounted() {
-		// window.onresize = () => {
-		// 	this._tableHeight = document.documentElement.clientHeight - 100
-		// }
 	},
-	// directives: {
-	// 	'el-table-infinite-scroll': elTableInfiniteScroll
-	// }
 }
 </script>
 

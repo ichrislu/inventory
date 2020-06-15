@@ -32,10 +32,9 @@ export default {
         }
         getSaledListApi(para).then(res => {
             this.loading = false
-            this.outStockList = this.outStockList.concat(util.setCate(res.data))
+            this.outStockList = this.outStockList.concat(util.setCategory(res.data))
             this.last = this.outStockList[this.outStockList.length - 1].OutDate
         }).catch(req => {
-			// console.log(req);
 			this.loading = false
         })
     },
@@ -125,7 +124,6 @@ export default {
         }
         if (formName == 'searchRef') {
             this.last = ''
-            // this.outStockList = []
             this.outStockList.length = 0
             this.getSaledList()
         }
@@ -133,6 +131,6 @@ export default {
 
     // 时间格式转换
     dataFormatter(row, column, cellValue, inde) {
-        return util.Datetransformation(cellValue)
+        return util.dateTransformation(cellValue)
     },
 }

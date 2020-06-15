@@ -143,7 +143,7 @@ export default {
 	},
 
 	// 修改客户信息
-	EditForm() {
+	editForm() {
 		if (this.editCustomerForm.DeliveryDate < this.editCustomerForm.SaleDate) {
 			this.$notify.error({
 				title: '错误',
@@ -258,11 +258,11 @@ export default {
 
 	// 时间格式转换
 	dataFormatter(row, column, cellValue, inde) {
-		return util.Datetransformation(cellValue)
+		return util.dateTransformation(cellValue)
 	},
 	// 打印列表时间转换
 	dataForma(value) {
-		return util.Datetransformation(value)
+		return util.dateTransformation(value)
 	},
 
 }

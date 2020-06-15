@@ -19,7 +19,7 @@ export default {
 		}
 		this.loading = true
 		getStockListAPI().then(res => {
-			this.stockList = util.setCate(res.data)
+			this.stockList = util.setCategory(res.data)
 			this.options = JSON.parse(window.sessionStorage.getItem('pickValue'))
 			this.loading = false
 			if (this.stockList.length > 100) {
@@ -48,7 +48,7 @@ export default {
 		}
 		searchStockAPI(para)
 			.then(res => {
-				this.stockList = util.setCate(res.data)
+				this.stockList = util.setCategory(res.data)
 				this.loading = false
 			})
 			.catch(err => {
@@ -61,6 +61,8 @@ export default {
 		this.$refs['addForm'].validate(valid => {
 			if (valid) {
 				let para = Object.assign(this.addForm)
+				console.log(para.Bid);
+
 				para.Price = parseFloat(this.addForm.Price)
 				addStockAPI(para).then(res => {
 					this.addValue = []
@@ -159,7 +161,7 @@ export default {
 	// 获取 将要出库的商品信息
 	showOutStock(outstock) {
 		this.outStockForm = Object.assign({}, outstock)
-		this.outStockValue = outstock.Category + ' / ' + outstock.Brand
+		this.classification = outstock.Category + ' / ' + outstock.Brand
 		this.outStockForm.Sid = outstock.Id
 		this.outStockForm.Quantity = 0
 		this.outStockFormDialogVisible = true
@@ -168,7 +170,6 @@ export default {
 	// 一键出库
 	outStock() {
 		if (this.outStockForm.Date > this.outStockForm.OutDate && this.outStockForm.OutDate != null ) {
-			console.log(this.outStockForm.OutDate);
 
 			this.$notify.error({
 				title: '错误',
@@ -183,7 +184,6 @@ export default {
 					para.Date = this.outStockForm.OutDate
 
 					outStockAPI(para).then(() => {
-						// console.log(para);
 						this.outStockFormDialogVisible = false
 						this.getList()
 						this.$notify.success({
@@ -221,20 +221,22 @@ export default {
 
 	// 时间格式转换
 	dataFormatter(row, column, cellValue, inde) {
-		return util.Datetransformation(cellValue)
+		return util.dateTransformation(cellValue)
 	},
 
 	//-----------------------------------------表单重置-----------------------------------------
 	formClose(formName) {
-		if (this.$refs[formName] !== undefined) {
-			this.$refs[formName].resetFields()
+		if (formName === 'addForm') {
+			this.addValue = []
 		}
-		if (formName == 'searchRef') {
+
+		if (formName === 'searchRef') {
 			this.searchForm.checked = false
 			this.getList()
 		}
-		if (formName == 'addForm') {
-			this.addValue = []
+
+		if (this.$refs[formName] !== undefined) {
+			this.$refs[formName].resetFields()
 		}
 	},
 

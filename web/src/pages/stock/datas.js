@@ -68,7 +68,7 @@ export default {
 				Bid: '',
 				Model: '',
 				Price: '',
-				Quantity: ''
+				Quantity: '',
 			},
 			// 新增库存时间快捷选项
 			addFormPickerOptions: {
@@ -119,13 +119,13 @@ export default {
 						trigger: 'blur'
 					}
 				],
-				Cate: [
-					{
-						required: true,
-						message: '请输入品类品牌',
-						trigger: 'blur'
-					}
-				],
+				// Category: [
+				// 	{
+				// 		required: true,
+				// 		message: '请输入品类品牌',
+				// 		trigger: 'blur'
+				// 	}
+				// ],
 				Model: [
 					{
 						required: true,
@@ -247,8 +247,6 @@ export default {
 			// 出库表单对象
 			outStockForm: {
 				Provider: '',
-				Cate: '',
-				Brand: '',
 				Model: '',
 				Price: '',
 				Inventory: '',
@@ -261,8 +259,7 @@ export default {
 				Sell: ''
 			},
 			// 出库表单对象 分类属性
-			outStockValue: '',
-			filters: {},
+			classification: '',
 			// 时间快捷选项
 			pickerOptions: {
 				// disabledDate(time) {
