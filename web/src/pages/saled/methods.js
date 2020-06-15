@@ -11,7 +11,7 @@ export default {
     getSaledList() {
         // 数据量提示
         this.loading = true
-        if (this.outStockList.length > 100) {
+        if (this.saledList.length > 100) {
             this.$notify({
                 title: '警告',
                 message: '数据量较大,建议按日期过滤',
@@ -32,8 +32,8 @@ export default {
         }
         getSaledListApi(para).then(res => {
             this.loading = false
-            this.outStockList = this.outStockList.concat(util.setCategory(res.data))
-            this.last = this.outStockList[this.outStockList.length - 1].OutDate
+            this.saledList = this.saledList.concat(util.setCategory(res.data))
+            this.last = this.saledList[this.saledList.length - 1].OutDate
         }).catch(req => {
 			this.loading = false
         })
@@ -45,7 +45,7 @@ export default {
             this.searchForm.time = []
         }
         this.last = ''
-        this.outStockList.length = 0
+        this.saledList.length = 0
         this.getSaledList()
     },
 
@@ -60,13 +60,13 @@ export default {
 	//根据搜索框内容过滤
     createFilter(queryString) {
         return (restaurant) => {
-            return (restaurant.outStockValue.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+            return (restaurant.saledValue.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
         };
     },
 
     // 获取所有供货商
     getShipper() {
-        if (window.sessionStorage.getItem('outStockValue') == null) {
+        if (window.sessionStorage.getItem('saledValue') == null) {
             getShipperApi().then(res => {
                 if (res.data == null) {
                     this.$notify({
@@ -82,20 +82,20 @@ export default {
                 var arr = []
                 for (var i = 0; i < list.length; i++) {
                     arr.push({
-                        outStockValue: list[i]
+                        saledValue: list[i]
                     })
                 }
-                window.sessionStorage.setItem('outStockValue', JSON.stringify(arr))
+                window.sessionStorage.setItem('saledValue', JSON.stringify(arr))
                 this.restaurants = arr
             })
         } else {
-            this.restaurants = JSON.parse(window.sessionStorage.getItem('outStockValue'))
+            this.restaurants = JSON.parse(window.sessionStorage.getItem('saledValue'))
         }
     },
 
 	// 搜索栏 选择出货人 触发的事件
     searchSelect(item) {
-        this.searchForm.shipper = item.outStockValue
+        this.searchForm.shipper = item.saledValue
         this.search()
     },
 
@@ -124,7 +124,7 @@ export default {
         }
         if (formName == 'searchRef') {
             this.last = ''
-            this.outStockList.length = 0
+            this.saledList.length = 0
             this.getSaledList()
         }
     },

@@ -86,7 +86,7 @@
 								<el-button
 									icon="el-icon-s-promotion"
 									type="success"
-									@click="showOutStock(scope.row)"
+									@click="showSaled(scope.row)"
 									circle
 									:disabled="scope.row.Inventory == 0 ? true : false"
 									class="operation"
@@ -221,20 +221,20 @@
 		</el-dialog>
 
 		<!--------------------------------------------------------出库对话框-------------------------------------------------------->
-		<el-dialog title="出库" :visible.sync="outStockFormDialogVisible" width="800px" @close="formClose('outStockForm')">
-			<el-form ref="outStockForm" :model="outStockForm" label-width="130px" :rules="addFormRules" :inline="true">
+		<el-dialog title="出库" :visible.sync="saledFormDialogVisible" width="800px" @close="formClose('saledForm')">
+			<el-form ref="saledForm" :model="saledForm" label-width="130px" :rules="addFormRules" :inline="true">
 				<el-form-item label="供应商">
-					<el-input v-model="outStockForm.Provider" disabled></el-input>
+					<el-input v-model="saledForm.Provider" disabled></el-input>
 				</el-form-item>
 				<el-form-item label="品类">
 					<el-input v-model="classification" disabled></el-input>
 				</el-form-item>
 				<el-form-item label="型号">
-					<el-input v-model="outStockForm.Model" disabled></el-input>
+					<el-input v-model="saledForm.Model" disabled></el-input>
 				</el-form-item>
 				<el-form-item label="入库时间">
 					<el-date-picker
-						v-model="outStockForm.Date"
+						v-model="saledForm.Date"
 						type="date"
 						placeholder="选择日期"
 						format="yyyy 年 MM 月 dd 日"
@@ -244,17 +244,17 @@
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="此单库存(件)">
-					<el-input v-model="outStockForm.Inventory" disabled></el-input>
+					<el-input v-model="saledForm.Inventory" disabled></el-input>
 				</el-form-item>
 				<el-form-item label="进货价格(元)">
-					<el-input v-model="outStockForm.Price" disabled></el-input>
+					<el-input v-model="saledForm.Price" disabled></el-input>
 				</el-form-item>
 				<el-form-item label="出货人" prop="Shipper">
-					<el-input v-model="outStockForm.Shipper" label="描述文字"></el-input>
+					<el-input v-model="saledForm.Shipper" label="描述文字"></el-input>
 				</el-form-item>
 				<el-form-item label="出库时间" prop="OutDate">
 					<el-date-picker
-						v-model="outStockForm.OutDate"
+						v-model="saledForm.OutDate"
 						type="date"
 						placeholder="选择日期"
 						format="yyyy 年 MM 月 dd 日"
@@ -266,7 +266,7 @@
 
 				<el-form-item label="出库数量(件)" prop="Quantity">
 					<el-input-number
-						v-model="outStockForm.Quantity"
+						v-model="saledForm.Quantity"
 						label="描述文字"
 						:min="0"
 						:precision="0"
@@ -275,12 +275,12 @@
 				</el-form-item>
 
 				<el-form-item label="售价(元)" prop="Sell">
-					<el-input v-model="outStockForm.Sell" label="描述文字"> </el-input>
+					<el-input v-model="saledForm.Sell" label="描述文字"> </el-input>
 				</el-form-item>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
-				<el-button @click="outStockFormDialogVisible = false" icon="el-icon-close">取消</el-button>
-				<el-button type="primary" @click="outStock" icon="el-icon-check">确认</el-button>
+				<el-button @click="saledFormDialogVisible = false" icon="el-icon-close">取消</el-button>
+				<el-button type="primary" @click="Saled" icon="el-icon-check">确认</el-button>
 			</span>
 		</el-dialog>
 	</section>

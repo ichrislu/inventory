@@ -243,9 +243,9 @@ export default {
 			// 控制备注框显示与隐藏
 			showRemarkDialogVisible: false,
 			// 控制出库表单的显示与隐藏
-			outStockFormDialogVisible: false,
+			saledFormDialogVisible: false,
 			// 出库表单对象
-			outStockForm: {
+			saledForm: {
 				Provider: '',
 				Model: '',
 				Price: '',

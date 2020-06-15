@@ -26,7 +26,7 @@ export const editStockApi = (id,params) => {
 }
 
 //一键出库
-export const outStockApi = params => {
+export const saledApi = params => {
     return axios.post(`${BaseUrl}/saled`, params)
 }
 

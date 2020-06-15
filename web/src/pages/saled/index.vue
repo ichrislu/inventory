@@ -26,7 +26,7 @@
 							placeholder="请输入出货人"
 							@focus="getShipper"
 							@select="searchSelect"
-							value-key="outStockValue"
+							value-key="saledValue"
 							clearable
 							@input="search"
 						></el-autocomplete>
@@ -39,7 +39,7 @@
 		<el-card>
 			<!-- --------------------------------------------------------------- 数据展示区 ------------------------------------------------ -->
 			<el-table
-				:data="outStockList"
+				:data="saledList"
 				border
 				style="width: 100%;"
 				stripe

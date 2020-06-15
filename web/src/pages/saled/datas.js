@@ -5,7 +5,7 @@ export default {
             // 数据表格高度
             _tableHeight : 800,
             // 出库列表数据
-            outStockList: [],
+            saledList: [],
             date: '',
             // 表单对象预验证规则
             addFormRules: {

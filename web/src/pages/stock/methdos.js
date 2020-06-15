@@ -5,7 +5,7 @@ import {
 	addStockApi,
 	addRemarkApi,
 	editStockApi,
-	outStockApi,
+	saledApi,
 	deleteStockApi,
 	getProviderApi
 } from '../../api/stockApi'
@@ -159,17 +159,17 @@ export default {
 
 	// ------------------------------------------- 出库功能 ------------------------------
 	// 获取 将要出库的商品信息
-	showOutStock(outstock) {
-		this.outStockForm = Object.assign({}, outstock)
-		this.classification = outstock.Category + ' / ' + outstock.Brand
-		this.outStockForm.Sid = outstock.Id
-		this.outStockForm.Quantity = 0
-		this.outStockFormDialogVisible = true
+	showSaled(saled) {
+		this.saledForm = Object.assign({}, saled)
+		this.classification = saled.Category + ' / ' + saled.Brand
+		this.saledForm.Sid = saled.Id
+		this.saledForm.Quantity = 0
+		this.saledFormDialogVisible = true
 	},
 
 	// 一键出库
-	outStock() {
-		if (this.outStockForm.Date > this.outStockForm.OutDate && this.outStockForm.OutDate != null ) {
+	Saled() {
+		if (this.saledForm.Date > this.saledForm.OutDate && this.saledForm.OutDate != null ) {
 
 			this.$notify.error({
 				title: '错误',
@@ -177,14 +177,14 @@ export default {
 				position: 'bottom-right'
 			})
 		} else {
-			this.$refs['outStockForm'].validate(valid => {
+			this.$refs['saledForm'].validate(valid => {
 				if (valid) {
-					let para = Object.assign(this.outStockForm)
-					para.Price = parseFloat(this.outStockForm.Sell)
-					para.Date = this.outStockForm.OutDate
+					let para = Object.assign(this.saledForm)
+					para.Price = parseFloat(this.saledForm.Sell)
+					para.Date = this.saledForm.OutDate
 
-					outStockApi(para).then(() => {
-						this.outStockFormDialogVisible = false
+					saledApi(para).then(() => {
+						this.saledFormDialogVisible = false
 						this.getList()
 						this.$notify.success({
 							title: '成功',
