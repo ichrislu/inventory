@@ -187,7 +187,7 @@
 						placeholder="选择日期"
 						format="yyyy 年 MM 月 dd 日"
 						value-format="timestamp"
-						:picker-options="pickerOptions"
+						:picker-options="addFormPickerOptions"
 					>
 					</el-date-picker>
 				</el-form-item>

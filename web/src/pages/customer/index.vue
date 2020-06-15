@@ -188,7 +188,7 @@
 						placeholder="选择日期"
 						format="yyyy 年 MM 月 dd 日"
 						value-format="timestamp"
-						:picker-options="pickerOptions"
+						:picker-options="issuingTimePickerOptions"
 					>
 					</el-date-picker>
 				</el-form-item>
@@ -199,7 +199,7 @@
 						placeholder="选择日期"
 						format="yyyy 年 MM 月 dd 日"
 						value-format="timestamp"
-						:picker-options="pickerOptions"
+						:picker-options="deliveryTimePickerOptions"
 					>
 					</el-date-picker>
 				</el-form-item>
@@ -228,7 +228,7 @@
 						placeholder="选择日期"
 						format="yyyy 年 MM 月 dd 日"
 						value-format="timestamp"
-						:picker-options="pickerOptions"
+						:picker-options="deliveryTimePickerOptions"
 					>
 					</el-date-picker>
 				</el-form-item>

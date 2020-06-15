@@ -206,6 +206,33 @@ export default {
 				EditNum: '',
 				Remarks: ''
 			},
+			// 修改库存 时间快捷选项
+			addFormPickerOptions: {
+				disabledDate(time) {
+					return time.getTime() > util.getTime() - 0
+				},
+				shortcuts: [
+					{
+						text: '前天',
+						onClick(picker) {
+							picker.$emit('pick', util.getTime() - 3600 * 1000 * 24 * 2)
+						}
+					},
+					{
+						text: '昨天',
+						onClick(picker) {
+							picker.$emit('pick', util.getTime() - 3600 * 1000 * 24)
+						}
+					},
+					{
+						text: '今天',
+						onClick(picker) {
+							picker.$emit('pick', util.getTime())
+						}
+					},
+				]
+			},
+
 			//----------------------
 			// 备注对话框 表单对象
 			remarkForm: {

@@ -94,7 +94,7 @@ export default {
 						onClick(picker) {
 							picker.$emit('pick', util.getTime())
 						}
-					},
+					}
 				]
 			},
 
@@ -129,9 +129,9 @@ export default {
 					{
 						text: '后天',
 						onClick(picker) {
-							picker.$emit('pick', util.getTime()  - 0 + 3600 * 1000 * 24 * 2)
+							picker.$emit('pick', util.getTime() - 0 + 3600 * 1000 * 24 * 2)
 						}
-					},
+					}
 				]
 			},
 			// 控制修改客户信息表单的显示和隐藏,
@@ -207,44 +207,6 @@ export default {
 			outVisible: false,
 			// 控制出库窗口的显示和隐藏
 			showFastEditStockVisible: false,
-			// 时间快捷选项
-			pickerOptions: {
-				disabledDate(time) {
-					return time.getTime() > util.getTime() - 0 + 3600 * 1000 * 24 * 2
-				},
-				shortcuts: [
-					{
-						text: '前天',
-						onClick(picker) {
-							picker.$emit('pick', util.getTime() - 3600 * 1000 * 24 * 2)
-						}
-					},
-					{
-						text: '昨天',
-						onClick(picker) {
-							picker.$emit('pick', util.getTime() - 3600 * 1000 * 24)
-						}
-					},
-					{
-						text: '今天',
-						onClick(picker) {
-							picker.$emit('pick', util.getTime())
-						}
-					},
-					{
-						text: '明天',
-						onClick(picker) {
-							picker.$emit('pick', util.getTime() - 0 + 3600 * 1000 * 24)
-						}
-					},
-					{
-						text: '后天',
-						onClick(picker) {
-							picker.$emit('pick', util.getTime() - 0 + 3600 * 1000 * 24 * 2)
-						}
-					}
-				]
-			},
 			// loading 开启
 			loading: false
 		}
