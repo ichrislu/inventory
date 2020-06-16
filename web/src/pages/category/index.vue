@@ -67,8 +67,8 @@
 </template>
 
 <script>
-import methods from '../category/methods.js'
-import datas from '../category/datas.js'
+import methods from './methods.js'
+import datas from './datas.js'
 
 export default {
     created() {
