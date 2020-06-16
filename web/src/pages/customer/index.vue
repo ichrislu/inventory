@@ -46,7 +46,7 @@
 		<!--------------------------------------------------------数据展示区-------------------------------------------------------->
 		<el-card>
 			<el-row>
-				<el-table :data="customerList" border style="width:100%" :row-class-name="tableRowClassName" v-loading="loading" height="850px">
+				<el-table :data="customerList" border style="width:100%" :row-class-name="tableRowClassName" v-loading="loading" :height="_tableHeight">
 					<el-table-column prop="Shipper" label="出货人" align="center" min-width="80px"></el-table-column>
 					<el-table-column prop="DeliveryDate" label="送货日期" align="center" :formatter="dataFormatter" min-width="110px">
 					</el-table-column>
@@ -296,8 +296,14 @@ export default {
 	},
 	created() {
 		this.getCustomerList()
+		this._tableHeight = document.documentElement.clientHeight - 100
 	},
-	methods: methods
+	methods: methods,
+	mounted() {
+		window.onresize = () => {
+			this._tableHeight = document.documentElement.clientHeight - 100
+		}
+	}
 }
 </script>
 

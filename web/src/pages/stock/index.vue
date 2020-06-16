@@ -52,7 +52,7 @@
 					style="width: 100% "
 					:row-class-name="tableRowClassName"
 					v-loading="loading"
-					height="850px"
+					:height="_tableHeight"
 				>
 					<el-table-column prop="Provider" label="供货商" align="center"></el-table-column>
 					<el-table-column prop="Date" label="进货时间" align="center" :formatter="dataFormatter" min-width="95px"> </el-table-column>
@@ -296,9 +296,13 @@ export default {
 	},
 	created() {
 		this.getList()
+		this._tableHeight = document.documentElement.clientHeight - 100
 	},
 	methods: methods,
 	mounted() {
+		window.onresize = () => {
+			this._tableHeight = document.documentElement.clientHeight - 100
+		}
 	},
 }
 </script>
