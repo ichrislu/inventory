@@ -10,12 +10,22 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 
+// Vue 配置请求本地json数据
+const express = require('express');
+const app = express();
+const appData = require('../src/assets/user.json'); //加载本地json文件
+const majorlist = appData.login; //获取本地对应数据
+const apiRoutes = express.Router();
+app.use('/api', apiRoutes);
+
 // const express = require('express')
 // const app = express()//请求server
+
 // var appData = require('../src/mock/data.json')//加载本地数据文件
 // var list = appData.list//获取对应的本地数据
 // var add = appData.add
 // var ratings = appData.ratings
+
 // var apiRoutes = express.Router()
 // app.use('/api', apiRoutes)//通过路由请求数据
 
@@ -78,7 +88,16 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         //         data: add
         //       })
         //     })
-        //   }
+		//   }
+		,
+        // before(app) {
+        //     app.get('/api/majorlist', (req, res) => {
+        //         res.json({
+        //             error: 0,
+        //             data: majorlist
+        //         }); //接口返回json数据，上面配置的数据majorlist就赋值给data请求后调用
+        //     });
+        // }
     },
     plugins: [
         new webpack.DefinePlugin({

@@ -19,4 +19,5 @@ body .el-table th.gutter {
     font-size: 20px;
 }
 
+
 </style>

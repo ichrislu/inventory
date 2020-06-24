@@ -45,21 +45,29 @@
 
 		<!----------------------------------------------------------------- 数据展示区 ------------------------------------------------ -->
 		<el-card>
+			<!-- <el-button @click="toTableTop">123</el-button> -->
 			<el-row>
-				<el-table :data="stockList" border style="width: 100% " :row-class-name="tableRowClassName" v-loading="loading">
-					<el-table-column prop="Provider" label="供货商" align="center"></el-table-column>
-					<el-table-column prop="Date" label="进货时间" align="center" :formatter="dataFormatter" min-width="95px"> </el-table-column>
+				<el-table
+					:data="stockList"
+					border
+					style="width: 100% "
+					:row-class-name="tableRowClassName"
+					v-loading="loading"
+					height="850px"
+					class="table"
+					ref="table"
+					:default-sort="{ prop: 'Date', order: 'descending' }"
+				>
+					<el-table-column prop="Provider" label="供货商" align="center"> </el-table-column>
+					<el-table-column prop="Date" label="进货时间" align="center" :formatter="dataFormatter" min-width="95px" sortable>
+					</el-table-column>
 					<el-table-column prop="Category" label="品类" align="center"> </el-table-column>
 					<el-table-column prop="Brand" label="品牌" align="center"></el-table-column>
 					<el-table-column prop="Model" label="型号" align="center"></el-table-column>
-					<el-table-column prop="Price" label="进货价格" align="center"></el-table-column>
+					<el-table-column prop="Price" label="进货价格" align="center"> </el-table-column>
 					<el-table-column prop="Quantity" label="此单总量" align="center"> </el-table-column>
 					<el-table-column prop="Inventory" label="库存余量" align="center"> </el-table-column>
-					<el-table-column prop="Remarks" label="备注" min-width="200px" align="center" class="remark">
-						<template slot-scope="scope">
-							<el-input v-model="scope.row.Remarks" class="in" autosize @change="addRemark(scope.row)" type="textarea"> </el-input>
-						</template>
-					</el-table-column>
+					<el-table-column prop="Remarks" label="备注" min-width="200px" align="center" class="remark"> </el-table-column>
 					<!-- 功能按钮区域 -->
 					<el-table-column width="220px" scope label="操作" align="center">
 						<template slot-scope="scope">
@@ -78,7 +86,7 @@
 								<el-button
 									icon="el-icon-s-promotion"
 									type="success"
-									@click="showOutStock(scope.row)"
+									@click="showSaled(scope.row)"
 									circle
 									:disabled="scope.row.Inventory == 0 ? true : false"
 									class="operation"
@@ -100,6 +108,7 @@
 							</el-tooltip>
 						</template>
 					</el-table-column>
+					<!-- <el-backtop target=".el-table__body-wrapper .is-scrolling-none"></el-backtop> -->
 				</el-table>
 			</el-row>
 		</el-card>
@@ -125,7 +134,7 @@
 						placeholder="选择日期"
 						format="yyyy 年 MM 月 dd 日"
 						value-format="timestamp"
-						:picker-options="pickerOptions"
+						:picker-options="addFormPickerOptions"
 					>
 					</el-date-picker>
 				</el-form-item>
@@ -143,7 +152,7 @@
 					<el-input v-model="addForm.Model"></el-input>
 				</el-form-item>
 				<el-form-item label="进货价格(元)" prop="Price">
-					<el-input v-model.number="addForm.Price" oninput="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"></el-input>
+					<el-input v-model="addForm.Price"> </el-input>
 				</el-form-item>
 				<el-form-item label="此单总量(件)" prop="Quantity">
 					<el-input-number v-model="addForm.Quantity" label="描述文字" :min="0" :precision="0" controls-position="right"></el-input-number>
@@ -176,7 +185,7 @@
 						placeholder="选择日期"
 						format="yyyy 年 MM 月 dd 日"
 						value-format="timestamp"
-						:picker-options="pickerOptions"
+						:picker-options="addFormPickerOptions"
 					>
 					</el-date-picker>
 				</el-form-item>
@@ -194,7 +203,7 @@
 					<el-input v-model="editForm.Model"></el-input>
 				</el-form-item>
 				<el-form-item label="进货价格(元)" prop="Price">
-					<el-input v-model="editForm.Price" oninput="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')" @change="changePrice"></el-input>
+					<el-input v-model="editForm.Price"></el-input>
 				</el-form-item>
 				<el-form-item label="此单总量(件)" prop="Quantity">
 					<el-input-number v-model="editForm.Quantity" label="描述文字" :min="0" :precision="0" controls-position="right"></el-input-number>
@@ -213,20 +222,20 @@
 		</el-dialog>
 
 		<!--------------------------------------------------------出库对话框-------------------------------------------------------->
-		<el-dialog title="出库" :visible.sync="outStockFormDialogVisible" width="800px" @close="formClose('outStockForm')">
-			<el-form ref="outStockForm" :model="outStockForm" label-width="130px" :rules="addFormRules" :inline="true">
+		<el-dialog title="出库" :visible.sync="saledFormDialogVisible" width="800px" @close="formClose('saledForm')">
+			<el-form ref="saledForm" :model="saledForm" label-width="130px" :rules="addFormRules" :inline="true">
 				<el-form-item label="供应商">
-					<el-input v-model="outStockForm.Provider" disabled></el-input>
+					<el-input v-model="saledForm.Provider" disabled></el-input>
 				</el-form-item>
 				<el-form-item label="品类">
-					<el-input v-model="outStockValue" disabled></el-input>
+					<el-input v-model="classification" disabled></el-input>
 				</el-form-item>
 				<el-form-item label="型号">
-					<el-input v-model="outStockForm.Model" disabled></el-input>
+					<el-input v-model="saledForm.Model" disabled></el-input>
 				</el-form-item>
 				<el-form-item label="入库时间">
 					<el-date-picker
-						v-model="outStockForm.Date"
+						v-model="saledForm.Date"
 						type="date"
 						placeholder="选择日期"
 						format="yyyy 年 MM 月 dd 日"
@@ -236,17 +245,17 @@
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="此单库存(件)">
-					<el-input v-model="outStockForm.Inventory" disabled></el-input>
+					<el-input v-model="saledForm.Inventory" disabled></el-input>
 				</el-form-item>
 				<el-form-item label="进货价格(元)">
-					<el-input v-model="outStockForm.Price" disabled></el-input>
+					<el-input v-model="saledForm.Price" disabled></el-input>
 				</el-form-item>
 				<el-form-item label="出货人" prop="Shipper">
-					<el-input v-model="outStockForm.Shipper" label="描述文字"></el-input>
+					<el-input v-model="saledForm.Shipper" label="描述文字"></el-input>
 				</el-form-item>
 				<el-form-item label="出库时间" prop="OutDate">
 					<el-date-picker
-						v-model="outStockForm.OutDate"
+						v-model="saledForm.OutDate"
 						type="date"
 						placeholder="选择日期"
 						format="yyyy 年 MM 月 dd 日"
@@ -258,7 +267,7 @@
 
 				<el-form-item label="出库数量(件)" prop="Quantity">
 					<el-input-number
-						v-model="outStockForm.Quantity"
+						v-model="saledForm.Quantity"
 						label="描述文字"
 						:min="0"
 						:precision="0"
@@ -267,12 +276,12 @@
 				</el-form-item>
 
 				<el-form-item label="售价(元)" prop="Sell">
-					<el-input v-model="outStockForm.Sell" label="描述文字" oninput="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"> </el-input>
+					<el-input v-model="saledForm.Sell" label="描述文字"> </el-input>
 				</el-form-item>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
-				<el-button @click="outStockFormDialogVisible = false" icon="el-icon-close">取消</el-button>
-				<el-button type="primary" @click="outStock" icon="el-icon-check">确认</el-button>
+				<el-button @click="saledFormDialogVisible = false" icon="el-icon-close">取消</el-button>
+				<el-button type="primary" @click="Saled" icon="el-icon-check">确认</el-button>
 			</span>
 		</el-dialog>
 	</section>
@@ -287,10 +296,10 @@ export default {
 		return datas.init()
 	},
 	created() {
-		// this.openFullScreen()
 		this.getList()
 	},
-	methods: methods
+	methods: methods,
+	mounted() {}
 }
 </script>
 
@@ -331,7 +340,20 @@ export default {
 	padding-top: 10px;
 }
 
-.in /deep/ .el-textarea__inner {
+.editRemark /deep/ .el-textarea__inner {
+	border: none;
+	resize: none;
+	padding: 0;
+	font-size: 14px;
+	overflow: hidden;
+}
+.editInput /deep/ .el-input__inner {
+	border: none;
+	resize: none;
+	padding: 0;
+	font-size: 14px;
+}
+.editInputDate /deep/ .el-input__inner {
 	border: none;
 	resize: none;
 	padding: 0;
@@ -351,5 +373,16 @@ export default {
 	height: 40px;
 	width: 220px;
 	padding: 0;
+}
+
+/*
+el-table 滚动条样式
+.el-table /deep/ .-webkit-scrollbar-thumb {
+
+    background-color: #000;
+} */
+
+::-webkit-scrollbar {
+	background-color: #000;
 }
 </style>

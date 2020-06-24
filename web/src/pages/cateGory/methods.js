@@ -1,17 +1,19 @@
 import {
-    getCate,
-    addCategory,
-    addBrandById,
-    deleteCateById,
-    deleteBrandById
-} from '../../api/cateGoryApi'
+    getAllCategoryApi,
+    addCategoryApi,
+    addBrandByIdApi,
+    deleteCategoryByIdApi,
+    deleteBrandByIdApi
+} from '../../api/categoryApi'
 
 export default {
-    getList() {
+	// 获取所有品类,品牌信息
+    getAllCategoryList() {
         this.loading = true
-        getCate().then(res => {
+        getAllCategoryApi().then(res => {
             this.list = res.data
             if (res.data !== null) {
+				// 将品类 , 品牌信息存入缓存
                 for (let i = 0; i < res.data.length; i++) {
                     for (let j = 0; j < res.data[i].Category.length; j++) {
                         let obj = {
@@ -26,16 +28,19 @@ export default {
             }
             this.loading = false
         })
-    },
+	},
+	// 增加分类弹出框 自动获取焦点
     showFocus(){
-        setTimeout(() => {
-            this.$refs.inputRef.focus();
-         }, 100);
+        // setTimeout(() => {
+        //     this.$refs.inputRef.focus();
+		//  }, 100);
+		this.$nextTick(() => {
+			this.$refs.inputRef.focus()
+		  })
     },
 
     //增加品类
-    addcate() {
-
+    addCategory() {
         if (this.list !== null) {
             for (var i = 0; i < this.list.length; i++) {
                 if (this.list[i].Name == this.addForm.name) {
@@ -52,14 +57,14 @@ export default {
             name: this.addForm.name
         };
 
-        addCategory(para).then(res => {
+        addCategoryApi(para).then(res => {
             this.$notify.success({
                 title: '成功',
                 message: '品类添加成功',
                 position: 'bottom-right'
             });
             window.sessionStorage.clear();
-            this.getList()
+            this.getAllCategoryList()
         }).catch(err => {
             this.$notify.error({
                 title: '错误',
@@ -71,10 +76,10 @@ export default {
     },
 
     // 删除分类
-    deleteBrand(id) {
-        deleteCateById(id).then(res => {
+    deleteCategoryById(id) {
+        deleteCategoryByIdApi(id).then(res => {
             window.sessionStorage.clear();
-            this.getList()
+            this.getAllCategoryList()
             this.$notify.success({
                 title: '成功',
                 message: '分类已删除',
@@ -85,11 +90,11 @@ export default {
     },
 
     // 删除品牌
-    removeBrand(id) {
-        deleteBrandById(id).then(
+	deleteBrandById(id) {
+        deleteBrandByIdApi(id).then(
             res => {
                 window.sessionStorage.clear();
-                this.getList(),
+                this.getAllCategoryList(),
                     this.$notify.success({
                         title: '成功',
                         message: '品牌已删除',
@@ -108,9 +113,8 @@ export default {
     },
     // ---------------------------------新增品牌tag-----------------------------------------
 
-    //显示制定输入框并聚焦
+    //显示 新增品牌输入框 并获取焦点
     showInput(tagsIndex) {
-
         this.inputVisible = true;
         this.currentIndex = tagsIndex
         this.$nextTick(_ => {
@@ -119,7 +123,7 @@ export default {
     },
 
     // 根据选中类别ID 添加该类别下品牌
-    handleInputConfirm(Id) {
+    addBrandById(Id) {
         let inputValue = this.inputValue;
         if (inputValue) {
 
@@ -127,16 +131,15 @@ export default {
                 pid: Id,
                 name: this.inputValue
             }
-            addBrandById(para).then(() => {
+            addBrandByIdApi(para).then(() => {
                 this.$notify.success({
                     title: '成功',
                     message: '品牌添加成功',
                     position: 'bottom-right'
 
                 });
-                // this.format(100)
                 window.sessionStorage.clear();
-                this.getList()
+                this.getAllCategoryList()
             }).catch(err => {
                 this.$notify.error({
                     title: '错误',
@@ -150,9 +153,4 @@ export default {
         this.currentIndex = -1
         this.inputValue = '';
     },
-
-    //--------------------------------- 进度条 ---------------------------------
-    // format(percentage) {
-    //     return percentage === 100 ? '满' : `${percentage}%`;
-    //   }
 }

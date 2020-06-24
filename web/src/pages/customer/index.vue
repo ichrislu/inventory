@@ -2,7 +2,7 @@
 	<section>
 		<!-- --------------------------------------------------------------- 查找区 ------------------------------------------------ -->
 		<el-card style="margin-bottom: 5px;height:70px">
-			<el-row :gutter="20" style="margin-bottom: 20px;" type="flex" justify="space-around">
+			<el-row :gutter="20" type="flex" justify="space-around">
 				<el-col style="padding:0px">
 					<el-form :model="searchForm" :inline="true" class="form-inline" label-width="70px" ref="searchRef">
 						<el-form-item prop="time" label="送货日期">
@@ -25,7 +25,7 @@
 								:fetch-suggestions="querySearch"
 								placeholder="请输入出货人"
 								@focus="getShipper"
-								@select="handleSelect"
+								@select="searchSelect"
 								value-key="customerValue"
 								clearable
 								@input="search"
@@ -46,9 +46,17 @@
 		<!--------------------------------------------------------数据展示区-------------------------------------------------------->
 		<el-card>
 			<el-row>
-				<el-table :data="customerList" border style="width:100%" :row-class-name="tableRowClassName" v-loading="loading">
+				<el-table
+					:data="customerList"
+					border
+					style="width:100%"
+					:row-class-name="tableRowClassName"
+					v-loading="loading"
+					height="850px"
+					:default-sort="{ prop: 'DeliveryDate', order: 'descending' }"
+				>
 					<el-table-column prop="Shipper" label="出货人" align="center" min-width="80px"></el-table-column>
-					<el-table-column prop="DeliveryDate" label="送货日期" align="center" :formatter="dataFormatter" min-width="110px">
+					<el-table-column prop="DeliveryDate" label="送货日期" align="center" :formatter="dataFormatter" min-width="110px" sortable>
 					</el-table-column>
 					<el-table-column prop="Model" label="型号" align="center" min-width="80px"></el-table-column>
 					<el-table-column prop="SaleDate" label="出单日期" align="center" :formatter="dataFormatter" min-width="110px"> </el-table-column>
@@ -57,7 +65,7 @@
 					<el-table-column prop="Status" label="状态" align="center" min-width="80px">
 						<template slot-scope="scope">
 							<span>
-								{{scope.row.Status == 1?'未送货':'已送货'}}
+								{{ scope.row.Status == 1 ? '未送货' : '已送货' }}
 							</span>
 						</template>
 					</el-table-column>
@@ -84,8 +92,8 @@
 							<el-tooltip class="item" effect="dark" content="送货状态修改" placement="top" :enterable="false">
 								<el-button
 									icon="el-icon-s-goods"
-									type="success "
-									@click="showSendStock(scope.row)"
+									type="success"
+									@click="showFastEditStock(scope.row)"
 									circle
 									:disabled="scope.row.Status == 0 ? true : false"
 									class="operation"
@@ -98,12 +106,12 @@
 		</el-card>
 
 		<!--------------------------------------------------------新增顾客信息对话框-------------------------------------------------------->
-		<el-dialog title="顾客信息" :visible.sync="customerFormDialogVisible" width="800px" @close="formClose('setCustomerForm')">
-			<el-form ref="setCustomerForm" :model="setCustomerForm" label-width="130px" :rules="formRules" :inline="true">
+		<el-dialog title="顾客信息" :visible.sync="customerFormDialogVisible" width="800px" @close="formClose('addCustomerForm')">
+			<el-form ref="addCustomerForm" :model="addCustomerForm" label-width="130px" :rules="formRules" :inline="true">
 				<el-form-item label="出货人" prop="Shipper">
 					<el-autocomplete
 						class="inline-input"
-						v-model="setCustomerForm.Shipper"
+						v-model="addCustomerForm.Shipper"
 						:fetch-suggestions="querySearch"
 						placeholder="请输入出货人"
 						@focus="getShipper"
@@ -112,41 +120,41 @@
 					></el-autocomplete>
 				</el-form-item>
 				<el-form-item label="型号" prop="Model">
-					<el-input v-model="setCustomerForm.Model"></el-input>
+					<el-input v-model="addCustomerForm.Model"></el-input>
 				</el-form-item>
 				<el-form-item label="顾客姓名" prop="Name">
-					<el-input v-model="setCustomerForm.Name" label="描述文字"></el-input>
+					<el-input v-model="addCustomerForm.Name" label="描述文字"></el-input>
 				</el-form-item>
 				<el-form-item label="联系电话" prop="Phone">
-					<el-input v-model="setCustomerForm.Phone" label="描述文字"></el-input>
+					<el-input v-model="addCustomerForm.Phone" label="描述文字"></el-input>
 				</el-form-item>
 				<el-form-item label="收货地址" prop="Address">
-					<el-input v-model="setCustomerForm.Address" label="描述文字"></el-input>
+					<el-input v-model="addCustomerForm.Address" label="描述文字"></el-input>
 				</el-form-item>
 				<el-form-item label="出单时间" prop="SaleDate">
 					<el-date-picker
-						v-model="setCustomerForm.SaleDate"
+						v-model="addCustomerForm.SaleDate"
 						type="date"
 						placeholder="选择日期"
 						format="yyyy 年 MM 月 dd 日"
 						value-format="timestamp"
-						:picker-options="pickerOptions"
+						:picker-options="issuingTimePickerOptions"
 					>
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="送货时间" prop="DeliveryDate">
 					<el-date-picker
-						v-model="setCustomerForm.DeliveryDate"
+						v-model="addCustomerForm.DeliveryDate"
 						type="date"
 						placeholder="选择日期"
 						format="yyyy 年 MM 月 dd 日"
 						value-format="timestamp"
-						:picker-options="pickerOptions"
+						:picker-options="deliveryTimePickerOptions"
 					>
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="备注 : " prop="Remarks">
-					<el-input type="textarea" autosize v-model="setCustomerForm.Remarks" label="描述文字" style="width:220px"></el-input>
+					<el-input type="textarea" autosize v-model="addCustomerForm.Remarks" label="描述文字" style="width:220px"></el-input>
 				</el-form-item>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
@@ -188,7 +196,7 @@
 						placeholder="选择日期"
 						format="yyyy 年 MM 月 dd 日"
 						value-format="timestamp"
-						:picker-options="pickerOptions"
+						:picker-options="issuingTimePickerOptions"
 					>
 					</el-date-picker>
 				</el-form-item>
@@ -199,7 +207,7 @@
 						placeholder="选择日期"
 						format="yyyy 年 MM 月 dd 日"
 						value-format="timestamp"
-						:picker-options="pickerOptions"
+						:picker-options="deliveryTimePickerOptions"
 					>
 					</el-date-picker>
 				</el-form-item>
@@ -214,13 +222,13 @@
 			</el-form>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="editCustomerFormDialogVisible = false" icon="el-icon-close">取消</el-button>
-				<el-button type="primary" @click="EditForm" icon="el-icon-check">确认</el-button>
+				<el-button type="primary" @click="editForm" icon="el-icon-check">确认</el-button>
 			</span>
 		</el-dialog>
 
 		<!------------------------------------------------------- 修改送货状态对话框 ------------------------------------------------------->
-		<el-dialog title="修改送货状态" :visible.sync="sendStockVisible" width="500px" @close="formClose('setCustomerForm')">
-			<el-form ref="setCustomerForm" :model="editCustomerForm" label-width="160px" :rules="formRules">
+		<el-dialog title="修改送货状态" :visible.sync="showFastEditStockVisible" width="500px" @close="formClose('sendCustomerForm')">
+			<el-form ref="sendCustomerForm" :model="editCustomerForm" label-width="160px" :rules="formRules">
 				<el-form-item label="送货时间" prop="DeliveryDate">
 					<el-date-picker
 						v-model="editCustomerForm.DeliveryDate"
@@ -228,13 +236,13 @@
 						placeholder="选择日期"
 						format="yyyy 年 MM 月 dd 日"
 						value-format="timestamp"
-						:picker-options="pickerOptions"
+						:picker-options="deliveryTimePickerOptions"
 					>
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="状态" prop="Status">
 					<div>
-						<el-checkbox v-model="editCustomerForm.Status" border label="已送货" @change="sendStock"></el-checkbox>
+						<el-checkbox v-model="editCustomerForm.Status" border label="已送货" @change="fastEditStock"></el-checkbox>
 					</div>
 				</el-form-item>
 			</el-form>
@@ -295,7 +303,7 @@ export default {
 		return datas.init()
 	},
 	created() {
-		this.getList()
+		this.getCustomerList()
 	},
 	methods: methods
 }
@@ -375,7 +383,7 @@ export default {
 }
 
 .el-card /deep/ .el-card__body {
-	padding: 3px;
+	padding: 5px;
 }
 
 .el-row /deep/ .form-inline {
@@ -387,6 +395,7 @@ export default {
 	resize: none;
 	padding: 0;
 	font-size: 14px;
+	overflow: hidden;
 }
 
 .el-form /deep/ .el-input__inner {
@@ -403,11 +412,11 @@ export default {
 	border-color: #bf1f1f;
 }
 
-.el-form /deep/ .inputShipper  {
+.el-form /deep/ .inputShipper {
 	width: 200px;
 }
 
-.el-form /deep/ .el-checkbox__inner{
+.el-form /deep/ .el-checkbox__inner {
 	margin-left: 20px;
 }
 </style>

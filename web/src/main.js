@@ -6,10 +6,17 @@ import router from './routers/router.js'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
+import './app.css'
+
+import store from './vuex/store'
+import Vuex from 'vuex'
 
 import Print from 'vue-print-nb'
 
-import '../app.css'
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
+
+require('./mock')
 
 import elTableInfiniteScroll from 'el-table-infinite-scroll';
 Vue.use(elTableInfiniteScroll);
@@ -21,13 +28,20 @@ Vue.config.productionTip = false
 
 Vue.use(ElementUI)
 Vue.use(Print)
+Vue.use(Vuex)
 
 /* eslint-disable no-new */
+// new Vue({
+//   el: '#app',
+//   router,
+//   components: {
+// 	App,
+// 	store,
+//   },
+//   template: '<App/>'
+// })
+
 new Vue({
-  el: '#app',
-  router,
-  components: {
-    App,
-  },
-  template: '<App/>'
-})
+	router,
+	render: h => h(App)
+}).$mount('#app')

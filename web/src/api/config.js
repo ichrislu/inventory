@@ -17,10 +17,17 @@ let BaseUrl = 'http://localhost'
 //     BaseUrl = '';
 // };
 
-export {
-    BaseUrl
-}
 
+// axios.defaults.headers.common['token'] =sessionStorage.token;
+
+// // 添加请求拦截器
+// axios.interceptors.request.use(function(config) {
+//   config.headers.token =sessionStorage.token;
+//   console.info(sessionStorage.token);
+//   return config;
+// }, function(error) {
+//   return Promise.reject(error);
+// });
 
 // // 请求拦截器
 // axios.interceptors.request.use(function (resp) {
@@ -45,3 +52,7 @@ axios.interceptors.response.use(function (resp) {
     });
     return Promise.reject(error);
 })
+
+export {
+    BaseUrl
+}
