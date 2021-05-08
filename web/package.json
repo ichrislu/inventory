@@ -15,7 +15,7 @@
     "axios-mock-adapter": "^1.18.1",
     "el-table-infinite-scroll": "^1.0.10",
     "element-ui": "^2.13.2",
-    "json-bigint": "^0.3.0",
+    "json-bigint": "^1.0.0",
     "nodemon": "^2.0.3",
     "print-js": "^1.0.63",
     "qs": "^6.9.4",
